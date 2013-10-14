@@ -7,9 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "DOTabbar.h"
 @class OBMenuBarWindow;
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, NSNetServiceBrowserDelegate, NSNetServiceDelegate>
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSNetServiceBrowserDelegate, NSNetServiceDelegate, DOTabbarDelegate>
 {
 @public
 	IBOutlet NSArrayController* DistCCServerController;
@@ -24,6 +25,8 @@
 }
 
 @property (assign) IBOutlet OBMenuBarWindow *window;
+@property (weak) IBOutlet DOTabbar *tabbar;
+@property (weak) IBOutlet NSTabView *TabView;
 
 // Other methods
 - (void)netServiceDidResolveAddress:(NSNetService *)netService;

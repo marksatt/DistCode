@@ -11,6 +11,11 @@
 #import <arpa/inet.h>
 #import "OBMenuBarWindow.h"
 
+static NSString *kDistCodeGroupIdentifier = @"DistCode";
+static NSString *kHostsItemIdentifier = @"Hosts";
+static NSString *kMonitorItemIdentifier = @"Monitor";
+static NSString *kOptionsItemIdentifier = @"Options";
+
 NSNetServiceBrowser* Browser = nil;
 @implementation AppDelegate
 
@@ -212,6 +217,7 @@ void *get_in_addr(struct sockaddr *sa)
 	Browser = [[NSNetServiceBrowser alloc] init];
 	[Browser setDelegate:self];
 	[Browser searchForServicesOfType:@"_xcodedistcc._tcp" inDomain:@""];
+	[self.tabbar selectItemWithIdentifier:kHostsItemIdentifier];
 }
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
@@ -266,5 +272,57 @@ void *get_in_addr(struct sockaddr *sa)
 - (void)netServiceBrowserDidStopSearch:(NSNetServiceBrowser *)netServiceBrowser
 {
 	
+}
+
+- (void)setViewForIdentifier:(NSString *)identifier
+{
+	[self.TabView selectTabViewItemWithIdentifier:identifier];
+}
+
+#pragma mark - DOTabBarDelegate
+
+- (void)tabbar:(DOTabbar *)tabbar didSelectItemWithIdentifier:(NSString *)identifier
+{
+	[self setViewForIdentifier:identifier];
+}
+
+- (NSArray *)tabbarGroupIdentifiers:(DOTabbar *)tabbar
+{
+	return @[kDistCodeGroupIdentifier];
+}
+
+- (NSString *)tabbar:(DOTabbar *)tabbar titleForGroupIdentifier:(NSString *)identifier
+{
+	return nil;
+}
+
+- (NSArray *)tabbar:(DOTabbar *)tabbar itemIdentifiersForGroupIdentifier:(NSString *)identifier
+{
+	if ([identifier isEqualToString:kDistCodeGroupIdentifier]) {
+		return @[kHostsItemIdentifier, kMonitorItemIdentifier, kOptionsItemIdentifier];
+	} else {
+		return nil;
+	}
+}
+
+- (NSCell *)tabbar:(DOTabbar *)tabbar cellForItemIdentifier:(NSString *)itemIdentifier
+{
+	DOTabbarItemCell *cell = [DOTabbarItemCell new];
+	
+	if ([itemIdentifier isEqualToString:kHostsItemIdentifier]) {
+		cell.title = kHostsItemIdentifier;
+		cell.image = [NSImage imageNamed:@"computer"];
+		[cell.image setSize:NSMakeSize(40.f, 40.f)];
+	} else if ([itemIdentifier isEqualToString:kMonitorItemIdentifier]) {
+		cell.title = kMonitorItemIdentifier;
+		cell.image = [NSImage imageNamed:@"utilities-system-monitor"];
+		[cell.image setSize:NSMakeSize(40.f, 40.f)];
+	} else if ([itemIdentifier isEqualToString:kOptionsItemIdentifier]) {
+		cell.title = kOptionsItemIdentifier;
+		cell.image = [NSImage imageNamed:@"applications-system"];
+		[cell.image setSize:NSMakeSize(40.f, 40.f)];
+	}
+	
+	return cell;
 }
 @end
