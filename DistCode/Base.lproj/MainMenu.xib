@@ -853,7 +853,7 @@ Gw
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YY7-EC-BZr">
-                    <rect key="frame" x="289.99999999999994" y="116" width="177" height="14"/>
+                    <rect key="frame" x="290" y="116" width="176.99999999999997" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="IP Address" id="eAH-9C-20G">
                         <font key="font" metaFont="smallSystem"/>
@@ -875,12 +875,17 @@ Gw
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bz0-od-tlk">
                     <rect key="frame" x="17" y="113" width="27" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="only" controlSize="small" state="on" inset="2" id="N2l-2A-jWk">
+                    <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="status-away" imagePosition="only" alternateImage="status-available" controlSize="small" enabled="NO" state="on" inset="2" id="N2l-2A-jWk">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="smallSystem"/>
                     </buttonCell>
                     <connections>
-                        <binding destination="LzJ-Kg-pH4" name="value" keyPath="representedObject.ACTIVE" id="pWD-Cv-SlX"/>
+                        <binding destination="LzJ-Kg-pH4" name="value" keyPath="representedObject.ACTIVE" id="vcd-rv-BfD">
+                            <dictionary key="options">
+                                <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                <bool key="NSConditionallySetsEnabled" value="NO"/>
+                            </dictionary>
+                        </binding>
                     </connections>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NDo-dN-1vp">
@@ -896,7 +901,7 @@ Gw
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EgQ-WY-QbS">
-                    <rect key="frame" x="380" y="72" width="86.999999999999986" height="14"/>
+                    <rect key="frame" x="380" y="72" width="87" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="Prio" id="6zv-06-oea">
                         <font key="font" metaFont="smallSystem"/>
@@ -944,7 +949,7 @@ Gw
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XoK-ju-lZn">
-                    <rect key="frame" x="290" y="94" width="177.00000000000003" height="14"/>
+                    <rect key="frame" x="290" y="94" width="177" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="HW" id="SrY-f4-vDH">
                         <font key="font" metaFont="smallSystem"/>
@@ -964,8 +969,8 @@ Gw
                         </binding>
                     </connections>
                 </textField>
-                <popUpButton verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wPT-p8-0M1">
-                    <rect key="frame" x="114" y="43" width="351.99999999999994" height="22"/>
+                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wPT-p8-0M1">
+                    <rect key="frame" x="114" y="43" width="352" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="mgC-zz-yVJ" id="Axf-oH-vM2">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -983,8 +988,8 @@ Gw
                         <binding destination="LzJ-Kg-pH4" name="contentValues" keyPath="representedObject.COMPILERS.name" previousBinding="qxQ-Mf-Q8U" id="lVK-DM-6Ne"/>
                     </connections>
                 </popUpButton>
-                <popUpButton verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yhf-07-Wly">
-                    <rect key="frame" x="113.99999999999997" y="17" width="352" height="22"/>
+                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Yhf-07-Wly">
+                    <rect key="frame" x="114" y="17" width="352" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="xQj-pM-GOY" id="Bng-Sc-L0f">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1035,15 +1040,15 @@ Gw
                 <constraint firstItem="yEm-PM-c79" firstAttribute="leading" secondItem="hOe-B4-BUX" secondAttribute="leading" constant="20" id="6Am-wI-U6n"/>
                 <constraint firstAttribute="bottom" secondItem="yEm-PM-c79" secondAttribute="bottom" constant="22" id="Cg8-z9-fOm"/>
                 <constraint firstAttribute="trailing" secondItem="Yhf-07-Wly" secondAttribute="trailing" constant="20" id="CyF-kj-r7e"/>
-                <constraint firstItem="Yhf-07-Wly" firstAttribute="leading" secondItem="yEm-PM-c79" secondAttribute="trailing" constant="11" id="FYe-Dh-pGo"/>
+                <constraint firstItem="Yhf-07-Wly" firstAttribute="leading" secondItem="yEm-PM-c79" secondAttribute="trailing" constant="10" id="FYe-Dh-pGo"/>
                 <constraint firstItem="yEm-PM-c79" firstAttribute="top" secondItem="W2T-2N-fHO" secondAttribute="bottom" constant="12" id="KP4-Es-5ss"/>
                 <constraint firstItem="Yhf-07-Wly" firstAttribute="top" secondItem="wPT-p8-0M1" secondAttribute="bottom" constant="8" id="Rup-pY-S9g"/>
                 <constraint firstItem="W2T-2N-fHO" firstAttribute="leading" secondItem="hOe-B4-BUX" secondAttribute="leading" constant="20" id="Tkd-hg-aHp"/>
                 <constraint firstAttribute="trailing" secondItem="wPT-p8-0M1" secondAttribute="trailing" constant="20" id="Ukb-kV-fVC"/>
                 <constraint firstAttribute="bottom" secondItem="Yhf-07-Wly" secondAttribute="bottom" constant="20" id="VLQ-UL-HRW"/>
-                <constraint firstItem="wPT-p8-0M1" firstAttribute="leading" secondItem="W2T-2N-fHO" secondAttribute="trailing" constant="11" id="aDQ-b3-VCb"/>
-                <constraint firstItem="wPT-p8-0M1" firstAttribute="leading" secondItem="W2T-2N-fHO" secondAttribute="trailing" constant="11" id="ugf-aP-Qhj"/>
-                <constraint firstItem="Yhf-07-Wly" firstAttribute="leading" secondItem="yEm-PM-c79" secondAttribute="trailing" constant="11" id="z7b-9h-5wg"/>
+                <constraint firstItem="wPT-p8-0M1" firstAttribute="leading" secondItem="W2T-2N-fHO" secondAttribute="trailing" constant="10" id="aDQ-b3-VCb"/>
+                <constraint firstItem="wPT-p8-0M1" firstAttribute="leading" secondItem="W2T-2N-fHO" secondAttribute="trailing" constant="10" id="ugf-aP-Qhj"/>
+                <constraint firstItem="Yhf-07-Wly" firstAttribute="leading" secondItem="yEm-PM-c79" secondAttribute="trailing" constant="10" id="z7b-9h-5wg"/>
             </constraints>
         </view>
         <arrayController objectClassName="NSDictionary" editable="NO" automaticallyPreparesContent="YES" selectsInsertedObjects="NO" avoidsEmptySelection="NO" id="Ca1-WZ-31d">
@@ -1057,4 +1062,8 @@ Gw
         </arrayController>
         <userDefaultsController id="FFW-oU-JRE"/>
     </objects>
+    <resources>
+        <image name="status-available" width="16" height="16"/>
+        <image name="status-away" width="16" height="16"/>
+    </resources>
 </document>

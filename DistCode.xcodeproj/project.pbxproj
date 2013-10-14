@@ -40,6 +40,8 @@
 		30F4622E17EAE822008042F1 /* pump in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F4622D17EAE822008042F1 /* pump */; };
 		30F4623617EAEA11008042F1 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F4623517EAEA11008042F1 /* main.cpp */; };
 		30F4623817EAEA11008042F1 /* distclang.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F4623717EAEA11008042F1 /* distclang.1 */; };
+		30F8FCEE180CABF000807EB6 /* status-available.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 30F8FCEC180CABF000807EB6 /* status-available.tiff */; };
+		30F8FCEF180CABF000807EB6 /* status-away.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 30F8FCED180CABF000807EB6 /* status-away.tiff */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -228,6 +230,8 @@
 		30F4623317EAEA11008042F1 /* distclang */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = distclang; sourceTree = BUILT_PRODUCTS_DIR; };
 		30F4623517EAEA11008042F1 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		30F4623717EAEA11008042F1 /* distclang.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = distclang.1; sourceTree = "<group>"; };
+		30F8FCEC180CABF000807EB6 /* status-available.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "status-available.tiff"; sourceTree = "<group>"; };
+		30F8FCED180CABF000807EB6 /* status-away.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "status-away.tiff"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -345,6 +349,8 @@
 		30409BDD17F9EDD500DD93A9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				30F8FCEC180CABF000807EB6 /* status-available.tiff */,
+				30F8FCED180CABF000807EB6 /* status-away.tiff */,
 				30F3C436180B43AB00614C58 /* vpn-512.png */,
 				30143ECF18072AEE004B0B54 /* mac_client-512.png */,
 				30409BDE17F9EDD500DD93A9 /* DistCode-Info.plist */,
@@ -555,9 +561,11 @@
 			files = (
 				30409BE117F9EDD500DD93A9 /* InfoPlist.strings in Resources */,
 				30409BEF17F9EDD500DD93A9 /* Images.xcassets in Resources */,
+				30F8FCEF180CABF000807EB6 /* status-away.tiff in Resources */,
 				30143ED018072AEE004B0B54 /* mac_client-512.png in Resources */,
 				30409BE717F9EDD500DD93A9 /* Credits.rtf in Resources */,
 				30409BED17F9EDD500DD93A9 /* MainMenu.xib in Resources */,
+				30F8FCEE180CABF000807EB6 /* status-available.tiff in Resources */,
 				30F3C437180B43AB00614C58 /* vpn-512.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
