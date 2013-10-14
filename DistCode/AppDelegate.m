@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <sys/socket.h>
 #import <arpa/inet.h>
+#import "OBMenuBarWindow.h"
 
 NSNetServiceBrowser* Browser = nil;
 @implementation AppDelegate
@@ -134,11 +135,11 @@ void *get_in_addr(struct sockaddr *sa)
 						NSString* Value = [Components objectAtIndex:i+1];
 						if ([Key isCaseInsensitiveLike:@"COMPILER"])
 						{
-							[DistCCCompilers addObject:Value];
+							[DistCCCompilers addObject:[NSDictionary dictionaryWithObjectsAndKeys:Value, @"name", nil]];
 						}
 						else if ([Key isCaseInsensitiveLike:@"SDK"])
 						{
-							[DistCCSDKs addObject:Value];
+							[DistCCSDKs addObject:[NSDictionary dictionaryWithObjectsAndKeys:Value, @"name", nil]];
 						}
 						else if(Key && [Key length] > 0 && Value && [Value length] > 0)
 						{
@@ -201,6 +202,13 @@ void *get_in_addr(struct sockaddr *sa)
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	// Insert code here to initialize your application
+	NSImage* Image = [NSImage imageNamed:@"vpn-512"];
+	[Image setSize:NSMakeSize(22.f, 22.f)];
+    self.window.menuBarIcon = Image;
+    self.window.highlightedMenuBarIcon = Image;
+    self.window.hasMenuBarIcon = YES;
+    self.window.attachedToMenuBar = YES;
+    self.window.isDetachable = YES;
 	Browser = [[NSNetServiceBrowser alloc] init];
 	[Browser setDelegate:self];
 	[Browser searchForServicesOfType:@"_xcodedistcc._tcp" inDomain:@""];

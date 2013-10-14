@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+@class OBMenuBarWindow;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSNetServiceBrowserDelegate, NSNetServiceDelegate>
 {
@@ -22,7 +23,7 @@
 	NSPipe* DmucsPipe;
 }
 
-@property (assign) IBOutlet NSWindow *window;
+@property (assign) IBOutlet OBMenuBarWindow *window;
 
 // Other methods
 - (void)netServiceDidResolveAddress:(NSNetService *)netService;

@@ -28,6 +28,9 @@
 		30409BEA17F9EDD500DD93A9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30409BE917F9EDD500DD93A9 /* AppDelegate.m */; };
 		30409BED17F9EDD500DD93A9 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 30409BEB17F9EDD500DD93A9 /* MainMenu.xib */; };
 		30409BEF17F9EDD500DD93A9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30409BEE17F9EDD500DD93A9 /* Images.xcassets */; };
+		305C57DD180BDABB001E1C83 /* DistCode.icns in Resources */ = {isa = PBXBuildFile; fileRef = 305C57DC180BDABB001E1C83 /* DistCode.icns */; };
+		30F3C435180B40BA00614C58 /* OBMenuBarWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 30F3C434180B40BA00614C58 /* OBMenuBarWindow.m */; };
+		30F3C437180B43AB00614C58 /* vpn-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 30F3C436180B43AB00614C58 /* vpn-512.png */; };
 		30F4620A17EAE515008042F1 /* Distcc 3.2.xcplugin in Resources */ = {isa = PBXBuildFile; fileRef = 303AA3E017E995A10077FFC3 /* Distcc 3.2.xcplugin */; };
 		30F4622617EAE80F008042F1 /* distcc in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F4622517EAE80F008042F1 /* distcc */; };
 		30F4622817EAE815008042F1 /* distccd in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F4622717EAE815008042F1 /* distccd */; };
@@ -208,6 +211,10 @@
 		30409BEC17F9EDD500DD93A9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		30409BEE17F9EDD500DD93A9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		30409BF517F9EDD500DD93A9 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		305C57DC180BDABB001E1C83 /* DistCode.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = DistCode.icns; sourceTree = "<group>"; };
+		30F3C433180B40BA00614C58 /* OBMenuBarWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBMenuBarWindow.h; sourceTree = "<group>"; };
+		30F3C434180B40BA00614C58 /* OBMenuBarWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OBMenuBarWindow.m; sourceTree = "<group>"; };
+		30F3C436180B43AB00614C58 /* vpn-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vpn-512.png"; sourceTree = "<group>"; };
 		30F461F417EAE499008042F1 /* dmucs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = dmucs.xcodeproj; path = "../Open Source/dmucs-code/dmucs.xcodeproj"; sourceTree = "<group>"; };
 		30F4622517EAE80F008042F1 /* distcc */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = distcc; path = "../../Open Source/distcc-read-only/distcc"; sourceTree = "<group>"; };
 		30F4622717EAE815008042F1 /* distccd */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = distccd; path = "../../Open Source/distcc-read-only/distccd"; sourceTree = "<group>"; };
@@ -316,6 +323,8 @@
 		30409BDC17F9EDD500DD93A9 /* DistCode */ = {
 			isa = PBXGroup;
 			children = (
+				30F3C433180B40BA00614C58 /* OBMenuBarWindow.h */,
+				30F3C434180B40BA00614C58 /* OBMenuBarWindow.m */,
 				30409BE817F9EDD500DD93A9 /* AppDelegate.h */,
 				30409BE917F9EDD500DD93A9 /* AppDelegate.m */,
 				30409BEB17F9EDD500DD93A9 /* MainMenu.xib */,
@@ -328,6 +337,8 @@
 		30409BDD17F9EDD500DD93A9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				305C57DC180BDABB001E1C83 /* DistCode.icns */,
+				30F3C436180B43AB00614C58 /* vpn-512.png */,
 				30143ECF18072AEE004B0B54 /* mac_client-512.png */,
 				30409BDE17F9EDD500DD93A9 /* DistCode-Info.plist */,
 				30409BDF17F9EDD500DD93A9 /* InfoPlist.strings */,
@@ -536,10 +547,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				30409BE117F9EDD500DD93A9 /* InfoPlist.strings in Resources */,
+				305C57DD180BDABB001E1C83 /* DistCode.icns in Resources */,
 				30409BEF17F9EDD500DD93A9 /* Images.xcassets in Resources */,
 				30143ED018072AEE004B0B54 /* mac_client-512.png in Resources */,
 				30409BE717F9EDD500DD93A9 /* Credits.rtf in Resources */,
 				30409BED17F9EDD500DD93A9 /* MainMenu.xib in Resources */,
+				30F3C437180B43AB00614C58 /* vpn-512.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -557,6 +570,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30F3C435180B40BA00614C58 /* OBMenuBarWindow.m in Sources */,
 				30409BEA17F9EDD500DD93A9 /* AppDelegate.m in Sources */,
 				30409BE317F9EDD500DD93A9 /* main.m in Sources */,
 			);
