@@ -13,6 +13,7 @@
 		300D3284180360E800EDD3BC /* distccd in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F4622717EAE815008042F1 /* distccd */; };
 		300D3285180360E800EDD3BC /* distcc in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F4622517EAE80F008042F1 /* distcc */; };
 		30143ED018072AEE004B0B54 /* mac_client-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 30143ECF18072AEE004B0B54 /* mac_client-512.png */; };
+		3032ECFF180D314B0069D360 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3032ECFE180D314B0069D360 /* Defaults.plist */; };
 		30330ACB18087AE10038958A /* dmucs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F6CE7E1807EB4F006EA000 /* dmucs */; };
 		30330ACC18087AE10038958A /* gethost in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F6CE821807EB4F006EA000 /* gethost */; };
 		30330ACD18087AE10038958A /* loadavg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F6CE841807EB4F006EA000 /* loadavg */; };
@@ -194,6 +195,7 @@
 
 /* Begin PBXFileReference section */
 		30143ECF18072AEE004B0B54 /* mac_client-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mac_client-512.png"; sourceTree = "<group>"; };
+		3032ECFE180D314B0069D360 /* Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults.plist; sourceTree = "<group>"; };
 		303AA3CA17E991060077FFC3 /* DistCode.xcplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DistCode.xcplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		303AA3CD17E991060077FFC3 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		303AA3CF17E991060077FFC3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -358,6 +360,7 @@
 				30409BE217F9EDD500DD93A9 /* main.m */,
 				30409BE417F9EDD500DD93A9 /* DistCode-Prefix.pch */,
 				30409BE517F9EDD500DD93A9 /* Credits.rtf */,
+				3032ECFE180D314B0069D360 /* Defaults.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -564,6 +567,7 @@
 				30F8FCEF180CABF000807EB6 /* status-away.tiff in Resources */,
 				30143ED018072AEE004B0B54 /* mac_client-512.png in Resources */,
 				30409BE717F9EDD500DD93A9 /* Credits.rtf in Resources */,
+				3032ECFF180D314B0069D360 /* Defaults.plist in Resources */,
 				30409BED17F9EDD500DD93A9 /* MainMenu.xib in Resources */,
 				30F8FCEE180CABF000807EB6 /* status-available.tiff in Resources */,
 				30F3C437180B43AB00614C58 /* vpn-512.png in Resources */,
