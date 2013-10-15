@@ -837,7 +837,7 @@ Gw
             </connections>
         </collectionViewItem>
         <view id="hOe-B4-BUX">
-            <rect key="frame" x="0.0" y="0.0" width="483.99999999999994" height="150"/>
+            <rect key="frame" x="0.0" y="0.0" width="484" height="150"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fQJ-84-Psn">
@@ -969,8 +969,8 @@ Gw
                         </binding>
                     </connections>
                 </textField>
-                <popUpButton verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wPT-p8-0M1">
-                    <rect key="frame" x="114" y="43" width="351.99999999999994" height="22"/>
+                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wPT-p8-0M1">
+                    <rect key="frame" x="111.99999999999994" y="43" width="353" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="mgC-zz-yVJ" id="Axf-oH-vM2">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -988,8 +988,8 @@ Gw
                         <binding destination="LzJ-Kg-pH4" name="contentValues" keyPath="representedObject.COMPILERS.name" previousBinding="qxQ-Mf-Q8U" id="lVK-DM-6Ne"/>
                     </connections>
                 </popUpButton>
-                <popUpButton verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yhf-07-Wly">
-                    <rect key="frame" x="114" y="17" width="351.99999999999994" height="22"/>
+                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Yhf-07-Wly">
+                    <rect key="frame" x="111.99999999999994" y="17" width="353" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="xQj-pM-GOY" id="Bng-Sc-L0f">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1039,16 +1039,16 @@ Gw
                 <constraint firstItem="Yhf-07-Wly" firstAttribute="top" secondItem="wPT-p8-0M1" secondAttribute="bottom" constant="8" id="5WE-Th-qgy"/>
                 <constraint firstItem="yEm-PM-c79" firstAttribute="leading" secondItem="hOe-B4-BUX" secondAttribute="leading" constant="20" id="6Am-wI-U6n"/>
                 <constraint firstAttribute="bottom" secondItem="yEm-PM-c79" secondAttribute="bottom" constant="22" id="Cg8-z9-fOm"/>
-                <constraint firstAttribute="trailing" secondItem="Yhf-07-Wly" secondAttribute="trailing" constant="20" id="CyF-kj-r7e"/>
-                <constraint firstItem="Yhf-07-Wly" firstAttribute="leading" secondItem="yEm-PM-c79" secondAttribute="trailing" constant="10" id="FYe-Dh-pGo"/>
+                <constraint firstAttribute="trailing" secondItem="Yhf-07-Wly" secondAttribute="trailing" constant="22.000000000000057" id="CyF-kj-r7e"/>
+                <constraint firstItem="Yhf-07-Wly" firstAttribute="leading" secondItem="yEm-PM-c79" secondAttribute="trailing" constant="7.9999999999999574" id="FYe-Dh-pGo"/>
                 <constraint firstItem="yEm-PM-c79" firstAttribute="top" secondItem="W2T-2N-fHO" secondAttribute="bottom" constant="12" id="KP4-Es-5ss"/>
                 <constraint firstItem="Yhf-07-Wly" firstAttribute="top" secondItem="wPT-p8-0M1" secondAttribute="bottom" constant="8" id="Rup-pY-S9g"/>
                 <constraint firstItem="W2T-2N-fHO" firstAttribute="leading" secondItem="hOe-B4-BUX" secondAttribute="leading" constant="20" id="Tkd-hg-aHp"/>
-                <constraint firstAttribute="trailing" secondItem="wPT-p8-0M1" secondAttribute="trailing" constant="20" id="Ukb-kV-fVC"/>
+                <constraint firstAttribute="trailing" secondItem="wPT-p8-0M1" secondAttribute="trailing" constant="22.000000000000057" id="Ukb-kV-fVC"/>
                 <constraint firstAttribute="bottom" secondItem="Yhf-07-Wly" secondAttribute="bottom" constant="20" id="VLQ-UL-HRW"/>
-                <constraint firstItem="wPT-p8-0M1" firstAttribute="leading" secondItem="W2T-2N-fHO" secondAttribute="trailing" constant="10" id="aDQ-b3-VCb"/>
-                <constraint firstItem="wPT-p8-0M1" firstAttribute="leading" secondItem="W2T-2N-fHO" secondAttribute="trailing" constant="10" id="ugf-aP-Qhj"/>
-                <constraint firstItem="Yhf-07-Wly" firstAttribute="leading" secondItem="yEm-PM-c79" secondAttribute="trailing" constant="10" id="z7b-9h-5wg"/>
+                <constraint firstItem="wPT-p8-0M1" firstAttribute="leading" secondItem="W2T-2N-fHO" secondAttribute="trailing" constant="7.9999999999999574" id="aDQ-b3-VCb"/>
+                <constraint firstItem="wPT-p8-0M1" firstAttribute="leading" secondItem="W2T-2N-fHO" secondAttribute="trailing" constant="7.9999999999999574" id="ugf-aP-Qhj"/>
+                <constraint firstItem="Yhf-07-Wly" firstAttribute="leading" secondItem="yEm-PM-c79" secondAttribute="trailing" constant="7.9999999999999574" id="z7b-9h-5wg"/>
             </constraints>
         </view>
         <arrayController objectClassName="NSDictionary" editable="NO" automaticallyPreparesContent="YES" selectsInsertedObjects="NO" avoidsEmptySelection="NO" id="Ca1-WZ-31d">
