@@ -10,6 +10,7 @@
 #import <sys/socket.h>
 #import <arpa/inet.h>
 #import "OBMenuBarWindow.h"
+#import <ServiceManagement/ServiceManagement.h>
 
 static NSString *kDistCodeGroupIdentifier = @"DistCode";
 static NSString *kHostsItemIdentifier = @"Hosts";
@@ -32,17 +33,43 @@ NSNetServiceBrowser* Browser = nil;
     if (self) {
         services = [[NSMutableArray alloc] init];
 		DistCCServers = [NSMutableArray new];
-		DistCCPipe = [NSPipe new];
-		DmucsPipe = [NSPipe new];
 		NSString* Path = [NSString stringWithFormat:@"%@/.dmucs", NSHomeDirectory()];
 		[[NSFileManager defaultManager] createDirectoryAtPath:Path withIntermediateDirectories:NO attributes:nil error:nil];
 	}
     return self;
 }
 
+- (IBAction)toggleLaunchAtLogin:(id)sender
+{
+	NSString* Id = [[NSBundle mainBundle] bundleIdentifier];
+	if([[[NSUserDefaults standardUserDefaults] valueForKey:@"LaunchAtLogin"] boolValue])
+	{
+		SMLoginItemSetEnabled((__bridge CFStringRef)Id, true);
+	}
+	else
+	{
+		SMLoginItemSetEnabled((__bridge CFStringRef)Id, false);
+	}
+}
+
+- (IBAction)toggleRunCompilationHost:(id)sender
+{
+	if([[[NSUserDefaults standardUserDefaults] valueForKey:@"RunCompilationHost"] boolValue])
+	{
+		[self unregisterLocalhost];
+		[self startDistcc];
+	}
+	else
+	{
+		[self stopDistcc];
+		[self registerLocalhost];
+	}
+}
+
 - (void)startDmucs
 {
 	NSString* DmucsPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"dmucs"];
+	DmucsPipe = [NSPipe new];
 	DmucsDaemon = [self beginDaemonTask:DmucsPath withArguments:[NSArray new] andPipe:DmucsPipe];
 }
 
@@ -56,6 +83,7 @@ NSNetServiceBrowser* Browser = nil;
 - (void)startDistcc
 {
 	NSString* DistccDPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"distccd"];
+	DistCCPipe = [NSPipe new];
 	DistCCDaemon = [self beginDaemonTask:DistccDPath withArguments:[NSArray arrayWithObjects:@"--daemon", @"--no-detach", @"--zeroconf", @"--allow", @"0.0.0.0/0", nil] andPipe:DistCCPipe];
 }
 
@@ -141,12 +169,13 @@ NSNetServiceBrowser* Browser = nil;
 		NSMutableArray* DistCCSDKs = [NSMutableArray new];
 		[DistCCDict setObject:DistCCCompilers forKey:@"COMPILERS"];
 		[DistCCDict setObject:DistCCSDKs forKey:@"SDKS"];
-		[DistCCDict setObject:NetService forKey:@"SERVICE"];
+		if(NetService)
+			[DistCCDict setObject:NetService forKey:@"SERVICE"];
 		[DistCCDict setObject:Address forKey:@"IP"];
 		[DistCCDict setObject:HostName forKey:@"HOSTNAME"];
 		[DistCCDict setObject:[NSNumber numberWithBool:YES] forKey:@"ACTIVE"];
 		[DistCCDict setObject:[[NSBundle mainBundle] imageForResource:@"mac_client-512"] forKey:@"ICON"];
-		for (NSUInteger i = 0; i < [Components count]; i+=2)
+		for (NSUInteger i = 0; i < [Components count]-1; i+=2)
 		{
 			NSString* Key = [Components objectAtIndex:i];
 			NSString* Value = [Components objectAtIndex:i+1];
@@ -197,7 +226,7 @@ NSNetServiceBrowser* Browser = nil;
 {
 	for (NSDictionary* DistCCDict in DistCCServers)
 	{
-		if ([[DistCCDict objectForKey:@"ADDRESS"] isCaseInsensitiveLike:@"localhost"])
+		if ([[DistCCDict objectForKey:@"IP"] isCaseInsensitiveLike:@"localhost"])
 		{
 			[DistCCServerController removeObject:DistCCDict];
 			break;

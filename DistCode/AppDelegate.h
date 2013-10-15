@@ -28,6 +28,9 @@
 @property (weak) IBOutlet DOTabbar *tabbar;
 @property (weak) IBOutlet NSTabView *TabView;
 
+- (IBAction)toggleLaunchAtLogin:(id)sender;
+- (IBAction)toggleRunCompilationHost:(id)sender;
+
 // Other methods
 - (void)netServiceDidResolveAddress:(NSNetService *)netService;
 // Sent if resolution fails

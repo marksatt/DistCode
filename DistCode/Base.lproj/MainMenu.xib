@@ -745,6 +745,10 @@
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="smallSystem"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="toggleRunCompilationHost:" target="494" id="uuI-Je-cUN"/>
+                                                <binding destination="FFW-oU-JRE" name="value" keyPath="values.RunCompilationHost" id="6UJ-vU-0tw"/>
+                                            </connections>
                                         </button>
                                         <button translatesAutoresizingMaskIntoConstraints="NO" id="2SA-rA-4ud">
                                             <rect key="frame" x="214" y="215" width="107" height="18"/>
@@ -756,6 +760,10 @@
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="smallSystem"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="toggleLaunchAtLogin:" target="494" id="lh3-Q8-EMS"/>
+                                                <binding destination="FFW-oU-JRE" name="value" keyPath="values.LaunchAtLogin" id="wIb-3w-hHN"/>
+                                            </connections>
                                         </button>
                                     </subviews>
                                     <constraints>
@@ -837,7 +845,7 @@ Gw
             </connections>
         </collectionViewItem>
         <view id="hOe-B4-BUX">
-            <rect key="frame" x="0.0" y="0.0" width="484" height="150"/>
+            <rect key="frame" x="0.0" y="0.0" width="483.99999999999994" height="150"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fQJ-84-Psn">
@@ -970,7 +978,7 @@ Gw
                     </connections>
                 </textField>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wPT-p8-0M1">
-                    <rect key="frame" x="111.99999999999994" y="43" width="353" height="22"/>
+                    <rect key="frame" x="112" y="43" width="353" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="mgC-zz-yVJ" id="Axf-oH-vM2">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -989,7 +997,7 @@ Gw
                     </connections>
                 </popUpButton>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Yhf-07-Wly">
-                    <rect key="frame" x="111.99999999999994" y="17" width="353" height="22"/>
+                    <rect key="frame" x="110.99999999999997" y="17" width="353" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="xQj-pM-GOY" id="Bng-Sc-L0f">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
