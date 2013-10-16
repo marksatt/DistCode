@@ -106,7 +106,9 @@ NSNetServiceBrowser* Browser = nil;
 			NSString* IP = [DistCCDict objectForKey:@"IP"];
 			NSString* CPUs = [DistCCDict objectForKey:@"CPUS"];
 			NSString* Priority = [DistCCDict objectForKey:@"PRIORITY"];
-			NSString* Entry = [NSString stringWithFormat:@"%@ %@ %@\n", IP, CPUs, Priority];
+			NSInteger Pri = [Priority integerValue];
+			Pri = 20 - Pri;
+			NSString* Entry = [NSString stringWithFormat:@"%@ %@ %ld\n", IP, CPUs, (long)Pri];
 			fwrite([Entry UTF8String], 1, strlen([Entry UTF8String]), f);
 		}
 	}
