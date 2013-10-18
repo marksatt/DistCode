@@ -71,10 +71,17 @@ NSNetServiceBrowser* Browser = nil;
 	NSString* DmucsPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"dmucs"];
 	DmucsPipe = [NSPipe new];
 	DmucsDaemon = [self beginDaemonTask:DmucsPath withArguments:[NSArray new] andPipe:DmucsPipe];
+	sleep(1);
+	NSString* LoadAvgPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"loadavg"];
+	LoadAvgPipe = [NSPipe new];
+	LoadAvgDaemon = [self beginDaemonTask:LoadAvgPath withArguments:[NSArray new] andPipe:LoadAvgPipe];
 }
 
 - (void)stopDmucs
 {
+	[LoadAvgDaemon terminate];
+	[LoadAvgDaemon waitUntilExit];
+	LoadAvgDaemon = nil;
 	[DmucsDaemon terminate];
 	[DmucsDaemon waitUntilExit];
 	DmucsDaemon = nil;
@@ -104,7 +111,7 @@ NSNetServiceBrowser* Browser = nil;
 		if([Active boolValue] == YES)
 		{
 			NSString* IP = [DistCCDict objectForKey:@"IP"];
-			NSString* CPUs = [DistCCDict objectForKey:@"CPUS"];
+			NSString* CPUs = [DistCCDict objectForKey:@"JOBS"];
 			NSString* Priority = [DistCCDict objectForKey:@"PRIORITY"];
 			NSInteger Pri = [Priority integerValue];
 			Pri = 20 - Pri;
@@ -162,6 +169,7 @@ NSNetServiceBrowser* Browser = nil;
 - (BOOL)registerHost:(NSNetService*)NetService withAddress:(NSString*)Address andDetails:(NSString*)Response
 {
 	BOOL OK = NO;
+	NSString* LoadAvgPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"loadavg"];
 	NSArray* Components = [Response componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n="]];
 	if(Components && [Components count])
 	{
@@ -193,6 +201,13 @@ NSNetServiceBrowser* Browser = nil;
 			{
 				[DistCCDict setObject:Value forKey:Key];
 			}
+		}
+		if(NetService && ![Address isCaseInsensitiveLike:@"127.0.0.1"]
+		&& [[[NSUserDefaults standardUserDefaults] valueForKey:@"RunCompilationHost"] boolValue])
+		{
+			NSPipe* LocalLoadAvgPipe = [NSPipe new];
+			NSTask* LocalLoadAvgDaemon = [self beginDaemonTask:LoadAvgPath withArguments:[NSArray new] andPipe:LocalLoadAvgPipe];
+			[DistCCDict setObject:LocalLoadAvgDaemon forKey:@"LOADAVG"];
 		}
 		if(NetService)
 		{
@@ -282,6 +297,12 @@ NSNetServiceBrowser* Browser = nil;
 			NSMutableDictionary* DistCCDict = [DistCCServers objectAtIndex:Index];
 			if(DistCCDict && [[DistCCDict objectForKey:@"SERVICE"] isEqualTo:netService])
 			{
+				NSTask* LoadAvg = [DistCCDict objectForKey:@"LOADAVG"];
+				if(LoadAvg)
+				{
+					[LoadAvg terminate];
+					[LoadAvg waitUntilExit];
+				}
 				[self removeDistCCServer:[DistCCDict objectForKey:@"IP"]];
 				[DistCCServerController removeObject:DistCCDict];
 				[self writeDmucsHostsFile];
@@ -325,6 +346,7 @@ NSNetServiceBrowser* Browser = nil;
 	}
 
 	NSNumber* RunCompilationHost = [[NSUserDefaults standardUserDefaults] valueForKey:@"RunCompilationHost"];
+	[self startDmucs];
 	if([RunCompilationHost boolValue] == YES)
 	{
 		[self startDistcc];
@@ -333,7 +355,6 @@ NSNetServiceBrowser* Browser = nil;
 	{
 		[self registerLocalhost];
 	}
-	[self startDmucs];
 	
 	Browser = [[NSNetServiceBrowser alloc] init];
 	[Browser setDelegate:self];
@@ -378,6 +399,12 @@ NSNetServiceBrowser* Browser = nil;
 			NSMutableDictionary* DistCCDict = [DistCCServers objectAtIndex:Index];
 			if(DistCCDict && [[DistCCDict objectForKey:@"SERVICE"] isEqualTo:netService])
 			{
+				NSTask* LoadAvg = [DistCCDict objectForKey:@"LOADAVG"];
+				if(LoadAvg)
+				{
+					[LoadAvg terminate];
+					[LoadAvg waitUntilExit];
+				}
 				[self removeDistCCServer:[DistCCDict objectForKey:@"IP"]];
 				[DistCCServerController removeObject:DistCCDict];
 				[self writeDmucsHostsFile];
