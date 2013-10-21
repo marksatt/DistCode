@@ -72,9 +72,6 @@ NSNetServiceBrowser* Browser = nil;
 	DmucsPipe = [NSPipe new];
 	DmucsDaemon = [self beginDaemonTask:DmucsPath withArguments:[NSArray new] andPipe:DmucsPipe];
 	sleep(1);
-	NSString* LoadAvgPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"loadavg"];
-	LoadAvgPipe = [NSPipe new];
-	LoadAvgDaemon = [self beginDaemonTask:LoadAvgPath withArguments:[NSArray new] andPipe:LoadAvgPipe];
 }
 
 - (void)stopDmucs
@@ -111,11 +108,26 @@ NSNetServiceBrowser* Browser = nil;
 		if([Active boolValue] == YES)
 		{
 			NSString* IP = [DistCCDict objectForKey:@"IP"];
-			NSString* CPUs = [DistCCDict objectForKey:@"JOBS"];
+			NSString* CPUs = [DistCCDict objectForKey:@"CPUS"];
+			NSString* Memory = [DistCCDict objectForKey:@"MEMORY"];
 			NSString* Priority = [DistCCDict objectForKey:@"PRIORITY"];
 			NSInteger Pri = [Priority integerValue];
 			Pri = 20 - Pri;
-			NSString* Entry = [NSString stringWithFormat:@"%@ %@ %ld\n", IP, CPUs, (long)Pri];
+			
+			NSUInteger NumCPUs = [CPUs integerValue];
+			NSUInteger NumBytes = [Memory integerValue];
+			
+			/* Actually use the memory as the basis - compiler instances in reasonable
+			 codebases typically need ~1GB each so we can't have more running than we
+			 have memory for. Plus the OS will generally need ~2GB for other processes
+			 so account for that. Only if the number of logical CPUs is smaller than
+			 the size of memory in GB will it be the value used. There is never any point
+			 to having more children than there is hardware support for either. */
+			NSUInteger GigaBytes = (NumBytes/(1024*1024*1024));
+			NSUInteger GigaBytesLessOS = (GigaBytes - 2);
+			NSUInteger MaxTasks = NumCPUs <= GigaBytesLessOS ? NumCPUs : GigaBytesLessOS;
+			
+			NSString* Entry = [NSString stringWithFormat:@"%@ %ld %ld\n", IP, (long)MaxTasks, (long)Pri];
 			fwrite([Entry UTF8String], 1, strlen([Entry UTF8String]), f);
 		}
 	}
@@ -185,6 +197,7 @@ NSNetServiceBrowser* Browser = nil;
 		[DistCCDict setObject:HostName forKey:@"HOSTNAME"];
 		[DistCCDict setObject:[NSNumber numberWithBool:YES] forKey:@"ACTIVE"];
 		[DistCCDict setObject:[[NSBundle mainBundle] imageForResource:@"mac_client-512"] forKey:@"ICON"];
+		
 		for (NSUInteger i = 0; i < [Components count]-1; i+=2)
 		{
 			NSString* Key = [Components objectAtIndex:i];
@@ -218,6 +231,7 @@ NSNetServiceBrowser* Browser = nil;
 			[DistCCServerController addObject:DistCCDict];
 		}
 		[self writeDmucsHostsFile];
+		sleep(1);
 		[self addDistCCServer:Address];
 		OK = YES;
 	}
@@ -250,6 +264,7 @@ NSNetServiceBrowser* Browser = nil;
 		}
 	}
 	[self writeDmucsHostsFile];
+	sleep(1);
 	[self removeDistCCServer:@"localhost"];
 }
 
@@ -306,6 +321,7 @@ NSNetServiceBrowser* Browser = nil;
 				[self removeDistCCServer:[DistCCDict objectForKey:@"IP"]];
 				[DistCCServerController removeObject:DistCCDict];
 				[self writeDmucsHostsFile];
+				sleep(1);
 			}
 		}
 		[services removeObject:netService];
@@ -355,6 +371,10 @@ NSNetServiceBrowser* Browser = nil;
 	{
 		[self registerLocalhost];
 	}
+	
+	NSString* LoadAvgPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"loadavg"];
+	LoadAvgPipe = [NSPipe new];
+	LoadAvgDaemon = [self beginDaemonTask:LoadAvgPath withArguments:[NSArray new] andPipe:LoadAvgPipe];
 	
 	Browser = [[NSNetServiceBrowser alloc] init];
 	[Browser setDelegate:self];
@@ -408,6 +428,7 @@ NSNetServiceBrowser* Browser = nil;
 				[self removeDistCCServer:[DistCCDict objectForKey:@"IP"]];
 				[DistCCServerController removeObject:DistCCDict];
 				[self writeDmucsHostsFile];
+				sleep(1);
 			}
 		}
 		[services removeObject:netService];
