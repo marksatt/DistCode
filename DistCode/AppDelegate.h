@@ -20,10 +20,8 @@
     NSMutableArray *services;
 	NSTask* DistCCDaemon;
 	NSTask* DmucsDaemon;
-	NSTask* LoadAvgDaemon;
 	NSPipe* DistCCPipe;
 	NSPipe* DmucsPipe;
-	NSPipe* LoadAvgPipe;
 }
 
 @property (assign) IBOutlet OBMenuBarWindow *window;

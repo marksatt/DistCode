@@ -11,11 +11,49 @@
 #import <arpa/inet.h>
 #import "OBMenuBarWindow.h"
 #import <ServiceManagement/ServiceManagement.h>
+#import "distcc.h"
+#import "mon.h"
+#import "util.h"
 
+const char *rs_program_name = "distccmon-distcode";
 static NSString *kDistCodeGroupIdentifier = @"DistCode";
 static NSString *kHostsItemIdentifier = @"Hosts";
 static NSString *kMonitorItemIdentifier = @"Monitor";
 static NSString *kOptionsItemIdentifier = @"Options";
+
+NSMutableArray* PumpDistccMon(void)
+{
+    struct dcc_task_state *list;
+    int ret;
+	
+	static bool TraceSet = false;
+	if(!TraceSet)
+	{
+		TraceSet = true;
+		dcc_set_trace_from_env();
+	}
+	
+	NSMutableArray* Objects = [NSMutableArray new];
+	
+	struct dcc_task_state *i;
+	
+	if ((ret = dcc_mon_poll(&list)))
+		return Objects;
+	
+	for (i = list; i; i = i->next) {
+		NSMutableDictionary* Object = [NSMutableDictionary new];
+		[Object setObject:[NSNumber numberWithUnsignedLong:i->cpid] forKey:@"ClientPID"];
+		[Object setObject:[NSString stringWithUTF8String:dcc_get_phase_name(i->curr_phase)] forKey:@"Phase"];
+		[Object setObject:[NSString stringWithUTF8String:i->file] forKey:@"File"];
+		[Object setObject:[NSString stringWithUTF8String:i->host] forKey:@"Host"];
+		[Object setObject:[NSNumber numberWithInt:i->slot] forKey:@"CPU"];
+		[Objects addObject:Object];
+	}
+	
+	dcc_task_state_free(list);
+	
+	return Objects;
+}
 
 void *get_in_addr(struct sockaddr *sa)
 {
@@ -76,12 +114,18 @@ NSNetServiceBrowser* Browser = nil;
 
 - (void)stopDmucs
 {
-	[LoadAvgDaemon terminate];
-	[LoadAvgDaemon waitUntilExit];
-	LoadAvgDaemon = nil;
 	[DmucsDaemon terminate];
 	[DmucsDaemon waitUntilExit];
 	DmucsDaemon = nil;
+	for (NSDictionary* DistCCDict in DistCCServers)
+	{
+		NSTask* LoadAvg = [DistCCDict objectForKey:@"LOADAVG"];
+		if(LoadAvg)
+		{
+			[LoadAvg terminate];
+			[LoadAvg waitUntilExit];
+		}
+	}
 }
 
 - (void)startDistcc
@@ -107,7 +151,7 @@ NSNetServiceBrowser* Browser = nil;
 		NSNumber* Active = [DistCCDict objectForKey:@"ACTIVE"];
 		if([Active boolValue] == YES)
 		{
-			NSString* IP = [DistCCDict objectForKey:@"IP"];
+			NSString* IP = [DistCCDict objectForKey:@"HOSTNAME"];
 			NSString* CPUs = [DistCCDict objectForKey:@"CPUS"];
 			NSString* Memory = [DistCCDict objectForKey:@"MEMORY"];
 			NSString* Priority = [DistCCDict objectForKey:@"PRIORITY"];
@@ -181,11 +225,19 @@ NSNetServiceBrowser* Browser = nil;
 - (BOOL)registerHost:(NSNetService*)NetService withAddress:(NSString*)Address andDetails:(NSString*)Response
 {
 	BOOL OK = NO;
+	char const* SelfName = NULL;
+	int Err = dcc_get_dns_domain(&SelfName);
+	if(Err != 0 || !SelfName || strlen(SelfName) <= 0)
+	{
+		return OK;
+	}
+	NSString* SelfHostName = [NSString stringWithUTF8String:SelfName];
 	NSString* LoadAvgPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"loadavg"];
 	NSArray* Components = [Response componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n="]];
 	if(Components && [Components count])
 	{
 		NSString* HostName = NetService ? [NetService hostName] : @"localhost";
+		HostName = [HostName stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"."]];
 		NSMutableDictionary* DistCCDict = [NSMutableDictionary new];
 		NSMutableArray* DistCCCompilers = [NSMutableArray new];
 		NSMutableArray* DistCCSDKs = [NSMutableArray new];
@@ -215,11 +267,16 @@ NSNetServiceBrowser* Browser = nil;
 				[DistCCDict setObject:Value forKey:Key];
 			}
 		}
-		if(NetService && ![Address isCaseInsensitiveLike:@"127.0.0.1"]
-		&& [[[NSUserDefaults standardUserDefaults] valueForKey:@"RunCompilationHost"] boolValue])
+		if(!NetService || ([HostName isCaseInsensitiveLike:SelfHostName]))
 		{
 			NSPipe* LocalLoadAvgPipe = [NSPipe new];
 			NSTask* LocalLoadAvgDaemon = [self beginDaemonTask:LoadAvgPath withArguments:[NSArray new] andPipe:LocalLoadAvgPipe];
+			[DistCCDict setObject:LocalLoadAvgDaemon forKey:@"LOADAVG"];
+		}
+		else if([[[NSUserDefaults standardUserDefaults] valueForKey:@"RunCompilationHost"] boolValue])
+		{
+			NSPipe* LocalLoadAvgPipe = [NSPipe new];
+			NSTask* LocalLoadAvgDaemon = [self beginDaemonTask:LoadAvgPath withArguments:[NSArray arrayWithObjects:@"--server", HostName, nil] andPipe:LocalLoadAvgPipe];
 			[DistCCDict setObject:LocalLoadAvgDaemon forKey:@"LOADAVG"];
 		}
 		if(NetService)
@@ -232,7 +289,7 @@ NSNetServiceBrowser* Browser = nil;
 		}
 		[self writeDmucsHostsFile];
 		sleep(1);
-		[self addDistCCServer:Address];
+		[self addDistCCServer:HostName];
 		OK = YES;
 	}
 	return OK;
@@ -259,6 +316,12 @@ NSNetServiceBrowser* Browser = nil;
 	{
 		if ([[DistCCDict objectForKey:@"IP"] isCaseInsensitiveLike:@"localhost"])
 		{
+			NSTask* LoadAvg = [DistCCDict objectForKey:@"LOADAVG"];
+			if(LoadAvg)
+			{
+				[LoadAvg terminate];
+				[LoadAvg waitUntilExit];
+			}
 			[DistCCServerController removeObject:DistCCDict];
 			break;
 		}
@@ -318,7 +381,7 @@ NSNetServiceBrowser* Browser = nil;
 					[LoadAvg terminate];
 					[LoadAvg waitUntilExit];
 				}
-				[self removeDistCCServer:[DistCCDict objectForKey:@"IP"]];
+				[self removeDistCCServer:[DistCCDict objectForKey:@"HOSTNAME"]];
 				[DistCCServerController removeObject:DistCCDict];
 				[self writeDmucsHostsFile];
 				sleep(1);
@@ -372,10 +435,6 @@ NSNetServiceBrowser* Browser = nil;
 		[self registerLocalhost];
 	}
 	
-	NSString* LoadAvgPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"loadavg"];
-	LoadAvgPipe = [NSPipe new];
-	LoadAvgDaemon = [self beginDaemonTask:LoadAvgPath withArguments:[NSArray new] andPipe:LoadAvgPipe];
-	
 	Browser = [[NSNetServiceBrowser alloc] init];
 	[Browser setDelegate:self];
 	[Browser searchForServicesOfType:@"_xcodedistcc._tcp" inDomain:@""];
@@ -425,7 +484,7 @@ NSNetServiceBrowser* Browser = nil;
 					[LoadAvg terminate];
 					[LoadAvg waitUntilExit];
 				}
-				[self removeDistCCServer:[DistCCDict objectForKey:@"IP"]];
+				[self removeDistCCServer:[DistCCDict objectForKey:@"HOSTNAME"]];
 				[DistCCServerController removeObject:DistCCDict];
 				[self writeDmucsHostsFile];
 				sleep(1);
