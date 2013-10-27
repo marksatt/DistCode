@@ -74,6 +74,16 @@ NSNetServiceBrowser* Browser = nil;
 		Tasks = [NSMutableArray new];
 		NSString* Path = [NSString stringWithFormat:@"%@/.dmucs", NSHomeDirectory()];
 		[[NSFileManager defaultManager] createDirectoryAtPath:Path withIntermediateDirectories:NO attributes:nil error:nil];
+		
+		NSArray* Paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+		Path = [NSString stringWithFormat:@"%@/Developer/Shared/Xcode/Plug-ins", [Paths objectAtIndex:0]];
+		NSString* PluginLink = [NSString stringWithFormat:@"%@/Distcc 3.2.xcplugin", Path];
+		if([[NSFileManager defaultManager] fileExistsAtPath:PluginLink isDirectory:NULL] == NO)
+		{
+			[[NSFileManager defaultManager] createDirectoryAtPath:Path withIntermediateDirectories:YES attributes:nil error:nil];
+			NSString* PluginPath = [[NSBundle mainBundle] pathForResource:@"Distcc 3.2" ofType:@"xcplugin"];
+			[[NSFileManager defaultManager] copyItemAtPath:PluginPath toPath:PluginLink error:nil];
+		}
 	}
     return self;
 }
