@@ -42,7 +42,7 @@ NSMutableArray* PumpDistccMon(void)
 	
 	for (i = list; i; i = i->next) {
 		NSMutableDictionary* Object = [NSMutableDictionary new];
-		[Object setObject:[NSNumber numberWithUnsignedLong:i->cpid] forKey:@"ClientPID"];
+		[Object setObject:[NSNumber numberWithUnsignedLong:i->cpid] forKey:@"PID"];
 		[Object setObject:[NSString stringWithUTF8String:dcc_get_phase_name(i->curr_phase)] forKey:@"Phase"];
 		[Object setObject:[NSString stringWithUTF8String:i->file] forKey:@"File"];
 		[Object setObject:[NSString stringWithUTF8String:i->host] forKey:@"Host"];
@@ -71,6 +71,7 @@ NSNetServiceBrowser* Browser = nil;
     if (self) {
         services = [[NSMutableArray alloc] init];
 		DistCCServers = [NSMutableArray new];
+		Tasks = [NSMutableArray new];
 		NSString* Path = [NSString stringWithFormat:@"%@/.dmucs", NSHomeDirectory()];
 		[[NSFileManager defaultManager] createDirectoryAtPath:Path withIntermediateDirectories:NO attributes:nil error:nil];
 	}
@@ -104,16 +105,27 @@ NSNetServiceBrowser* Browser = nil;
 	}
 }
 
+- (void)monitorLoop
+{
+	NSMutableArray* Objects = PumpDistccMon();
+	[TasksController removeObjects:Tasks];
+	[TasksController addObjects:Objects];
+}
+
 - (void)startDmucs
 {
 	NSString* DmucsPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"dmucs"];
 	DmucsPipe = [NSPipe new];
 	DmucsDaemon = [self beginDaemonTask:DmucsPath withArguments:[NSArray new] andPipe:DmucsPipe];
 	sleep(1);
+	MonitorLoopTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(monitorLoop) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:MonitorLoopTimer forMode:NSEventTrackingRunLoopMode];
 }
 
 - (void)stopDmucs
 {
+	[MonitorLoopTimer invalidate];
+	MonitorLoopTimer = nil;
 	[DmucsDaemon terminate];
 	[DmucsDaemon waitUntilExit];
 	DmucsDaemon = nil;

@@ -41,6 +41,8 @@
 		30ED79E91815B15F001AFD9C /* trace.c in Sources */ = {isa = PBXBuildFile; fileRef = 30ED79DC1815B15F001AFD9C /* trace.c */; };
 		30ED79EA1815B15F001AFD9C /* traceenv.c in Sources */ = {isa = PBXBuildFile; fileRef = 30ED79DD1815B15F001AFD9C /* traceenv.c */; };
 		30ED79EB1815B15F001AFD9C /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 30ED79DE1815B15F001AFD9C /* util.c */; };
+		30F32FB6181C600C005C77CD /* gethost in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F6CE821807EB4F006EA000 /* gethost */; };
+		30F32FB9181C601B005C77CD /* distcc in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F4622517EAE80F008042F1 /* distcc */; };
 		30F3C435180B40BA00614C58 /* OBMenuBarWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 30F3C434180B40BA00614C58 /* OBMenuBarWindow.m */; };
 		30F3C437180B43AB00614C58 /* vpn-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 30F3C436180B43AB00614C58 /* vpn-512.png */; };
 		30F4623617EAEA11008042F1 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F4623517EAEA11008042F1 /* main.cpp */; };
@@ -112,6 +114,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 303AA3E617E9962C0077FFC3;
 			remoteInfo = "distcc-read-only";
+		};
+		30F32FB4181C6001005C77CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 303AA41817E9962C0077FFC3 /* distcc-read-only.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 303AA3E617E9962C0077FFC3;
+			remoteInfo = "distcc-read-only";
+		};
+		30F32FB7181C6013005C77CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30F461F417EAE499008042F1 /* dmucs.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 308B37D317EA3CAC00025EAC;
+			remoteInfo = gethost;
 		};
 		30F6CE7D1807EB4F006EA000 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -199,6 +215,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3049293D181C53F500DA9C5F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		30F4623117EAEA11008042F1 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -226,6 +251,8 @@
 			dstPath = Contents/usr/bin;
 			dstSubfolderSpec = 1;
 			files = (
+				30F32FB9181C601B005C77CD /* distcc in CopyFiles */,
+				30F32FB6181C600C005C77CD /* gethost in CopyFiles */,
 				30FAAB36181C24E3002051EB /* distclang in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -594,6 +621,7 @@
 				30409BD217F9EDD400DD93A9 /* Frameworks */,
 				30409BD317F9EDD400DD93A9 /* Resources */,
 				300D327B180360BD00EDD3BC /* CopyFiles */,
+				3049293D181C53F500DA9C5F /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -642,6 +670,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				30F32FB8181C6013005C77CD /* PBXTargetDependency */,
+				30F32FB5181C6001005C77CD /* PBXTargetDependency */,
 				30FAAB35181C24D8002051EB /* PBXTargetDependency */,
 			);
 			name = "Distcc 3.2";
@@ -851,6 +881,16 @@
 			isa = PBXTargetDependency;
 			name = "distcc-read-only";
 			targetProxy = 30330AC118087ACF0038958A /* PBXContainerItemProxy */;
+		};
+		30F32FB5181C6001005C77CD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "distcc-read-only";
+			targetProxy = 30F32FB4181C6001005C77CD /* PBXContainerItemProxy */;
+		};
+		30F32FB8181C6013005C77CD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = gethost;
+			targetProxy = 30F32FB7181C6013005C77CD /* PBXContainerItemProxy */;
 		};
 		30FAAB35181C24D8002051EB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1110,6 +1150,7 @@
 				30FAAB29181C2316002051EB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

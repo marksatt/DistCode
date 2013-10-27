@@ -14,7 +14,9 @@
 {
 @public
 	IBOutlet NSArrayController* DistCCServerController;
+	IBOutlet NSArrayController* TasksController;
 	NSMutableArray* DistCCServers;
+	NSMutableArray* Tasks;
 @protected
     // Keeps track of services handled by this delegate
     NSMutableArray *services;
@@ -22,6 +24,7 @@
 	NSTask* DmucsDaemon;
 	NSPipe* DistCCPipe;
 	NSPipe* DmucsPipe;
+	NSTimer* MonitorLoopTimer;
 }
 
 @property (assign) IBOutlet OBMenuBarWindow *window;

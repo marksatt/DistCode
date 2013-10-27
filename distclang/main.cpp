@@ -12,15 +12,15 @@
 
 int main(int argc, const char * argv[])
 {
-	char** newArgv = (char**)alloca(argc+2*sizeof(char const*));
-
 	char const* path = argv[0];
+	char const* name = argv[0];
 	size_t pathLen = strlen(path);
 	for (size_t i = pathLen; i; --i)
 	{
 		if(path[i-1]=='/')
 		{
-			path = &path[i];
+			name = &path[i];
+			pathLen = i-1;
 			break;
 		}
 	}
@@ -33,37 +33,21 @@ int main(int argc, const char * argv[])
 	}
 	putenv("DISTCLANG_RECURSE=1");
 	
-	const char *envpath;
-    if (!(envpath = getenv("PATH")))
-		/* strange but true*/
-        return 0;
+	std::string getHostPath(path, pathLen);
+	getHostPath = "\"" + getHostPath + "/gethost\"";
 	
-	std::string getHostPath(".");
-	getHostPath += "/gethost";
-	newArgv[0] = (char*)"xcrun";
-	newArgv[1] = (char*)path;
+	std::string distccPath(path, pathLen);
+	distccPath = "\"" + distccPath + "/distcc\"";
 	
+	std::string compileop = getHostPath;
+	compileop += " ";
+	compileop += distccPath;
+	compileop += " xcrun ";
+	compileop += name;
 	for (int i = 1; i < argc; i++) {
-		newArgv[i+1] = (char*)argv[i];
+		compileop += " ";
+		compileop += (char*)argv[i];
 	}
-	
-	int forkret = fork();
-    if (forkret == 0) {
-		/* child process */
-		if (execvp(getHostPath.c_str(), newArgv) < 0) {
-			fprintf(stderr, "execvp failed: err %s\n", strerror(errno));
-			return -1;
-		}
-		return 0;
-    } else if (forkret < 0) {
-		fprintf(stderr, "Failed to fork a process!\n");
-		return -1;
-    }
-	
-    /* parent process -- just wait for the child */
-    int status = 0;
-    (void) wait(&status);
-	
-    return WEXITSTATUS(status);
+	return system(compileop.c_str());
 }
 
