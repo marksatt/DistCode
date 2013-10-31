@@ -367,7 +367,7 @@ NSNetServiceBrowser* Browser = nil;
 		for (NSData* Addr in Addresses)
 		{
 			struct sockaddr* IP = (struct sockaddr*)[Addr bytes];
-			if(inet_ntop(IP->sa_family, get_in_addr(IP), Name, INET6_ADDRSTRLEN)!=NULL)
+			if(IP->sa_family == AF_INET && inet_ntop(IP->sa_family, get_in_addr(IP), Name, INET6_ADDRSTRLEN)!=NULL)
 			{
 				NSString* Address = [NSString stringWithFormat:@"%s", Name];
 				NSString* Response = [self executeTask:Path withArguments:[NSArray arrayWithObjects:@"--host-info", Address, nil]];
