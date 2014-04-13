@@ -14,6 +14,7 @@
 #import "distcc.h"
 #import "mon.h"
 #import "util.h"
+#import <Foundation/NSDistributedNotificationCenter.h>
 
 const char *rs_program_name = "distccmon-distcode";
 static NSString *kDistCodeGroupIdentifier = @"DistCode";
@@ -122,6 +123,34 @@ NSNetServiceBrowser* Browser = nil;
 	[TasksController addObjects:Objects];
 }
 
+- (void)dmucsMonitorHostStatus:(NSNotification*)Notification
+{
+	NSString* Name = [Notification.userInfo objectForKey:@"HostName"];
+	for (NSDictionary* DistCCDict in DistCCServers)
+	{
+		if ([[DistCCDict objectForKey:@"HOSTNAME"] isCaseInsensitiveLike:Name] || [[DistCCDict objectForKey:@"IP"] isCaseInsensitiveLike:Name])
+		{
+			BOOL Avail = ([[Notification.userInfo objectForKey:@"Cpus"] integerValue] == 1);
+			[DistCCDict setValue:[NSNumber numberWithBool:Avail] forKey:@"ACTIVE"];
+			break;
+		}
+	}
+}
+
+- (void)dmucsMonitorHostTier:(NSNotification*)Notification
+{
+	NSString* Name = [Notification.userInfo objectForKey:@"HostName"];
+	for (NSDictionary* DistCCDict in DistCCServers)
+	{
+		if ([[DistCCDict objectForKey:@"HOSTNAME"] isCaseInsensitiveLike:Name] || [[DistCCDict objectForKey:@"IP"] isCaseInsensitiveLike:Name])
+		{
+			[DistCCDict setValue:[Notification.userInfo objectForKey:@"Cpus"] forKey:@"CPUS"];
+			[DistCCDict setValue:[Notification.userInfo objectForKey:@"Tier"] forKey:@"PRIORITY"];
+			break;
+		}
+	}
+}
+
 - (void)startDmucs
 {
 	NSString* DmucsPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"dmucs"];
@@ -130,12 +159,26 @@ NSNetServiceBrowser* Browser = nil;
 	sleep(1);
 	MonitorLoopTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(monitorLoop) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:MonitorLoopTimer forMode:NSEventTrackingRunLoopMode];
+	
+	NSDistributedNotificationCenter* Notifier = [NSDistributedNotificationCenter defaultCenter];
+	[Notifier addObserver:self selector:@selector(dmucsMonitorHostStatus:) name:@"dmucsMonitorHostStatus" object:@"DMUCS"];
+	[Notifier addObserver:self selector:@selector(dmucsMonitorHostTier:) name:@"dmucsMonitorHostTier" object:@"DMUCS"];
+	
+	NSString* DmucsMonPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"monitor"];
+	DmucsMonPipe = [NSPipe new];
+	DmucsMonDaemon = [self beginDaemonTask:DmucsMonPath withArguments:[NSArray new] andPipe:DmucsMonPipe];
 }
 
 - (void)stopDmucs
 {
+	NSDistributedNotificationCenter* Notifier = [NSDistributedNotificationCenter defaultCenter];
+	[Notifier removeObserver:self];
+	
 	[MonitorLoopTimer invalidate];
 	MonitorLoopTimer = nil;
+	[DmucsMonDaemon terminate];
+	[DmucsMonDaemon waitUntilExit];
+	DmucsMonDaemon = nil;
 	[DmucsDaemon terminate];
 	[DmucsDaemon waitUntilExit];
 	DmucsDaemon = nil;
@@ -178,7 +221,6 @@ NSNetServiceBrowser* Browser = nil;
 			NSString* Memory = [DistCCDict objectForKey:@"MEMORY"];
 			NSString* Priority = [DistCCDict objectForKey:@"PRIORITY"];
 			NSInteger Pri = [Priority integerValue];
-			Pri = 20 - Pri;
 			
 			NSUInteger NumCPUs = [CPUs integerValue];
 			NSUInteger NumBytes = [Memory integerValue];
@@ -231,7 +273,7 @@ NSNetServiceBrowser* Browser = nil;
 - (void)addDistCCServer:(NSString*)ServerIP
 {
 	NSString* Path = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"addhost"];
-	NSString* Task = [NSString stringWithFormat:@"\"%@\" -ip %@", Path, ServerIP];
+	NSString* Task = [NSString stringWithFormat:@"\"%@\" --host %@", Path, ServerIP];
 	int Err = system([Task UTF8String]);
 	assert(Err == 0);
 }
@@ -239,7 +281,7 @@ NSNetServiceBrowser* Browser = nil;
 - (void)removeDistCCServer:(NSString*)ServerIP
 {
 	NSString* Path = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"remhost"];
-	NSString* Task = [NSString stringWithFormat:@"\"%@\" -ip %@", Path, ServerIP];
+	NSString* Task = [NSString stringWithFormat:@"\"%@\" --host %@", Path, ServerIP];
 	int Err = system([Task UTF8String]);
 	assert(Err == 0);
 }
@@ -289,6 +331,17 @@ NSNetServiceBrowser* Browser = nil;
 				[DistCCDict setObject:Value forKey:Key];
 			}
 		}
+		if(NetService)
+		{
+			[DistCCServerController insertObject:DistCCDict atArrangedObjectIndex:[services indexOfObject:NetService]];
+		}
+		else
+		{
+			[DistCCServerController addObject:DistCCDict];
+		}
+		[self writeDmucsHostsFile];
+		sleep(1);
+		[self addDistCCServer:HostName];
 		if(!NetService || ([HostName isCaseInsensitiveLike:SelfHostName]))
 		{
 			NSPipe* LocalLoadAvgPipe = [NSPipe new];
@@ -301,17 +354,6 @@ NSNetServiceBrowser* Browser = nil;
 			NSTask* LocalLoadAvgDaemon = [self beginDaemonTask:LoadAvgPath withArguments:[NSArray arrayWithObjects:@"--server", HostName, nil] andPipe:LocalLoadAvgPipe];
 			[DistCCDict setObject:LocalLoadAvgDaemon forKey:@"LOADAVG"];
 		}
-		if(NetService)
-		{
-			[DistCCServerController insertObject:DistCCDict atArrangedObjectIndex:[services indexOfObject:NetService]];
-		}
-		else
-		{
-			[DistCCServerController addObject:DistCCDict];
-		}
-		[self writeDmucsHostsFile];
-		sleep(1);
-		[self addDistCCServer:HostName];
 		OK = YES;
 	}
 	return OK;

@@ -22,8 +22,10 @@
     NSMutableArray *services;
 	NSTask* DistCCDaemon;
 	NSTask* DmucsDaemon;
+	NSTask* DmucsMonDaemon;
 	NSPipe* DistCCPipe;
 	NSPipe* DmucsPipe;
+	NSPipe* DmucsMonPipe;
 	NSTimer* MonitorLoopTimer;
 }
 

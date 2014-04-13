@@ -21,7 +21,7 @@
 			sdk,
 		);
 		"BuiltinJambaseRuleName" = ProcessC;
-		ExecPath = "$(DEVELOPER_DIR)/../PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/Xcode/Plug-ins/Distcc 3.2.xcplugin/Contents/usr/bin/clang";
+		ExecPath = "$(USER_LIBRARY_DIR)/Application Support/Developer/Shared/Xcode/Plug-ins/Distcc 3.2.xcplugin/Contents/usr/bin/clang";
 		"UseCPlusPlusCompilerDriverWhenBundlizing" = Yes;
 		CommandOutputParser = "XCSimpleBufferedCommandOutputParser";
 		SupportsHeadermaps = Yes;
