@@ -9,6 +9,8 @@
 #include <iostream>
 #include <string>
 #include <unistd.h>
+#include <syslog.h>
+#include <vector>
 
 int main(int argc, const char * argv[])
 {
@@ -33,21 +35,42 @@ int main(int argc, const char * argv[])
 	}
 	putenv("DISTCLANG_RECURSE=1");
 	
-	std::string getHostPath(path, pathLen);
-	getHostPath = "\"" + getHostPath + "/gethost\"";
+	std::string getHostPath = std::string(path, pathLen);
+	getHostPath += "/gethost";
+//	std::string pumpPath = std::string(path, pathLen);
+//	pumpPath += "/pump";
+	std::string distccPath = std::string(path, pathLen);
+	distccPath += "/distcc";
 	
-	std::string distccPath(path, pathLen);
-	distccPath = "\"" + distccPath + "/distcc\"";
-	
-	std::string compileop = getHostPath;
-	compileop += " ";
-	compileop += distccPath;
-	compileop += " xcrun ";
-	compileop += name;
+	char** Args = (char**)alloca(sizeof(char*) * argc + 5);
+	int ArgIdx = 0;
+	Args[ArgIdx++] = strdup(getHostPath.c_str());
+	//Args[ArgIdx++] = strdup(pumpPath.c_str());
+	Args[ArgIdx++] = strdup(distccPath.c_str());
+	Args[ArgIdx++] = strdup("xcrun");
+	Args[ArgIdx++] = strdup(name);
 	for (int i = 1; i < argc; i++) {
-		compileop += " ";
-		compileop += (char*)argv[i];
+		Args[ArgIdx++] = strdup(argv[i]);
 	}
-	return system(compileop.c_str());
+	Args[ArgIdx++] = NULL;
+	
+	int forkret = fork();
+    if (forkret == 0) {
+		/* child process */
+		if (execvp(getHostPath.c_str(), Args) < 0) {
+			fprintf(stderr, "execvp failed: %s err %s\n", getHostPath.c_str(), strerror(errno));
+			return -1;
+		}
+		return 0;
+    } else if (forkret < 0) {
+		fprintf(stderr, "Failed to fork a process!\n");
+		return -1;
+    }
+	
+    /* parent process -- just wait for the child */
+    int status = 0;
+    (void) wait(&status);
+	
+    return WEXITSTATUS(status);
 }
 
