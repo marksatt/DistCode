@@ -1,6 +1,28 @@
+/*
+ *
+ * DistCode -- An OS X GUI & Xcode plugin for the distcc distributed C compiler.
+ *
+ * Copyright (C) 2013-14 by Mark Satterthwaite
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
+ */
+
 //
 //  AppDelegate.m
-//  Distcc
+//  DistCode
 //
 //  Created by Mark Satterthwaite on 30/09/2013.
 //  Copyright (c) 2013 marksatt. All rights reserved.
@@ -211,6 +233,7 @@ NSNetServiceBrowser* Browser = nil;
 {
 	NSString* Path = [NSString stringWithFormat:@"%@/.dmucs/hosts-info", NSHomeDirectory()];
 	FILE* f = fopen([Path UTF8String], "w");
+	NSUInteger SumTasks = 0;
 	for (NSDictionary* DistCCDict in DistCCServers)
 	{
 		NSNumber* Active = [DistCCDict objectForKey:@"ACTIVE"];
@@ -234,12 +257,26 @@ NSNetServiceBrowser* Browser = nil;
 			NSUInteger GigaBytes = (NumBytes/(1024*1024*1024));
 			NSUInteger GigaBytesLessOS = (GigaBytes - 2);
 			NSUInteger MaxTasks = NumCPUs <= GigaBytesLessOS ? NumCPUs : GigaBytesLessOS;
-			
+			SumTasks += MaxTasks;
 			NSString* Entry = [NSString stringWithFormat:@"%@ %ld %ld\n", IP, (long)MaxTasks, (long)Pri];
 			fwrite([Entry UTF8String], 1, strlen([Entry UTF8String]), f);
 		}
 	}
 	fclose(f);
+	
+	// Set the number of Xcode build tasks.
+	NSUserDefaults* XcodeDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"com.apple.dt.Xcode"];
+	if (SumTasks)
+	{
+		[XcodeDefaults setInteger: (NSInteger)SumTasks forKey:@"IDEBuildOperationMaxNumberOfConcurrentCompileTasks"];
+		assert([XcodeDefaults integerForKey:@"IDEBuildOperationMaxNumberOfConcurrentCompileTasks"] == SumTasks);
+	}
+	else
+	{
+		// Don't ever use 0, if we get to that use the system default.
+		[XcodeDefaults removeObjectForKey:@"IDEBuildOperationMaxNumberOfConcurrentCompileTasks"];
+	}
+	[XcodeDefaults synchronize];
 }
 
 - (NSTask*)beginDaemonTask:(NSString*)Path withArguments:(NSArray*)Arguments andPipe:(NSPipe*)Pipe
