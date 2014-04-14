@@ -857,8 +857,8 @@
                                     <rect key="frame" x="0.0" y="0.0" width="536" height="250"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="4m3-4S-v95">
-                                            <rect key="frame" x="198" y="195" width="139" height="20"/>
+                                        <button ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4m3-4S-v95">
+                                            <rect key="frame" x="198" y="213" width="139" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="14" id="4e5-1m-cWg"/>
@@ -873,28 +873,9 @@
                                                 <binding destination="FFW-oU-JRE" name="value" keyPath="values.RunCompilationHost" id="6UJ-vU-0tw"/>
                                             </connections>
                                         </button>
-                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="2SA-rA-4ud">
-                                            <rect key="frame" x="214" y="215" width="107" height="18"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="102" id="NpJ-XB-kXd"/>
-                                            </constraints>
-                                            <buttonCell key="cell" type="check" title="Launch at Login" bezelStyle="regularSquare" imagePosition="left" controlSize="small" state="on" inset="2" id="NU6-kA-aC8">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="smallSystem"/>
-                                            </buttonCell>
-                                            <connections>
-                                                <action selector="toggleLaunchAtLogin:" target="494" id="lh3-Q8-EMS"/>
-                                                <binding destination="FFW-oU-JRE" name="value" keyPath="values.LaunchAtLogin" id="wIb-3w-hHN"/>
-                                            </connections>
-                                        </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="4m3-4S-v95" firstAttribute="top" secondItem="2SA-rA-4ud" secondAttribute="bottom" constant="6" id="8hg-eu-8PK"/>
                                         <constraint firstAttribute="centerX" secondItem="4m3-4S-v95" secondAttribute="centerX" id="NfH-Ky-obf"/>
-                                        <constraint firstItem="4m3-4S-v95" firstAttribute="top" secondItem="2SA-rA-4ud" secondAttribute="bottom" constant="6" id="kcb-Wa-u8q"/>
-                                        <constraint firstAttribute="centerX" secondItem="2SA-rA-4ud" secondAttribute="centerX" id="plf-8V-3dN"/>
-                                        <constraint firstItem="2SA-rA-4ud" firstAttribute="top" secondItem="I0B-hC-GlG" secondAttribute="top" constant="20" id="qkM-HN-PhM"/>
                                     </constraints>
                                 </view>
                             </tabViewItem>
@@ -985,7 +966,7 @@ Gw
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YY7-EC-BZr">
-                    <rect key="frame" x="290.00000114045349" y="116" width="177" height="14"/>
+                    <rect key="frame" x="289.99999875855946" y="116" width="177" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="IP Address" id="eAH-9C-20G">
                         <font key="font" metaFont="smallSystem"/>
@@ -997,7 +978,7 @@ Gw
                     </connections>
                 </textField>
                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CCb-VK-dmz">
-                    <rect key="frame" x="50" y="72.000001611236627" width="57" height="58"/>
+                    <rect key="frame" x="50" y="72" width="57" height="58"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
                     <imageCell key="cell" controlSize="small" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="CgZ-d3-Wza"/>
                     <connections>
@@ -1007,7 +988,7 @@ Gw
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bz0-od-tlk">
                     <rect key="frame" x="17" y="113" width="27" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="status-away" imagePosition="only" alternateImage="status-available" controlSize="small" enabled="NO" state="on" inset="2" id="N2l-2A-jWk">
+                    <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="user-busy" imagePosition="only" alternateImage="user-online" controlSize="small" enabled="NO" state="on" imageScaling="proportionallyDown" inset="2" id="N2l-2A-jWk">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="smallSystem"/>
                     </buttonCell>
@@ -1204,7 +1185,7 @@ Gw
         <userDefaultsController id="FFW-oU-JRE"/>
     </objects>
     <resources>
-        <image name="status-available" width="16" height="16"/>
-        <image name="status-away" width="16" height="16"/>
+        <image name="user-busy" width="104.72727203369141" height="104.72727203369141"/>
+        <image name="user-online" width="104.72727203369141" height="104.72727203369141"/>
     </resources>
 </document>

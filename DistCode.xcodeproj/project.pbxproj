@@ -25,6 +25,8 @@
 		30409BE317F9EDD500DD93A9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 30409BE217F9EDD500DD93A9 /* main.m */; };
 		30409BE717F9EDD500DD93A9 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 30409BE517F9EDD500DD93A9 /* Credits.rtf */; };
 		30409BEA17F9EDD500DD93A9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30409BE917F9EDD500DD93A9 /* AppDelegate.m */; };
+		3047011818FC77FB00ADFCAF /* user-busy.png in Resources */ = {isa = PBXBuildFile; fileRef = 3047011618FC77FB00ADFCAF /* user-busy.png */; };
+		3047011918FC77FB00ADFCAF /* user-online.png in Resources */ = {isa = PBXBuildFile; fileRef = 3047011718FC77FB00ADFCAF /* user-online.png */; };
 		30C5A956180DBD1500599060 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C5A955180DBD1500599060 /* ServiceManagement.framework */; };
 		30ED78D5180C6A3200F8B42E /* DOTabbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 30ED78D2180C6A3200F8B42E /* DOTabbar.m */; };
 		30ED78D6180C6A3200F8B42E /* DOTabbarItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 30ED78D4180C6A3200F8B42E /* DOTabbarItemCell.m */; };
@@ -47,8 +49,6 @@
 		30F3C437180B43AB00614C58 /* vpn-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 30F3C436180B43AB00614C58 /* vpn-512.png */; };
 		30F4623617EAEA11008042F1 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F4623517EAEA11008042F1 /* main.cpp */; };
 		30F4623817EAEA11008042F1 /* distclang.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F4623717EAEA11008042F1 /* distclang.1 */; };
-		30F8FCEE180CABF000807EB6 /* status-available.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 30F8FCEC180CABF000807EB6 /* status-available.tiff */; };
-		30F8FCEF180CABF000807EB6 /* status-away.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 30F8FCED180CABF000807EB6 /* status-away.tiff */; };
 		30FAAB1B181C2316002051EB /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 303AA3CD17E991060077FFC3 /* AppKit.framework */; };
 		30FAAB1C181C2316002051EB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 303AA3CF17E991060077FFC3 /* Foundation.framework */; };
 		30FAAB2C181C23F4002051EB /* Distcc compiler 3.2.strings in Resources */ = {isa = PBXBuildFile; fileRef = 30FAAB2A181C23F4002051EB /* Distcc compiler 3.2.strings */; };
@@ -280,6 +280,8 @@
 		30409BEC17F9EDD500DD93A9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		30409BEE17F9EDD500DD93A9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		30409BF517F9EDD500DD93A9 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		3047011618FC77FB00ADFCAF /* user-busy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user-busy.png"; sourceTree = "<group>"; };
+		3047011718FC77FB00ADFCAF /* user-online.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user-online.png"; sourceTree = "<group>"; };
 		30C5A955180DBD1500599060 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		30ED78D1180C6A3200F8B42E /* DOTabbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DOTabbar.h; sourceTree = "<group>"; };
 		30ED78D2180C6A3200F8B42E /* DOTabbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DOTabbar.m; sourceTree = "<group>"; };
@@ -350,8 +352,6 @@
 		30F4623317EAEA11008042F1 /* distclang */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = distclang; sourceTree = BUILT_PRODUCTS_DIR; };
 		30F4623517EAEA11008042F1 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		30F4623717EAEA11008042F1 /* distclang.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = distclang.1; sourceTree = "<group>"; };
-		30F8FCEC180CABF000807EB6 /* status-available.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "status-available.tiff"; sourceTree = "<group>"; };
-		30F8FCED180CABF000807EB6 /* status-away.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "status-away.tiff"; sourceTree = "<group>"; };
 		30FAAB1A181C2316002051EB /* Distcc 3.2.xcplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Distcc 3.2.xcplugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		30FAAB1F181C2316002051EB /* Distcc 3.2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Distcc 3.2-Info.plist"; sourceTree = "<group>"; };
 		30FAAB2B181C23F4002051EB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/Distcc compiler 3.2.strings"; sourceTree = "<group>"; };
@@ -495,12 +495,12 @@
 		30409BDD17F9EDD500DD93A9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				3047011618FC77FB00ADFCAF /* user-busy.png */,
+				3047011718FC77FB00ADFCAF /* user-online.png */,
 				30FAAB49181C2812002051EB /* AppIcon.icns */,
 				30FAAB4A181C2812002051EB /* applications-system.icns */,
 				30FAAB4B181C2812002051EB /* computer.icns */,
 				30FAAB4C181C2812002051EB /* utilities-system-monitor.icns */,
-				30F8FCEC180CABF000807EB6 /* status-available.tiff */,
-				30F8FCED180CABF000807EB6 /* status-away.tiff */,
 				30F3C436180B43AB00614C58 /* vpn-512.png */,
 				30143ECF18072AEE004B0B54 /* mac_client-512.png */,
 				30409BDE17F9EDD500DD93A9 /* DistCode-Info.plist */,
@@ -775,15 +775,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3047011818FC77FB00ADFCAF /* user-busy.png in Resources */,
 				30FAAB3D181C26F3002051EB /* Distcc 3.2.xcplugin in Resources */,
 				30FAAB40181C27E3002051EB /* Images.xcassets in Resources */,
+				3047011918FC77FB00ADFCAF /* user-online.png in Resources */,
 				30409BE117F9EDD500DD93A9 /* InfoPlist.strings in Resources */,
-				30F8FCEF180CABF000807EB6 /* status-away.tiff in Resources */,
 				30FAAB4E181C2812002051EB /* applications-system.icns in Resources */,
 				30143ED018072AEE004B0B54 /* mac_client-512.png in Resources */,
 				30409BE717F9EDD500DD93A9 /* Credits.rtf in Resources */,
 				3032ECFF180D314B0069D360 /* Defaults.plist in Resources */,
-				30F8FCEE180CABF000807EB6 /* status-available.tiff in Resources */,
 				30F3C437180B43AB00614C58 /* vpn-512.png in Resources */,
 				30FAAB3A181C26D3002051EB /* MainMenu.xib in Resources */,
 				30FAAB50181C2812002051EB /* utilities-system-monitor.icns in Resources */,
