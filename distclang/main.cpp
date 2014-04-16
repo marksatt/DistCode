@@ -64,11 +64,15 @@ int main(int argc, const char * argv[])
 	
 #if __APPLE__
 	CFPropertyListRef Value = CFPreferencesCopyAppValue(CFSTR("HostTimeout"), CFSTR("com.marksatt.DistCode"));
-	if(Value && CFGetTypeID(Value) == CFNumberGetTypeID())
+	if(Value)
 	{
-		long value = 1;
-		CFNumberGetValue((CFNumberRef)Value, kCFNumberLongType, &value);
-		timeout = value * 60;
+		if(CFGetTypeID(Value) == CFNumberGetTypeID())
+		{
+			long value = 1;
+			CFNumberGetValue((CFNumberRef)Value, kCFNumberLongType, &value);
+			timeout = value * 60;
+		}
+		CFRelease(Value);
 	}
 #endif
 	
