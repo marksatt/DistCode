@@ -857,7 +857,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="536" height="250"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <button ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4m3-4S-v95">
+                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="4m3-4S-v95">
                                             <rect key="frame" x="198" y="213" width="139" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <constraints>
@@ -873,9 +873,49 @@
                                                 <binding destination="FFW-oU-JRE" name="value" keyPath="values.RunCompilationHost" id="6UJ-vU-0tw"/>
                                             </connections>
                                         </button>
+                                        <textField toolTip="Time to wait for remote compilation host before falling back to localhost in minutes." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Rym-kM-KJO">
+                                            <rect key="frame" x="268" y="189" width="64" height="19"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="64" id="e4o-XJ-QxX"/>
+                                            </constraints>
+                                            <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Ixp-SG-1qZ">
+                                                <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="309" maximumFractionDigits="3" id="8ud-Wy-Cqk"/>
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <connections>
+                                                <binding destination="FFW-oU-JRE" name="value" keyPath="values.HostTimeout" id="CZy-RE-glq"/>
+                                            </connections>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-Gk-iok">
+                                            <rect key="frame" x="183" y="191" width="79" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Host Timeout:" id="MX1-CF-K0b">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5Ff-7H-IHm">
+                                            <rect key="frame" x="338" y="187" width="15" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <stepperCell key="cell" controlSize="small" continuous="YES" alignment="left" maxValue="100" id="hxe-O0-Fa4"/>
+                                            <connections>
+                                                <binding destination="FFW-oU-JRE" name="value" keyPath="values.HostTimeout" id="bnr-Tj-Kvj"/>
+                                            </connections>
+                                        </stepper>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="Rym-kM-KJO" firstAttribute="top" secondItem="5Ff-7H-IHm" secondAttribute="top" id="Ip1-As-YHX"/>
+                                        <constraint firstAttribute="trailing" secondItem="Rym-kM-KJO" secondAttribute="trailing" constant="204" id="IpB-hw-c3W"/>
                                         <constraint firstAttribute="centerX" secondItem="4m3-4S-v95" secondAttribute="centerX" id="NfH-Ky-obf"/>
+                                        <constraint firstItem="4m3-4S-v95" firstAttribute="top" secondItem="I0B-hC-GlG" secondAttribute="top" constant="20" symbolic="YES" id="fTg-Nn-3AM"/>
+                                        <constraint firstItem="5Ff-7H-IHm" firstAttribute="leading" secondItem="Rym-kM-KJO" secondAttribute="trailing" constant="8" symbolic="YES" id="gjn-4B-UL3"/>
+                                        <constraint firstItem="Rym-kM-KJO" firstAttribute="top" secondItem="4m3-4S-v95" secondAttribute="bottom" constant="8" symbolic="YES" id="i4B-FZ-0hQ"/>
+                                        <constraint firstItem="Rym-kM-KJO" firstAttribute="leading" secondItem="Dry-Gk-iok" secondAttribute="trailing" constant="8" id="kmX-j6-TQ5"/>
+                                        <constraint firstItem="Rym-kM-KJO" firstAttribute="baseline" secondItem="Dry-Gk-iok" secondAttribute="baseline" id="l2b-y5-Led"/>
                                     </constraints>
                                 </view>
                             </tabViewItem>
@@ -966,7 +1006,7 @@ Gw
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YY7-EC-BZr">
-                    <rect key="frame" x="289.99999875855946" y="116" width="177" height="14"/>
+                    <rect key="frame" x="289.99999894895188" y="116" width="177" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="IP Address" id="eAH-9C-20G">
                         <font key="font" metaFont="smallSystem"/>
@@ -978,7 +1018,7 @@ Gw
                     </connections>
                 </textField>
                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CCb-VK-dmz">
-                    <rect key="frame" x="50" y="72" width="57" height="58"/>
+                    <rect key="frame" x="50" y="72.000000309880903" width="57" height="58"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
                     <imageCell key="cell" controlSize="small" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="CgZ-d3-Wza"/>
                     <connections>

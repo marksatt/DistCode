@@ -33,6 +33,9 @@
 #include <unistd.h>
 #include <syslog.h>
 #include <vector>
+#if __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
 
 int main(int argc, const char * argv[])
 {
@@ -57,6 +60,21 @@ int main(int argc, const char * argv[])
 	}
 	putenv("DISTCLANG_RECURSE=1");
 	
+	unsigned long timeout = 0;
+	
+#if __APPLE__
+	CFPropertyListRef Value = CFPreferencesCopyAppValue(CFSTR("HostTimeout"), CFSTR("com.marksatt.DistCode"));
+	if(Value && CFGetTypeID(Value) == CFNumberGetTypeID())
+	{
+		long value = 1;
+		CFNumberGetValue((CFNumberRef)Value, kCFNumberLongType, &value);
+		timeout = value * 60;
+	}
+#endif
+	
+	char timeoutBuffer[16] = {0};
+	snprintf(timeoutBuffer, 16, "%lu", timeout);
+	
 	std::string getHostPath = std::string(path, pathLen);
 	getHostPath += "/gethost";
 //	std::string pumpPath = std::string(path, pathLen);
@@ -64,9 +82,11 @@ int main(int argc, const char * argv[])
 	std::string distccPath = std::string(path, pathLen);
 	distccPath += "/distcc";
 	
-	char** Args = (char**)alloca(sizeof(char*) * argc + 5);
+	char** Args = (char**)alloca(sizeof(char*) * argc + 7);
 	int ArgIdx = 0;
 	Args[ArgIdx++] = strdup(getHostPath.c_str());
+	Args[ArgIdx++] = strdup("--wait");
+	Args[ArgIdx++] = timeoutBuffer;
 	//Args[ArgIdx++] = strdup(pumpPath.c_str());
 	Args[ArgIdx++] = strdup(distccPath.c_str());
 	Args[ArgIdx++] = strdup("xcrun");

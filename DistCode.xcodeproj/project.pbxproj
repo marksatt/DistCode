@@ -27,6 +27,7 @@
 		30409BEA17F9EDD500DD93A9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30409BE917F9EDD500DD93A9 /* AppDelegate.m */; };
 		3047011818FC77FB00ADFCAF /* user-busy.png in Resources */ = {isa = PBXBuildFile; fileRef = 3047011618FC77FB00ADFCAF /* user-busy.png */; };
 		3047011918FC77FB00ADFCAF /* user-online.png in Resources */ = {isa = PBXBuildFile; fileRef = 3047011718FC77FB00ADFCAF /* user-online.png */; };
+		3084B09C18FF0CB7003C64F2 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3084B09B18FF0CB7003C64F2 /* CoreFoundation.framework */; };
 		30C5A956180DBD1500599060 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C5A955180DBD1500599060 /* ServiceManagement.framework */; };
 		30ED78D5180C6A3200F8B42E /* DOTabbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 30ED78D2180C6A3200F8B42E /* DOTabbar.m */; };
 		30ED78D6180C6A3200F8B42E /* DOTabbarItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 30ED78D4180C6A3200F8B42E /* DOTabbarItemCell.m */; };
@@ -282,6 +283,7 @@
 		30409BF517F9EDD500DD93A9 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		3047011618FC77FB00ADFCAF /* user-busy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user-busy.png"; sourceTree = "<group>"; };
 		3047011718FC77FB00ADFCAF /* user-online.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user-online.png"; sourceTree = "<group>"; };
+		3084B09B18FF0CB7003C64F2 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		30C5A955180DBD1500599060 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		30ED78D1180C6A3200F8B42E /* DOTabbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DOTabbar.h; sourceTree = "<group>"; };
 		30ED78D2180C6A3200F8B42E /* DOTabbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DOTabbar.m; sourceTree = "<group>"; };
@@ -378,6 +380,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3084B09C18FF0CB7003C64F2 /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -420,6 +423,7 @@
 		303AA3CC17E991060077FFC3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3084B09B18FF0CB7003C64F2 /* CoreFoundation.framework */,
 				30C5A955180DBD1500599060 /* ServiceManagement.framework */,
 				303AA3CD17E991060077FFC3 /* AppKit.framework */,
 				303AA3CF17E991060077FFC3 /* Foundation.framework */,
