@@ -396,6 +396,7 @@ NSNetServiceBrowser* Browser = nil;
 		}
 		@catch (NSException *exception) {
 			NSLog(@"%@", exception);
+			[DistCCServerController addObject:DistCCDict];
 		}
 		[self writeDmucsHostsFile];
 		sleep(1);
