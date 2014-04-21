@@ -42,6 +42,14 @@ static NSString *kHostsItemIdentifier = @"Hosts";
 static NSString *kMonitorItemIdentifier = @"Monitor";
 static NSString *kOptionsItemIdentifier = @"Options";
 
+static NSString* kHostStatus[] = {
+	@"Unknown",
+	@"Available",
+	@"Unavailable",
+	@"Overloaded",
+	@"Silent"
+};
+
 NSMutableArray* PumpDistccMon(void)
 {
     struct dcc_task_state *list;
@@ -130,6 +138,24 @@ NSNetServiceBrowser* Browser = nil;
 	[TasksController addObjects:Objects];
 }
 
+- (void)dmucsLoadAvg:(NSNotification*)Notification
+{
+	NSString* Name = [Notification.userInfo objectForKey:@"HostName"];
+	for (NSDictionary* DistCCDict in DistCCServers)
+	{
+		if ([[DistCCDict objectForKey:@"HOSTNAME"] isCaseInsensitiveLike:Name] || [[DistCCDict objectForKey:@"IP"] isCaseInsensitiveLike:Name])
+		{
+			NSString* LoadAvg1 = [NSString stringWithFormat:@"%.2f", [[Notification.userInfo objectForKey:@"LoadAvg1"] floatValue]];
+			NSString* LoadAvg5 = [NSString stringWithFormat:@"%.2f", [[Notification.userInfo objectForKey:@"LoadAvg5"] floatValue]];
+			NSString* LoadAvg10 = [NSString stringWithFormat:@"%.2f", [[Notification.userInfo objectForKey:@"LoadAvg10"] floatValue]];
+			[DistCCDict setValue:LoadAvg1 forKey:@"LOADAVG1"];
+			[DistCCDict setValue:LoadAvg5 forKey:@"LOADAVG5"];
+			[DistCCDict setValue:LoadAvg10 forKey:@"LOADAVG10"];
+			break;
+		}
+	}
+}
+
 - (void)dmucsMonitorHostStatus:(NSNotification*)Notification
 {
 	NSString* Name = [Notification.userInfo objectForKey:@"HostName"];
@@ -137,7 +163,9 @@ NSNetServiceBrowser* Browser = nil;
 	{
 		if ([[DistCCDict objectForKey:@"HOSTNAME"] isCaseInsensitiveLike:Name] || [[DistCCDict objectForKey:@"IP"] isCaseInsensitiveLike:Name])
 		{
-			BOOL Avail = ([[Notification.userInfo objectForKey:@"Cpus"] integerValue] == 1);
+			NSInteger Status = [[Notification.userInfo objectForKey:@"Status"] integerValue];
+			BOOL Avail = (Status == 1);
+			[DistCCDict setValue:kHostStatus[Status] forKey:@"STATUS"];
 			[DistCCDict setValue:[NSNumber numberWithBool:Avail] forKey:@"ACTIVE"];
 			break;
 		}
@@ -168,6 +196,7 @@ NSNetServiceBrowser* Browser = nil;
     [[NSRunLoop currentRunLoop] addTimer:MonitorLoopTimer forMode:NSEventTrackingRunLoopMode];
 	
 	NSDistributedNotificationCenter* Notifier = [NSDistributedNotificationCenter defaultCenter];
+	[Notifier addObserver:self selector:@selector(dmucsLoadAvg:) name:@"dmucsLoadAvg" object:@"DMUCS"];
 	[Notifier addObserver:self selector:@selector(dmucsMonitorHostStatus:) name:@"dmucsMonitorHostStatus" object:@"DMUCS"];
 	[Notifier addObserver:self selector:@selector(dmucsMonitorHostTier:) name:@"dmucsMonitorHostTier" object:@"DMUCS"];
 	
@@ -334,6 +363,7 @@ NSNetServiceBrowser* Browser = nil;
 		[DistCCDict setObject:Address forKey:@"IP"];
 		[DistCCDict setObject:HostName forKey:@"HOSTNAME"];
 		[DistCCDict setObject:[NSNumber numberWithBool:YES] forKey:@"ACTIVE"];
+		[DistCCDict setValue:@"Updating..." forKey:@"STATUS"];
 		[DistCCDict setObject:[[NSBundle mainBundle] imageForResource:@"mac_client-512"] forKey:@"ICON"];
 		
 		for (NSUInteger i = 0; i < [Components count]-1; i+=2)
@@ -364,6 +394,7 @@ NSNetServiceBrowser* Browser = nil;
 		[self writeDmucsHostsFile];
 		sleep(1);
 		[self addDistCCServer:HostName];
+		sleep(1);
 		if(!NetService || ([HostName isCaseInsensitiveLike:SelfHostName]))
 		{
 			NSPipe* LocalLoadAvgPipe = [NSPipe new];
