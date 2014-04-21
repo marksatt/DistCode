@@ -383,13 +383,19 @@ NSNetServiceBrowser* Browser = nil;
 				[DistCCDict setObject:Value forKey:Key];
 			}
 		}
-		if(NetService)
+		@try
 		{
-			[DistCCServerController insertObject:DistCCDict atArrangedObjectIndex:[services indexOfObject:NetService]];
+			if(NetService)
+			{
+				[DistCCServerController insertObject:DistCCDict atArrangedObjectIndex:[services indexOfObject:NetService]];
+			}
+			else
+			{
+				[DistCCServerController addObject:DistCCDict];
+			}
 		}
-		else
-		{
-			[DistCCServerController addObject:DistCCDict];
+		@catch (NSException *exception) {
+			NSLog(@"%@", exception);
 		}
 		[self writeDmucsHostsFile];
 		sleep(1);
