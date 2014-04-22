@@ -32,7 +32,14 @@
 		30995E051905DAAC000E2B90 /* trace.c in Sources */ = {isa = PBXBuildFile; fileRef = 30995DFB1905DAAC000E2B90 /* trace.c */; };
 		30995E061905DAAC000E2B90 /* traceenv.c in Sources */ = {isa = PBXBuildFile; fileRef = 30995DFC1905DAAC000E2B90 /* traceenv.c */; };
 		30995E071905DAAC000E2B90 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 30995DFD1905DAAC000E2B90 /* util.c */; };
+		30BF2A091906701800104783 /* dmucs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30995DE41905D9C5000E2B90 /* dmucs */; };
+		30BF2A0A1906701800104783 /* gethost in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30995DE81905D9C5000E2B90 /* gethost */; };
+		30BF2A0B1906701800104783 /* loadavg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30995DEA1905D9C5000E2B90 /* loadavg */; };
+		30BF2A0C1906701800104783 /* monitor in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30995DEC1905D9C5000E2B90 /* monitor */; };
+		30BF2A0D1906701800104783 /* remhost in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30995DEE1905D9C5000E2B90 /* remhost */; };
+		30BF2A0E1906701800104783 /* addhost in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30995DF01905D9C5000E2B90 /* addhost */; };
 		30C5A956180DBD1500599060 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30C5A955180DBD1500599060 /* ServiceManagement.framework */; };
+		30E9868D1906A1A9006FA27E /* gethost in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30995DE81905D9C5000E2B90 /* gethost */; };
 		30ED78D5180C6A3200F8B42E /* DOTabbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 30ED78D2180C6A3200F8B42E /* DOTabbar.m */; };
 		30ED78D6180C6A3200F8B42E /* DOTabbarItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 30ED78D4180C6A3200F8B42E /* DOTabbarItemCell.m */; };
 		30ED79DF1815B15F001AFD9C /* argutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 30ED79D21815B15F001AFD9C /* argutil.c */; };
@@ -109,6 +116,55 @@
 			remoteGlobalIDString = 302882FD1803F70B00BB141E;
 			remoteInfo = addhost;
 		};
+		30BF29F51906700B00104783 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30F461F417EAE499008042F1 /* dmucs.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 308B36CB17EA307900025EAC;
+			remoteInfo = dmucs;
+		};
+		30BF29F71906700B00104783 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30F461F417EAE499008042F1 /* dmucs.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 308B37D317EA3CAC00025EAC;
+			remoteInfo = gethost;
+		};
+		30BF29F91906700B00104783 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30F461F417EAE499008042F1 /* dmucs.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 308B37E717EA3D1700025EAC;
+			remoteInfo = loadavg;
+		};
+		30BF29FB1906700B00104783 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30F461F417EAE499008042F1 /* dmucs.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 308B37F817EA3D4500025EAC;
+			remoteInfo = monitor;
+		};
+		30BF29FD1906700B00104783 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30F461F417EAE499008042F1 /* dmucs.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 308B380917EA3D7800025EAC;
+			remoteInfo = remhost;
+		};
+		30BF29FF1906700B00104783 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30F461F417EAE499008042F1 /* dmucs.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 302882F21803F70B00BB141E;
+			remoteInfo = addhost;
+		};
+		30E986891906A1A3006FA27E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30F461F417EAE499008042F1 /* dmucs.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 308B37D317EA3CAC00025EAC;
+			remoteInfo = gethost;
+		};
 		30FAAB34181C24D8002051EB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 303AA3C217E991060077FFC3 /* Project object */;
@@ -132,6 +188,12 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				30BF2A091906701800104783 /* dmucs in CopyFiles */,
+				30BF2A0A1906701800104783 /* gethost in CopyFiles */,
+				30BF2A0B1906701800104783 /* loadavg in CopyFiles */,
+				30BF2A0C1906701800104783 /* monitor in CopyFiles */,
+				30BF2A0D1906701800104783 /* remhost in CopyFiles */,
+				30BF2A0E1906701800104783 /* addhost in CopyFiles */,
 				300D3281180360E800EDD3BC /* pump in CopyFiles */,
 				300D3282180360E800EDD3BC /* lsdistcc in CopyFiles */,
 				300D3283180360E800EDD3BC /* distccmon-text in CopyFiles */,
@@ -167,6 +229,7 @@
 			dstPath = Contents/usr/bin;
 			dstSubfolderSpec = 1;
 			files = (
+				30E9868D1906A1A9006FA27E /* gethost in CopyFiles */,
 				30F32FB9181C601B005C77CD /* distcc in CopyFiles */,
 				30FAAB36181C24E3002051EB /* distclang in CopyFiles */,
 			);
@@ -544,6 +607,12 @@
 			buildRules = (
 			);
 			dependencies = (
+				30BF29F61906700B00104783 /* PBXTargetDependency */,
+				30BF29F81906700B00104783 /* PBXTargetDependency */,
+				30BF29FA1906700B00104783 /* PBXTargetDependency */,
+				30BF29FC1906700B00104783 /* PBXTargetDependency */,
+				30BF29FE1906700B00104783 /* PBXTargetDependency */,
+				30BF2A001906700B00104783 /* PBXTargetDependency */,
 				30FAAB3C181C26E9002051EB /* PBXTargetDependency */,
 			);
 			name = DistCode;
@@ -581,6 +650,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				30E9868A1906A1A3006FA27E /* PBXTargetDependency */,
 				30FAAB35181C24D8002051EB /* PBXTargetDependency */,
 			);
 			name = "Distcc 3.2";
@@ -772,6 +842,41 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		30BF29F61906700B00104783 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = dmucs;
+			targetProxy = 30BF29F51906700B00104783 /* PBXContainerItemProxy */;
+		};
+		30BF29F81906700B00104783 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = gethost;
+			targetProxy = 30BF29F71906700B00104783 /* PBXContainerItemProxy */;
+		};
+		30BF29FA1906700B00104783 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = loadavg;
+			targetProxy = 30BF29F91906700B00104783 /* PBXContainerItemProxy */;
+		};
+		30BF29FC1906700B00104783 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = monitor;
+			targetProxy = 30BF29FB1906700B00104783 /* PBXContainerItemProxy */;
+		};
+		30BF29FE1906700B00104783 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = remhost;
+			targetProxy = 30BF29FD1906700B00104783 /* PBXContainerItemProxy */;
+		};
+		30BF2A001906700B00104783 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = addhost;
+			targetProxy = 30BF29FF1906700B00104783 /* PBXContainerItemProxy */;
+		};
+		30E9868A1906A1A3006FA27E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = gethost;
+			targetProxy = 30E986891906A1A3006FA27E /* PBXContainerItemProxy */;
+		};
 		30FAAB35181C24D8002051EB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 30F4623217EAEA11008042F1 /* distclang */;
