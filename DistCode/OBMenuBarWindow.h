@@ -102,6 +102,8 @@ extern const CGFloat OBMenuBarWindowArrowWidth;
  is set to `YES`. */
 @property (nonatomic, assign) BOOL attachedToMenuBar;
 
+@property (nonatomic, assign) BOOL showingSheet;
+
 /** Whether to hide the "traffic light" window controls when the window is
  attached to the menu bar (default is `YES`). */
 @property (nonatomic, assign) BOOL hideWindowControlsWhenAttached;

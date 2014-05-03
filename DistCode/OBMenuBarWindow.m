@@ -51,6 +51,8 @@ const CGFloat OBMenuBarWindowArrowWidth = 20.0;
 - (void)windowDidResize:(NSNotification *)aNotification;
 - (void)windowWillStartLiveResize:(NSNotification *)aNotification;
 - (void)windowDidMove:(NSNotification *)aNotification;
+- (void)windowWillBeginSheet:(NSNotification *)notification;
+- (void)windowDidEndSheet:(NSNotification *)notification;
 - (void)statusItemViewDidMove:(NSNotification *)aNotification;
 - (NSWindow *)window;
 - (NSImage *)noiseImage;
@@ -62,6 +64,7 @@ const CGFloat OBMenuBarWindowArrowWidth = 20.0;
 
 @synthesize hasMenuBarIcon;
 @synthesize attachedToMenuBar;
+@synthesize showingSheet;
 @synthesize hideWindowControlsWhenAttached;
 @synthesize snapDistance;
 @synthesize distanceFromMenuBar;
@@ -87,6 +90,7 @@ const CGFloat OBMenuBarWindowArrowWidth = 20.0;
         distanceFromMenuBar = 0;
         hideWindowControlsWhenAttached = YES;
         isDetachable = YES;
+		showingSheet = NO;
         [self initialSetup];
     }
     return self;
@@ -457,7 +461,7 @@ const CGFloat OBMenuBarWindowArrowWidth = 20.0;
 
 - (void)windowDidResignKey:(NSNotification *)aNotification
 {
-    if (self.attachedToMenuBar)
+    if (self.attachedToMenuBar && self.showingSheet == NO)
     {
         [self orderOut:self];
     }
@@ -595,6 +599,16 @@ const CGFloat OBMenuBarWindowArrowWidth = 20.0;
         }
     }
     [self layoutContent];
+}
+
+- (void)windowWillBeginSheet:(NSNotification *)notification
+{
+	showingSheet = YES;
+}
+
+- (void)windowDidEndSheet:(NSNotification *)notification
+{
+	showingSheet = NO;
 }
 
 - (void)statusItemViewDidMove:(NSNotification *)aNotification
