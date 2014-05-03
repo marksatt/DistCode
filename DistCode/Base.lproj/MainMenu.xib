@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment defaultVersion="1080" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
@@ -676,6 +676,20 @@
                             <action selector="terminate:" target="-3" id="fcE-y5-TVA"/>
                         </connections>
                     </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sbd-OV-WIl">
+                        <rect key="frame" x="93" y="14" width="80" height="28"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="70" id="KVz-ZH-4ci"/>
+                        </constraints>
+                        <buttonCell key="cell" type="push" title="About" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="oLd-gA-Y1G">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="orderFrontStandardAboutPanel:" target="-2" id="4OV-Td-f9h"/>
+                        </connections>
+                    </button>
                     <tabView type="noTabsNoBorder" initialItem="gJ8-fy-5U1" translatesAutoresizingMaskIntoConstraints="NO" id="gW2-b2-Aea">
                         <rect key="frame" x="0.0" y="46" width="536" height="250"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -880,7 +894,10 @@
                                                 <constraint firstAttribute="width" constant="64" id="e4o-XJ-QxX"/>
                                             </constraints>
                                             <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Ixp-SG-1qZ">
-                                                <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="309" maximumFractionDigits="3" id="8ud-Wy-Cqk"/>
+                                                <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="309" maximumFractionDigits="3" id="8ud-Wy-Cqk">
+                                                    <real key="minimum" value="-1"/>
+                                                    <real key="maximum" value="100"/>
+                                                </numberFormatter>
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -901,7 +918,7 @@
                                         <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5Ff-7H-IHm">
                                             <rect key="frame" x="338" y="187" width="15" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <stepperCell key="cell" controlSize="small" continuous="YES" alignment="left" maxValue="100" id="hxe-O0-Fa4"/>
+                                            <stepperCell key="cell" controlSize="small" continuous="YES" alignment="left" minValue="-1" maxValue="100" id="hxe-O0-Fa4"/>
                                             <connections>
                                                 <binding destination="FFW-oU-JRE" name="value" keyPath="values.HostTimeout" id="bnr-Tj-Kvj"/>
                                             </connections>
@@ -962,8 +979,10 @@ Gw
                     <constraint firstAttribute="trailing" secondItem="gW2-b2-Aea" secondAttribute="trailing" id="Db1-gh-avc"/>
                     <constraint firstAttribute="trailing" secondItem="zD7-zX-K3z" secondAttribute="trailing" id="HAC-N2-uzK"/>
                     <constraint firstItem="gW2-b2-Aea" firstAttribute="leading" secondItem="372" secondAttribute="leading" id="Jbu-jx-5gS"/>
+                    <constraint firstItem="sbd-OV-WIl" firstAttribute="baseline" secondItem="8RP-JR-OYT" secondAttribute="baseline" id="Llh-NO-rbS"/>
                     <constraint firstItem="zD7-zX-K3z" firstAttribute="leading" secondItem="372" secondAttribute="leading" id="aiO-Ta-XLo"/>
                     <constraint firstAttribute="bottom" secondItem="8RP-JR-OYT" secondAttribute="bottom" constant="20" symbolic="YES" id="bwH-YK-1x9"/>
+                    <constraint firstItem="sbd-OV-WIl" firstAttribute="leading" secondItem="8RP-JR-OYT" secondAttribute="trailing" constant="8" symbolic="YES" id="iE3-VL-j2T"/>
                     <constraint firstItem="8RP-JR-OYT" firstAttribute="top" secondItem="gW2-b2-Aea" secondAttribute="bottom" constant="8" symbolic="YES" id="iFn-6o-cYQ"/>
                     <constraint firstItem="gW2-b2-Aea" firstAttribute="top" secondItem="zD7-zX-K3z" secondAttribute="bottom" id="mRm-qn-jN7"/>
                     <constraint firstItem="h2w-Kb-ScE" firstAttribute="leading" secondItem="A2P-WR-pMh" secondAttribute="trailing" constant="8" symbolic="YES" id="n19-MG-pNI"/>
@@ -1006,7 +1025,7 @@ Gw
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YY7-EC-BZr">
-                    <rect key="frame" x="290.00000014401587" y="138" width="177" height="14"/>
+                    <rect key="frame" x="290.00000029391629" y="138" width="177" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="IP Address" id="eAH-9C-20G">
                         <font key="font" metaFont="smallSystem"/>
@@ -1018,7 +1037,7 @@ Gw
                     </connections>
                 </textField>
                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CCb-VK-dmz">
-                    <rect key="frame" x="50" y="94.000000380236514" width="57" height="58"/>
+                    <rect key="frame" x="50" y="94.000000676907518" width="57" height="58"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
                     <imageCell key="cell" controlSize="small" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="CgZ-d3-Wza"/>
                     <connections>
@@ -1216,12 +1235,12 @@ Gw
                                 <string key="NSDisplayPattern">Load: %{value1}@ %{value2}@ %{value3}@</string>
                             </dictionary>
                         </binding>
-                        <binding destination="LzJ-Kg-pH4" name="displayPatternValue2" keyPath="representedObject.LOADAVG5" previousBinding="2hL-QQ-PXA" id="eXe-6q-xb5">
+                        <binding destination="LzJ-Kg-pH4" name="displayPatternValue3" keyPath="representedObject.LOADAVG10" previousBinding="eXe-6q-xb5" id="71X-n4-Qgq">
                             <dictionary key="options">
                                 <string key="NSDisplayPattern">Load: %{value1}@ %{value2}@ %{value3}@</string>
                             </dictionary>
                         </binding>
-                        <binding destination="LzJ-Kg-pH4" name="displayPatternValue3" keyPath="representedObject.LOADAVG10" previousBinding="eXe-6q-xb5" id="71X-n4-Qgq">
+                        <binding destination="LzJ-Kg-pH4" name="displayPatternValue2" keyPath="representedObject.LOADAVG5" previousBinding="2hL-QQ-PXA" id="eXe-6q-xb5">
                             <dictionary key="options">
                                 <string key="NSDisplayPattern">Load: %{value1}@ %{value2}@ %{value3}@</string>
                             </dictionary>

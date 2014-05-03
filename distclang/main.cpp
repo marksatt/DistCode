@@ -60,7 +60,7 @@ int main(int argc, const char * argv[])
 	}
 	putenv("DISTCLANG_RECURSE=1");
 	
-	unsigned long timeout = 0;
+	long timeout = 0;
 	
 #if __APPLE__
 	CFPropertyListRef Value = CFPreferencesCopyAppValue(CFSTR("HostTimeout"), CFSTR("com.marksatt.DistCode"));
@@ -70,14 +70,14 @@ int main(int argc, const char * argv[])
 		{
 			long value = 1;
 			CFNumberGetValue((CFNumberRef)Value, kCFNumberLongType, &value);
-			timeout = value * 60;
+			timeout = value >= 0 ? value * 60 : value;
 		}
 		CFRelease(Value);
 	}
 #endif
 	
 	char timeoutBuffer[16] = {0};
-	snprintf(timeoutBuffer, 16, "%lu", timeout);
+	snprintf(timeoutBuffer, 16, "%ld", timeout);
 	
 	std::string getHostPath = std::string(path, pathLen);
 	getHostPath += "/gethost";
