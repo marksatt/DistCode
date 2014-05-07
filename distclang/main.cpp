@@ -74,6 +74,10 @@ int main(int argc, const char * argv[])
 		}
 		CFRelease(Value);
 	}
+    else
+    {
+        timeout = -1;
+    }
 #endif
 	
 	char timeoutBuffer[16] = {0};
