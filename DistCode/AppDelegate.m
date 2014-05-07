@@ -103,6 +103,8 @@ NSNetServiceBrowser* Browser = nil;
 		Tasks = [NSMutableArray new];
 		NSString* Path = [NSString stringWithFormat:@"%@/.dmucs", NSHomeDirectory()];
 		[[NSFileManager defaultManager] createDirectoryAtPath:Path withIntermediateDirectories:NO attributes:nil error:nil];
+        NSString* HostsPath = [NSString stringWithFormat:@"%@/.dmucs/hosts-info", NSHomeDirectory()];
+        [[NSFileManager defaultManager] removeItemAtPath:HostsPath error:nil];
 		
 		NSArray* Paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 		Path = [NSString stringWithFormat:@"%@/Developer/Shared/Xcode/Plug-ins", [Paths objectAtIndex:0]];
