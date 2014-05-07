@@ -1,11 +1,11 @@
 (
 	{
-		Identifier = "com.apple.compilers.distcc.llvm.clang.1_0";
+		Identifier = "com.distcc.compilers.distcc.3_2";
 		Type = Compiler;
 		Class = "XCCompilerSpecificationClang";
-		Name = "Distcc compiler 3.2";
-		Description = "Distcc compiler 3.2";
-		Vendor = "Distcc/Apple";
+		Name = "Distcc 3.2";
+		Description = "Distcc 3.2 compiler";
+		Vendor = Distcc;
 		Version = "3.2";
 		IsAbstract = NO;
 		"ShowInCompilerSelectionPopup" = YES;
@@ -39,6 +39,17 @@
 			"-save-temps",
 			"-W*",
 			"-w",
+			"-fdiagnostics-show-note-include-stack",
+			"-fmacro-backtrace-limit*",
+			"-fmessage-length*",
+			"-fcolor-diagnostics",
+			"-fvectorize",
+			"-flto",
+			"-fstrict-aliasing",
+			"-fno-strict-aliasing",
+			"-fmodules-autolink",
+			"-fmodules-prune-interval*",
+			"-fmodules-prune-after*",
 		);
 		"MessageCategoryInfoOptions" = (
 			"--print-diagnostic-categories",
@@ -63,10 +74,38 @@
 			{
 				Name = "print_note_include_stack";
 				Type = Boolean;
-				DefaultValue = NO;
+				DefaultValue = YES;
 				CommandLineArgs = {
 					YES = (
 						"-fdiagnostics-show-note-include-stack",
+					);
+					NO = ();
+				};
+			},
+			{
+				Name = "CLANG_MACRO_BACKTRACE_LIMIT";
+				Type = String;
+				DefaultValue = 0;
+				"CommandLinePrefixFlag" = "-fmacro-backtrace-limit=";
+			},
+			{
+				Name = "CLANG_RETAIN_COMMENTS_FROM_SYSTEM_HEADERS";
+				Type = Boolean;
+				DefaultValue = NO;
+				CommandLineArgs = {
+					YES = (
+						"-fretain-comments-from-system-headers",
+					);
+					NO = ();
+				};
+			},
+			{
+				Name = "CLANG_COLOR_DIAGNOSTICS";
+				Type = Boolean;
+				DefaultValue = "$(COLOR_DIAGNOSTICS)";
+				CommandLineArgs = {
+					YES = (
+						"-fcolor-diagnostics",
 					);
 					NO = ();
 				};
@@ -164,7 +203,7 @@
 					"sourcecode.cpp.cpp",
 					"sourcecode.cpp.objcpp",
 				);
-				Category = Language;
+				Category = LanguageCXX;
 			},
 			{
 				Name = "CLANG_CXX_LIBRARY";
@@ -192,7 +231,7 @@
 					);
 				};
 				AppearsAfter = "CLANG_CXX_LANGUAGE_STANDARD";
-				Category = Language;
+				Category = LanguageCXX;
 			},
 			{
 				Name = "GCC_ENABLE_OBJC_GC";
@@ -237,7 +276,7 @@
 					"sourcecode.c.objc",
 					"sourcecode.cpp.objcpp",
 				);
-				Category = Language;
+				Category = LanguageObjC;
 			},
 			{
 				Name = "CLANG_LINK_OBJC_RUNTIME";
@@ -257,7 +296,77 @@
 					"sourcecode.c.objc",
 					"sourcecode.cpp.objcpp",
 				);
-				Category = Language;
+				Category = LanguageObjC;
+			},
+			{
+				Name = "CLANG_ENABLE_MODULES";
+				Type = Boolean;
+				DefaultValue = NO;
+				CommandLineArgs = {
+					YES = (
+						"-fmodules",
+					);
+					NO = ();
+				};
+				Category = LanguageModules;
+			},
+			{
+				Name = "CLANG_MODULE_CACHE_PATH";
+				Type = String;
+				DefaultValue = "$(MODULE_CACHE_DIR)";
+				CommandLineArgs = {
+					"" = ();
+					"<<otherwise>>" = (
+						"-fmodules-cache-path=$(CLANG_MODULE_CACHE_PATH)",
+					);
+				};
+				Condition = "$(CLANG_ENABLE_MODULES) == YES";
+			},
+			{
+				Name = "CLANG_MODULES_AUTOLINK";
+				Type = Boolean;
+				DefaultValue = YES;
+				CommandLineArgs = {
+					YES = ();
+					NO = (
+						"-fno-autolink",
+					);
+				};
+				Condition = "$(CLANG_ENABLE_MODULES) == YES";
+				Category = LanguageModules;
+			},
+			{
+				Name = "CLANG_MODULES_PRUNE_INTERVAL";
+				Type = String;
+				DefaultValue = "";
+				CommandLineArgs = {
+					"" = ();
+					"<<otherwise>>" = (
+						"-fmodules-prune-interval=$(value)",
+					);
+				};
+				Condition = "$(CLANG_ENABLE_MODULES) == YES";
+			},
+			{
+				Name = "CLANG_MODULES_PRUNE_AFTER";
+				Type = String;
+				DefaultValue = "";
+				CommandLineArgs = {
+					"" = ();
+					"<<otherwise>>" = (
+						"-fmodules-prune-after=$(value)",
+					);
+				};
+				Condition = "$(CLANG_ENABLE_MODULES) == YES";
+			},
+			{
+				Name = "CLANG_MODULES_IGNORE_MACROS";
+				Type = StringList;
+				DefaultValue = "$(GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS)";
+				CommandLineArgs = (
+					"-fmodules-ignore-macro=$(value)",
+				);
+				Condition = "$(CLANG_ENABLE_MODULES) == YES";
 			},
 			{
 				Name = "GCC_CHAR_IS_UNSIGNED_CHAR";
@@ -323,7 +432,7 @@
 					"sourcecode.cpp.cpp",
 					"sourcecode.cpp.objcpp",
 				);
-				Category = Language;
+				Category = LanguageCXX;
 			},
 			{
 				Name = "GCC_ENABLE_CPP_RTTI";
@@ -339,7 +448,7 @@
 					"sourcecode.cpp.cpp",
 					"sourcecode.cpp.objcpp",
 				);
-				Category = Language;
+				Category = LanguageCXX;
 			},
 			{
 				Name = "GCC_ENABLE_PASCAL_STRINGS";
@@ -390,30 +499,6 @@
 				Category = Language;
 			},
 			{
-				Name = "GCC_USE_INDIRECT_FUNCTION_CALLS";
-				Type = Boolean;
-				DefaultValue = NO;
-				CommandLineArgs = {
-					YES = (
-						"-mlong-branch",
-					);
-					NO = ();
-				};
-				Category = Language;
-			},
-			{
-				Name = "GCC_USE_REGISTER_FUNCTION_CALLS";
-				Type = Boolean;
-				DefaultValue = NO;
-				CommandLineArgs = {
-					YES = (
-						"-mlong-calls",
-					);
-					NO = ();
-				};
-				Category = Language;
-			},
-			{
 				Name = "GCC_PREFIX_HEADER";
 				Type = String;
 				DefaultValue = "";
@@ -441,7 +526,7 @@
 					"sourcecode.c.c",
 					"sourcecode.c.objc",
 				);
-				Category = Language;
+				Category = CustomFlags;
 			},
 			{
 				Name = "OTHER_CPLUSPLUSFLAGS";
@@ -450,7 +535,7 @@
 					"sourcecode.cpp.cpp",
 					"sourcecode.cpp.objcpp",
 				);
-				Category = Language;
+				Category = CustomFlags;
 			},
 			{
 				Name = "GCC_GENERATE_DEBUGGING_SYMBOLS";
@@ -467,12 +552,48 @@
 					2,
 					3,
 					s,
+					fast,
 				);
 				DefaultValue = s;
 				CommandLineArgs = (
 					"-O$(value)",
 				);
 				Category = CodeGeneration;
+			},
+			{
+				Name = "LLVM_OPTIMIZATION_LEVEL_VAL_0";
+				Type = Boolean;
+				DefaultValue = NO;
+			},
+			{
+				Name = "LLVM_OPTIMIZATION_LEVEL_VAL_1";
+				Type = Boolean;
+				DefaultValue = NO;
+			},
+			{
+				Name = "LLVM_OPTIMIZATION_LEVEL_VAL_2";
+				Type = Boolean;
+				DefaultValue = NO;
+			},
+			{
+				Name = "LLVM_OPTIMIZATION_LEVEL_VAL_3";
+				Type = Boolean;
+				DefaultValue = NO;
+			},
+			{
+				Name = "LLVM_OPTIMIZATION_LEVEL_VAL_s";
+				Type = Boolean;
+				DefaultValue = NO;
+			},
+			{
+				Name = "LLVM_OPTIMIZATION_LEVEL_VAL_fast";
+				Type = Boolean;
+				DefaultValue = YES;
+			},
+			{
+				Name = "LLVM_IMPLICIT_AGGRESSIVE_OPTIMIZATIONS";
+				Type = Boolean;
+				DefaultValue = "$(LLVM_OPTIMIZATION_LEVEL_VAL_$(GCC_OPTIMIZATION_LEVEL))";
 			},
 			{
 				Name = "LLVM_LTO";
@@ -607,15 +728,33 @@
 			},
 			{
 				Name = "GCC_WARN_ABOUT_RETURN_TYPE";
-				Type = Boolean;
+				Type = Enumeration;
+				AllowedValues = (
+					YES,
+					NO,
+					"YES_ERROR",
+				);
 				DefaultValue = NO;
 				CommandLineArgs = {
-					YES = (
-						"-Wreturn-type",
+					YES = ();
+					"YES_ERROR" = (
+						"-Werror=return-type",
 					);
 					NO = (
 						"-Wno-return-type",
 					);
+				};
+				Category = Warnings;
+			},
+			{
+				Name = "CLANG_WARN_DOCUMENTATION_COMMENTS";
+				Type = Boolean;
+				DefaultValue = NO;
+				CommandLineArgs = {
+					YES = (
+						"-Wdocumentation",
+					);
+					NO = ();
 				};
 				Category = Warnings;
 			},
@@ -638,6 +777,26 @@
 				Category = WarningsObjC;
 			},
 			{
+				Name = "CLANG_WARN_DIRECT_OBJC_ISA_USAGE";
+				Type = Enumeration;
+				AllowedValues = (
+					YES,
+					NO,
+					"YES_ERROR",
+				);
+				DefaultValue = YES;
+				CommandLineArgs = {
+					YES = ();
+					"YES_ERROR" = (
+						"-Werror=deprecated-objc-isa-usage",
+					);
+					NO = (
+						"-Wno-deprecated-objc-isa-usage",
+					);
+				};
+				Category = Warnings;
+			},
+			{
 				Name = "CLANG_WARN_OBJC_MISSING_PROPERTY_SYNTHESIS";
 				Type = Boolean;
 				DefaultValue = NO;
@@ -651,6 +810,26 @@
 					"sourcecode.c.objc",
 					"sourcecode.cpp.objcpp",
 				);
+				Category = WarningsObjC;
+			},
+			{
+				Name = "CLANG_WARN_OBJC_ROOT_CLASS";
+				Type = Enumeration;
+				AllowedValues = (
+					YES,
+					NO,
+					"YES_ERROR",
+				);
+				DefaultValue = YES;
+				CommandLineArgs = {
+					YES = ();
+					NO = (
+						"-Wno-objc-root-class",
+					);
+					"YES_ERROR" = (
+						"-Werror=objc-root-class",
+					);
+				};
 				Category = WarningsObjC;
 			},
 			{
@@ -669,7 +848,57 @@
 					"sourcecode.c.objc",
 					"sourcecode.cpp.objcpp",
 				);
-				Category = WarningsObjC;
+				Category = WarningsObjCARC;
+			},
+			{
+				Name = "CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK";
+				Type = Boolean;
+				DefaultValue = NO;
+				CommandLineArgs = {
+					YES = (
+						"-Warc-repeated-use-of-weak",
+					);
+					NO = (
+						"-Wno-arc-repeated-use-of-weak",
+					);
+				};
+				FileTypes = (
+					"sourcecode.c.objc",
+					"sourcecode.cpp.objcpp",
+				);
+				Category = WarningsObjCARC;
+			},
+			{
+				Name = "CLANG_WARN_OBJC_EXPLICIT_OWNERSHIP_TYPE";
+				Type = Boolean;
+				DefaultValue = NO;
+				CommandLineArgs = {
+					YES = (
+						"-Wexplicit-ownership-type",
+					);
+					NO = ();
+				};
+				FileTypes = (
+					"sourcecode.c.objc",
+					"sourcecode.cpp.objcpp",
+				);
+				Category = WarningsObjCARC;
+			},
+			{
+				Name = "CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF";
+				Type = Boolean;
+				DefaultValue = NO;
+				CommandLineArgs = {
+					YES = (
+						"-Wimplicit-retain-self",
+					);
+					NO = ();
+				};
+				FileTypes = (
+					"sourcecode.c.objc",
+					"sourcecode.cpp.objcpp",
+				);
+				Category = WarningsObjCARC;
 			},
 			{
 				Name = "GCC_WARN_NON_VIRTUAL_DESTRUCTOR";
@@ -739,7 +968,7 @@
 					"sourcecode.c.objc",
 					"sourcecode.cpp.objcpp",
 				);
-				Category = WarningsObjC;
+				Category = WarningsObjCARC;
 			},
 			{
 				Name = "CLANG_WARN__DUPLICATE_METHOD_MATCH";
@@ -762,9 +991,7 @@
 				Type = Boolean;
 				DefaultValue = YES;
 				CommandLineArgs = {
-					YES = (
-						"-Wformat",
-					);
+					YES = ();
 					NO = (
 						"-Wno-format",
 					);
@@ -857,11 +1084,19 @@
 			},
 			{
 				Name = "GCC_WARN_UNINITIALIZED_AUTOS";
-				Type = Boolean;
+				Type = Enumeration;
+				AllowedValues = (
+					YES,
+					"YES_AGGRESSIVE",
+					NO,
+				);
 				DefaultValue = NO;
 				CommandLineArgs = {
 					YES = (
 						"-Wuninitialized",
+					);
+					"YES_AGGRESSIVE" = (
+						"-Wconditional-uninitialized",
 					);
 					NO = (
 						"-Wno-uninitialized",
@@ -974,6 +1209,20 @@
 					);
 					NO = (
 						"-Wno-int-conversion",
+					);
+				};
+				Category = Warnings;
+			},
+			{
+				Name = "CLANG_WARN_BOOL_CONVERSION";
+				Type = Boolean;
+				DefaultValue = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CommandLineArgs = {
+					YES = (
+						"-Wbool-conversion",
+					);
+					NO = (
+						"-Wno-bool-conversion",
 					);
 				};
 				Category = Warnings;
@@ -1098,7 +1347,7 @@
 				Name = "WARNING_CFLAGS";
 				Type = StringList;
 				DefaultValue = "";
-				Category = Warnings;
+				Category = CustomFlags;
 			},
 			{
 				Name = "GCC_PREPROCESSOR_DEFINITIONS";
@@ -1121,6 +1370,22 @@
 				Name = "GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS";
 				Type = StringList;
 				DefaultValue = "";
+				Category = Preprocessing;
+			},
+			{
+				Name = "ENABLE_NS_ASSERTIONS";
+				Type = Boolean;
+				DefaultValue = YES;
+				CommandLineArgs = {
+					YES = ();
+					NO = (
+						"-DNS_BLOCK_ASSERTIONS=1",
+					);
+				};
+				FileTypes = (
+					"sourcecode.c.objc",
+					"sourcecode.cpp.objcpp",
+				);
 				Category = Preprocessing;
 			},
 			{
@@ -1266,7 +1531,7 @@
 					"sourcecode.c.objc",
 					"sourcecode.cpp.objcpp",
 				);
-				Category = Language;
+				Category = LanguageObjC;
 			},
 			{
 				Name = "GCC_CW_ASM_SYNTAX";
@@ -1283,22 +1548,6 @@
 					"x86_64",
 				);
 				Category = Language;
-			},
-			{
-				Name = "GCC_FAST_OBJC_DISPATCH";
-				Type = Boolean;
-				DefaultValue = YES;
-				CommandLineArgs = {
-					YES = ();
-					NO = (
-						"-fno-objc-direct-dispatch",
-					);
-				};
-				FileTypes = (
-					"sourcecode.c.objc",
-					"sourcecode.cpp.objcpp",
-				);
-				Category = CodeGeneration;
 			},
 			{
 				Name = "GCC_UNROLL_LOOPS";
@@ -1322,6 +1571,7 @@
 					);
 					NO = ();
 				};
+				Condition = "$(LLVM_IMPLICIT_AGGRESSIVE_OPTIMIZATIONS) == NO";
 				Category = CodeGeneration;
 			},
 			{
@@ -1456,6 +1706,24 @@
 				CommonOption = NO;
 			},
 			{
+				Name = "CLANG_DEBUG_INFORMATION_LEVEL";
+				Type = Enumeration;
+				AllowedValues = (
+					default,
+					"line-tables-only",
+				);
+				DefaultValue = default;
+				CommandLineArgs = {
+					default = ();
+					"line-tables-only" = (
+						"-gline-tables-only",
+					);
+				};
+				Condition = "$(GCC_GENERATE_DEBUGGING_SYMBOLS)";
+				CommonOption = NO;
+				Category = CodeGeneration;
+			},
+			{
 				Name = "GCC_ENABLE_SSE3_EXTENSIONS";
 				Type = Boolean;
 				DefaultValue = NO;
@@ -1557,7 +1825,9 @@
 					"sse4.1",
 					"sse4.2",
 					avx,
+					avx2,
 				);
+				AvoidMacroDefinition = YES;
 				DisplayName = "Enable Additional Vector Extensions";
 				DefaultValue = "$(DEFAULT_SSE_LEVEL_4_2_$(GCC_ENABLE_SSE42_EXTENSIONS))";
 				CommandLineArgs = {
@@ -1777,11 +2047,11 @@
 		);
 	},
 	{
-		Identifier = "com.apple.compilers.distcc.llvm.clang.1_0.compiler";
+		Identifier = "com.distcc.compilers.distcc.3_2.compiler";
 		Type = Compiler;
-		BasedOn = "com.apple.compilers.distcc.llvm.clang.1_0";
-		Name = "Distcc compiler 3.2";
-		Description = "Distcc compiler 3.2";
+		BasedOn = "com.distcc.compilers.distcc.3_2";
+		Name = "Distcc 3.2";
+		Description = "Distcc 3.2 compiler";
 		IsAbstract = YES;
 		"ShowInCompilerSelectionPopup" = NO;
 		Architectures = (
@@ -1795,16 +2065,24 @@
 			sdk,
 		);
 		FallbackTools = (
-			"com.apple.compilers.llvm.clang.1_0",
+			"com.apple.compilers.llvmgcc42",
 		);
 		"ExecCPlusPlusLinkerPath" = "clang++";
 		"SupportsGeneratePreprocessedFile" = YES;
 		"SupportsGenerateAssemblyFile" = YES;
 		"CommandResultsPostprocessor" = "XCClangResultsPostprocessor";
 		"SupportsSerializedDiagnostics" = YES;
+		DependencyInfoFile = "$(OutputDir)/$(OutputFileBase).d";
+		DependencyInfoArgs = (
+			"-MMD",
+			"-MT",
+			dependencies,
+			"-MF",
+			"$(DependencyInfoFile)",
+		);
 	},
 	{
-		Identifier = "com.apple.compilers.distcc.llvm.clang.1_0.analyzer";
+		Identifier = "com.distcc.compilers.llvm.clang.1_0.analyzer";
 		Type = Compiler;
 		BasedOn = "com.apple.compilers.llvm.clang.1_0";
 		Name = "Static Analyzer";
@@ -1816,7 +2094,7 @@
 			armv7,
 		);
 		ExecPath = "$(CLANG_ANALYZER_EXEC)";
-		RuleName = "Analyze $(InputFile)";
+		RuleName = "Analyze$(CLANG_STATIC_ANALYZER_MODE_ACTION_$(CLANG_STATIC_ANALYZER_MODE)) $(InputFile)";
 		OutputDir = "$(CLANG_ANALYZER_OUTPUT_DIR)/StaticAnalyzer/$(PROJECT_NAME)/$(TARGET_NAME)/$(CURRENT_VARIANT)/$(CURRENT_ARCH)";
 		OutputFileExtension = plist;
 		OutputsAreProducts = YES;
@@ -1824,6 +2102,7 @@
 		"ShowInCompilerSelectionPopup" = NO;
 		"ShowOnlySelfDefinedProperties" = YES;
 		SoftError = YES;
+		SupportsAnalyzeFile = YES;
 		CommandOutputParser = (
 			(
 				"^([^:]*):([0-9]*):[0-9]*: [^:]*error: (.*)$",
@@ -1846,14 +2125,19 @@
 			"sourcecode.cpp.cpp",
 			"sourcecode.cpp.objcpp",
 		);
-		OverridingProperties = {
-			"OTHER_PRECOMP_CFLAGS" = "$(inherited) -D__clang_analyzer__";
-		};
 		Options = (
 			{
 				Name = "CLANG_ANALYZER_EXEC";
 				Type = Path;
 				DefaultValue = "$(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang";
+			},
+			{
+				Name = "CLANG_ANALYZER_DEFINES";
+				Type = String;
+				DefaultValue = "-D__clang_analyzer__";
+				CommandLineArgs = (
+					"$(value)",
+				);
 			},
 			{
 				Name = "CLANG_ANALYZER_OUTPUT_DIR";
@@ -1875,6 +2159,86 @@
 						"-analyzer-output=$(value)",
 					);
 				};
+			},
+			{
+				Name = "CLANG_ANALYZER_ALTERNATE_EDGES";
+				Type = Boolean;
+				DefaultValue = YES;
+				CommandLineArgs = {
+					NO = (
+						"-Xclang",
+						"-analyzer-config",
+						"-Xclang",
+						"path-diagnostics-alternate=false",
+					);
+					YES = (
+						"-Xclang",
+						"-analyzer-config",
+						"-Xclang",
+						"path-diagnostics-alternate=true",
+					);
+				};
+			},
+			{
+				Name = "CLANG_ANALYZER_REPORT_MAIN_SOURCE_FILE";
+				Type = Boolean;
+				DefaultValue = YES;
+				CommandLineArgs = {
+					NO = ();
+					YES = (
+						"-Xclang",
+						"-analyzer-config",
+						"-Xclang",
+						"report-in-main-source-file=true",
+					);
+				};
+			},
+			{
+				Name = "RUN_CLANG_STATIC_ANALYZER";
+				Type = Boolean;
+				DefaultValue = NO;
+				Category = SAPolicy;
+			},
+			{
+				Name = "CLANG_STATIC_ANALYZER_MODE_ACTION_shallow";
+				Type = String;
+				DefaultValue = Shallow;
+			},
+			{
+				Name = "CLANG_STATIC_ANALYZER_MODE_ACTION_deep";
+				Type = String;
+				DefaultValue = "";
+			},
+			{
+				Name = "CLANG_STATIC_ANALYZER_MODE";
+				Type = Enumeration;
+				AllowedValues = (
+					shallow,
+					deep,
+				);
+				DefaultValue = shallow;
+				CommandLineArgs = {
+					shallow = (
+						"-Xclang",
+						"-analyzer-config",
+						"-Xclang",
+						"mode=shallow",
+					);
+					deep = ();
+				};
+				AppearsAfter = "RUN_CLANG_STATIC_ANALYZER";
+				Category = SAPolicy;
+			},
+			{
+				Name = "CLANG_STATIC_ANALYZER_MODE_ON_ANALYZE_ACTION";
+				Type = Enumeration;
+				AllowedValues = (
+					shallow,
+					deep,
+				);
+				DefaultValue = deep;
+				AppearsAfter = "CLANG_STATIC_ANALYZER_MODE";
+				Category = SAPolicy;
 			},
 			{
 				Name = "CLANG_ANALYZER_DEADCODE_DEADSTORES";
@@ -1906,6 +2270,10 @@
 						"-analyzer-disable-checker",
 						"-Xclang",
 						"osx.cocoa.VariadicMethodTypes",
+						"-Xclang",
+						"-analyzer-disable-checker",
+						"-Xclang",
+						"osx.cocoa.NilArg",
 					);
 				};
 				Category = SAObjCCheckers;
@@ -1925,21 +2293,6 @@
 						"-analyzer-disable-checker",
 						"-Xclang",
 						"osx.cocoa.NSError",
-					);
-				};
-				Category = SAObjCCheckers;
-			},
-			{
-				Name = "CLANG_ANALYZER_OBJC_CFNUMBER";
-				Type = Boolean;
-				DefaultValue = YES;
-				CommandLineArgs = {
-					YES = ();
-					NO = (
-						"-Xclang",
-						"-analyzer-disable-checker",
-						"-Xclang",
-						"osx.coreFoundation.CFNumber",
 					);
 				};
 				Category = SAObjCCheckers;
@@ -1978,6 +2331,11 @@
 				Name = "CLANG_ANALYZER_MALLOC";
 				Type = Boolean;
 				DefaultValue = YES;
+			},
+			{
+				Name = "CLANG_ANALYZER_MEMORY_MANAGEMENT";
+				Type = Boolean;
+				DefaultValue = "$(CLANG_ANALYZER_MALLOC)";
 				CommandLineArgs = {
 					YES = ();
 					NO = (
@@ -1989,6 +2347,14 @@
 						"-analyzer-disable-checker",
 						"-Xclang",
 						"unix.MallocSizeof",
+						"-Xclang",
+						"-analyzer-disable-checker",
+						"-Xclang",
+						"unix.MismatchedDeallocator",
+						"-Xclang",
+						"-analyzer-disable-checker",
+						"-Xclang",
+						"cplusplus.NewDelete",
 					);
 				};
 				Category = SACheckers;
@@ -2286,7 +2652,7 @@
 		);
 	},
 	{
-		Identifier = "com.apple.compilers.distcc.llvm.clang.1_0.migrator";
+		Identifier = "com.distcc.compilers.llvm.clang.1_0.migrator";
 		Type = Compiler;
 		BasedOn = "com.apple.compilers.llvm.clang.1_0";
 		Name = "ObjC Migrator";
@@ -2320,7 +2686,41 @@
 		);
 	},
 	{
-		Identifier = "com.apple.compilers.distcc.llvm.clang.1_0.astbuilder";
+		Identifier = "com.distcc.compilers.llvm.clang.1_0.migrator.xctest";
+		Type = Compiler;
+		BasedOn = "com.apple.compilers.llvm.clang.1_0";
+		Name = "XCTest Migrator";
+		Description = "Apple Clang XCTest Migrator";
+		Architectures = (
+			i386,
+			"x86_64",
+			armv6,
+			armv7,
+		);
+		ExecPath = "$(CLANG)";
+		OutputDir = "$(TEMP_DIR)/Migrator";
+		OutputFileExtension = remap;
+		OutputsAreProducts = YES;
+		IsAbstract = YES;
+		"CommandResultsPostprocessor" = "XCClangResultsPostprocessor";
+		"SupportsSerializedDiagnostics" = YES;
+		"ShowInCompilerSelectionPopup" = NO;
+		"ShowOnlySelfDefinedProperties" = YES;
+		SourceFileOption = "--migrate-xct";
+		FileTypes = (
+			"sourcecode.c.objc",
+			"sourcecode.cpp.objcpp",
+		);
+		Options = (
+			{
+				Name = CLANG;
+				Type = Path;
+				DefaultValue = clang;
+			},
+		);
+	},
+	{
+		Identifier = "com.distcc.compilers.llvm.clang.1_0.astbuilder";
 		Type = Compiler;
 		BasedOn = "com.apple.compilers.llvm.clang.1_0";
 		Name = "AST Builder";
@@ -2336,6 +2736,7 @@
 			"ENABLE_HEADER_DEPENDENCIES" = YES;
 			"SHARED_PRECOMPS_DIR" = "$(INDEX_PRECOMPS_DIR)";
 			"CLEAN_PRECOMPS" = NO;
+			"CLANG_RETAIN_COMMENTS_FROM_SYSTEM_HEADERS" = YES;
 		};
 		RuleName = "Build AST from $(InputFile)";
 		OutputFileExtension = ast;

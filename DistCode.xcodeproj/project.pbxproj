@@ -21,6 +21,7 @@
 		30409BEA17F9EDD500DD93A9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30409BE917F9EDD500DD93A9 /* AppDelegate.m */; };
 		3047011818FC77FB00ADFCAF /* user-busy.png in Resources */ = {isa = PBXBuildFile; fileRef = 3047011618FC77FB00ADFCAF /* user-busy.png */; };
 		3047011918FC77FB00ADFCAF /* user-online.png in Resources */ = {isa = PBXBuildFile; fileRef = 3047011718FC77FB00ADFCAF /* user-online.png */; };
+		307DCE80191AEB55009552C0 /* Distcc 3.2.strings in Resources */ = {isa = PBXBuildFile; fileRef = 307DCE7E191AEB55009552C0 /* Distcc 3.2.strings */; };
 		3084B09C18FF0CB7003C64F2 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3084B09B18FF0CB7003C64F2 /* CoreFoundation.framework */; };
 		30995DFE1905DAAC000E2B90 /* io.c in Sources */ = {isa = PBXBuildFile; fileRef = 30995DF41905DAAC000E2B90 /* io.c */; };
 		30995DFF1905DAAC000E2B90 /* mon.c in Sources */ = {isa = PBXBuildFile; fileRef = 30995DF51905DAAC000E2B90 /* mon.c */; };
@@ -52,7 +53,6 @@
 		30F4623817EAEA11008042F1 /* distclang.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F4623717EAEA11008042F1 /* distclang.1 */; };
 		30FAAB1B181C2316002051EB /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 303AA3CD17E991060077FFC3 /* AppKit.framework */; };
 		30FAAB1C181C2316002051EB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 303AA3CF17E991060077FFC3 /* Foundation.framework */; };
-		30FAAB2C181C23F4002051EB /* Distcc compiler 3.2.strings in Resources */ = {isa = PBXBuildFile; fileRef = 30FAAB2A181C23F4002051EB /* Distcc compiler 3.2.strings */; };
 		30FAAB30181C2406002051EB /* Distcc 3.2.xcspec in Resources */ = {isa = PBXBuildFile; fileRef = 30FAAB2F181C2406002051EB /* Distcc 3.2.xcspec */; };
 		30FAAB32181C244E002051EB /* version.plist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30FAAB2D181C2401002051EB /* version.plist */; };
 		30FAAB36181C24E3002051EB /* distclang in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F4623317EAEA11008042F1 /* distclang */; };
@@ -260,6 +260,7 @@
 		30409BF517F9EDD500DD93A9 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		3047011618FC77FB00ADFCAF /* user-busy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user-busy.png"; sourceTree = "<group>"; };
 		3047011718FC77FB00ADFCAF /* user-online.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user-online.png"; sourceTree = "<group>"; };
+		307DCE7F191AEB55009552C0 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = "English.lproj/Distcc 3.2.strings"; sourceTree = "<group>"; };
 		3084B09B18FF0CB7003C64F2 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		30995DF41905DAAC000E2B90 /* io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = io.c; path = distcc/src/io.c; sourceTree = SOURCE_ROOT; };
 		30995DF51905DAAC000E2B90 /* mon.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mon.c; path = distcc/src/mon.c; sourceTree = SOURCE_ROOT; };
@@ -333,7 +334,6 @@
 		30F4623717EAEA11008042F1 /* distclang.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = distclang.1; sourceTree = "<group>"; };
 		30FAAB1A181C2316002051EB /* Distcc 3.2.xcplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Distcc 3.2.xcplugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		30FAAB1F181C2316002051EB /* Distcc 3.2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Distcc 3.2-Info.plist"; sourceTree = "<group>"; };
-		30FAAB2B181C23F4002051EB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/Distcc compiler 3.2.strings"; sourceTree = "<group>"; };
 		30FAAB2D181C2401002051EB /* version.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = version.plist; sourceTree = "<group>"; };
 		30FAAB2F181C2406002051EB /* Distcc 3.2.xcspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xcspec; path = "Distcc 3.2.xcspec"; sourceTree = "<group>"; };
 		30FAAB37181C252F002051EB /* usr */ = {isa = PBXFileReference; lastKnownFileType = folder; path = usr; sourceTree = "<group>"; };
@@ -582,10 +582,10 @@
 		30FAAB1E181C2316002051EB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				307DCE7E191AEB55009552C0 /* Distcc 3.2.strings */,
 				30FAAB37181C252F002051EB /* usr */,
 				30FAAB2F181C2406002051EB /* Distcc 3.2.xcspec */,
 				30FAAB2D181C2401002051EB /* version.plist */,
-				30FAAB2A181C23F4002051EB /* Distcc compiler 3.2.strings */,
 				30FAAB1F181C2316002051EB /* Distcc 3.2-Info.plist */,
 			);
 			name = "Supporting Files";
@@ -674,6 +674,7 @@
 			knownRegions = (
 				en,
 				Base,
+				English,
 			);
 			mainGroup = 303AA3C117E991060077FFC3;
 			productRefGroup = 303AA3CB17E991060077FFC3 /* Products */;
@@ -776,7 +777,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				30FAAB30181C2406002051EB /* Distcc 3.2.xcspec in Resources */,
-				30FAAB2C181C23F4002051EB /* Distcc compiler 3.2.strings in Resources */,
+				307DCE80191AEB55009552C0 /* Distcc 3.2.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -914,12 +915,12 @@
 			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
-		30FAAB2A181C23F4002051EB /* Distcc compiler 3.2.strings */ = {
+		307DCE7E191AEB55009552C0 /* Distcc 3.2.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				30FAAB2B181C23F4002051EB /* en */,
+				307DCE7F191AEB55009552C0 /* English */,
 			);
-			name = "Distcc compiler 3.2.strings";
+			name = "Distcc 3.2.strings";
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
