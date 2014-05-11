@@ -23,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>dcln</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>1.0.1</string>
 	<key>DTCompiler</key>
 	<string>com.distcc.compilers.distcc.3_2</string>
 	<key>DTPlatformBuild</key>

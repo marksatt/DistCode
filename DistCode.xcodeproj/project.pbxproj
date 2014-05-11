@@ -12,6 +12,12 @@
 		300D3283180360E800EDD3BC /* distccmon-text in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F4622917EAE819008042F1 /* distccmon-text */; };
 		300D3284180360E800EDD3BC /* distccd in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F4622717EAE815008042F1 /* distccd */; };
 		300D3285180360E800EDD3BC /* distcc in CopyFiles */ = {isa = PBXBuildFile; fileRef = 30F4622517EAE80F008042F1 /* distcc */; };
+		30131571191FDFA900388D78 /* applications-system.svg in Resources */ = {isa = PBXBuildFile; fileRef = 3013156B191FDFA900388D78 /* applications-system.svg */; };
+		30131572191FDFA900388D78 /* computer.svg in Resources */ = {isa = PBXBuildFile; fileRef = 3013156C191FDFA900388D78 /* computer.svg */; };
+		30131573191FDFA900388D78 /* preferences-system-network.svg in Resources */ = {isa = PBXBuildFile; fileRef = 3013156D191FDFA900388D78 /* preferences-system-network.svg */; };
+		30131574191FDFA900388D78 /* user-busy.svg in Resources */ = {isa = PBXBuildFile; fileRef = 3013156E191FDFA900388D78 /* user-busy.svg */; };
+		30131575191FDFA900388D78 /* user-online.svg in Resources */ = {isa = PBXBuildFile; fileRef = 3013156F191FDFA900388D78 /* user-online.svg */; };
+		30131576191FDFA900388D78 /* utilities-system-monitor.svg in Resources */ = {isa = PBXBuildFile; fileRef = 30131570191FDFA900388D78 /* utilities-system-monitor.svg */; };
 		30143ED018072AEE004B0B54 /* mac_client-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 30143ECF18072AEE004B0B54 /* mac_client-512.png */; };
 		3032ECFF180D314B0069D360 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3032ECFE180D314B0069D360 /* Defaults.plist */; };
 		30409BD717F9EDD500DD93A9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30409BD617F9EDD500DD93A9 /* Cocoa.framework */; };
@@ -245,6 +251,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3013156B191FDFA900388D78 /* applications-system.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "applications-system.svg"; sourceTree = "<group>"; };
+		3013156C191FDFA900388D78 /* computer.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = computer.svg; sourceTree = "<group>"; };
+		3013156D191FDFA900388D78 /* preferences-system-network.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "preferences-system-network.svg"; sourceTree = "<group>"; };
+		3013156E191FDFA900388D78 /* user-busy.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "user-busy.svg"; sourceTree = "<group>"; };
+		3013156F191FDFA900388D78 /* user-online.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "user-online.svg"; sourceTree = "<group>"; };
+		30131570191FDFA900388D78 /* utilities-system-monitor.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "utilities-system-monitor.svg"; sourceTree = "<group>"; };
 		30143ECF18072AEE004B0B54 /* mac_client-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mac_client-512.png"; sourceTree = "<group>"; };
 		3032ECFE180D314B0069D360 /* Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults.plist; sourceTree = "<group>"; };
 		303AA3CD17E991060077FFC3 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -484,6 +496,12 @@
 		30409BDD17F9EDD500DD93A9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				3013156B191FDFA900388D78 /* applications-system.svg */,
+				3013156C191FDFA900388D78 /* computer.svg */,
+				3013156D191FDFA900388D78 /* preferences-system-network.svg */,
+				3013156E191FDFA900388D78 /* user-busy.svg */,
+				3013156F191FDFA900388D78 /* user-online.svg */,
+				30131570191FDFA900388D78 /* utilities-system-monitor.svg */,
 				3047011618FC77FB00ADFCAF /* user-busy.png */,
 				3047011718FC77FB00ADFCAF /* user-online.png */,
 				30FAAB49181C2812002051EB /* AppIcon.icns */,
@@ -763,6 +781,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30131574191FDFA900388D78 /* user-busy.svg in Resources */,
+				30131576191FDFA900388D78 /* utilities-system-monitor.svg in Resources */,
+				30131575191FDFA900388D78 /* user-online.svg in Resources */,
 				3047011818FC77FB00ADFCAF /* user-busy.png in Resources */,
 				30FAAB3D181C26F3002051EB /* Distcc 3.2.xcplugin in Resources */,
 				30FAAB40181C27E3002051EB /* Images.xcassets in Resources */,
@@ -772,10 +793,13 @@
 				30143ED018072AEE004B0B54 /* mac_client-512.png in Resources */,
 				30409BE717F9EDD500DD93A9 /* Credits.rtf in Resources */,
 				3032ECFF180D314B0069D360 /* Defaults.plist in Resources */,
+				30131572191FDFA900388D78 /* computer.svg in Resources */,
 				30F3C437180B43AB00614C58 /* vpn-512.png in Resources */,
 				30FAAB3A181C26D3002051EB /* MainMenu.xib in Resources */,
+				30131571191FDFA900388D78 /* applications-system.svg in Resources */,
 				30FAAB50181C2812002051EB /* utilities-system-monitor.icns in Resources */,
 				30FAAB4F181C2812002051EB /* computer.icns in Resources */,
+				30131573191FDFA900388D78 /* preferences-system-network.svg in Resources */,
 				30FAAB4D181C2812002051EB /* AppIcon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
