@@ -94,6 +94,27 @@ void *get_in_addr(struct sockaddr *sa)
 NSNetServiceBrowser* Browser = nil;
 @implementation AppDelegate
 
++ (NSComparisonResult)compareVersion:(NSString*)versionOne toVersion:(NSString*)versionTwo {
+    NSArray* versionOneComp = [versionOne componentsSeparatedByString:@"."];
+    NSArray* versionTwoComp = [versionTwo componentsSeparatedByString:@"."];
+    
+    NSInteger pos = 0;
+    
+    while ([versionOneComp count] > pos || [versionTwoComp count] > pos) {
+        NSInteger v1 = [versionOneComp count] > pos ? [[versionOneComp objectAtIndex:pos] integerValue] : 0;
+        NSInteger v2 = [versionTwoComp count] > pos ? [[versionTwoComp objectAtIndex:pos] integerValue] : 0;
+        if (v1 < v2) {
+            return NSOrderedAscending;
+        }
+        else if (v1 > v2) {
+            return NSOrderedDescending;
+        }
+        pos++;
+    }
+    
+    return NSOrderedSame;
+}
+
 - (id)init
 {
     self = [super init];
@@ -102,7 +123,10 @@ NSNetServiceBrowser* Browser = nil;
 		DistCCServers = [NSMutableArray new];
 		Tasks = [NSMutableArray new];
 		NSString* Path = [NSString stringWithFormat:@"%@/.dmucs", NSHomeDirectory()];
-		[[NSFileManager defaultManager] createDirectoryAtPath:Path withIntermediateDirectories:NO attributes:nil error:nil];
+        if([[NSFileManager defaultManager] fileExistsAtPath:Path isDirectory:NULL] == NO)
+        {
+            [[NSFileManager defaultManager] createDirectoryAtPath:Path withIntermediateDirectories:NO attributes:nil error:nil];
+        }
         NSString* HostsPath = [NSString stringWithFormat:@"%@/.dmucs/hosts-info", NSHomeDirectory()];
         [[NSFileManager defaultManager] removeItemAtPath:HostsPath error:nil];
 		
@@ -115,6 +139,19 @@ NSNetServiceBrowser* Browser = nil;
 			NSString* PluginPath = [[NSBundle mainBundle] pathForResource:@"Distcc 3.2" ofType:@"xcplugin"];
 			[[NSFileManager defaultManager] copyItemAtPath:PluginPath toPath:PluginLink error:nil];
 		}
+        else
+        {
+            NSBundle* CurrentBundle = [NSBundle bundleWithPath:PluginLink];
+            NSString* CurrentVersion = [[CurrentBundle infoDictionary] objectForKey:@"CFBundleVersion"];
+            NSString* PluginPath = [[NSBundle mainBundle] pathForResource:@"Distcc 3.2" ofType:@"xcplugin"];
+            NSBundle* NewBundle = [NSBundle bundleWithPath:PluginPath];
+            NSString* NewVersion = [[NewBundle infoDictionary] objectForKey:@"CFBundleVersion"];
+            if([AppDelegate compareVersion:CurrentVersion toVersion:NewVersion] == NSOrderedAscending)
+            {
+                [[NSFileManager defaultManager] removeItemAtPath:PluginLink error:nil];
+                [[NSFileManager defaultManager] copyItemAtPath:PluginPath toPath:PluginLink error:nil];
+            }
+        }
 	}
     return self;
 }
