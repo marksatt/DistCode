@@ -67,6 +67,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		30131567191FD36D00388D78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 303AA41817E9962C0077FFC3 /* distcc-read-only.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 303AA3E617E9962C0077FFC3;
+			remoteInfo = "distcc-read-only";
+		};
 		30995DE31905D9C5000E2B90 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 30F461F417EAE499008042F1 /* dmucs.xcodeproj */;
@@ -607,6 +614,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				30131568191FD36D00388D78 /* PBXTargetDependency */,
 				30BF29F61906700B00104783 /* PBXTargetDependency */,
 				30BF29F81906700B00104783 /* PBXTargetDependency */,
 				30BF29FA1906700B00104783 /* PBXTargetDependency */,
@@ -843,6 +851,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		30131568191FD36D00388D78 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "distcc-read-only";
+			targetProxy = 30131567191FD36D00388D78 /* PBXContainerItemProxy */;
+		};
 		30BF29F61906700B00104783 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = dmucs;
