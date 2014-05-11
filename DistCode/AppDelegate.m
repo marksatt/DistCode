@@ -193,7 +193,6 @@ NSNetServiceBrowser* Browser = nil;
 	NSString* DmucsPath = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"dmucs"];
 	DmucsPipe = [NSPipe new];
 	DmucsDaemon = [self beginDaemonTask:DmucsPath withArguments:[NSArray new] andPipe:DmucsPipe];
-	sleep(1);
 	MonitorLoopTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(monitorLoop) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:MonitorLoopTimer forMode:NSEventTrackingRunLoopMode];
 	
@@ -401,9 +400,7 @@ NSNetServiceBrowser* Browser = nil;
 			[DistCCServerController addObject:DistCCDict];
 		}
 		[self writeDmucsHostsFile];
-		sleep(1);
 		[self addDistCCServer:HostName];
-		sleep(1);
 		if(!NetService || ([HostName isCaseInsensitiveLike:SelfHostName]))
 		{
 			NSPipe* LocalLoadAvgPipe = [NSPipe new];
@@ -453,7 +450,6 @@ NSNetServiceBrowser* Browser = nil;
 		}
 	}
 	[self writeDmucsHostsFile];
-	sleep(1);
 	[self removeDistCCServer:@"localhost"];
 }
 
@@ -510,7 +506,6 @@ NSNetServiceBrowser* Browser = nil;
 				[self removeDistCCServer:[DistCCDict objectForKey:@"HOSTNAME"]];
 				[DistCCServerController removeObject:DistCCDict];
 				[self writeDmucsHostsFile];
-				sleep(1);
 			}
 		}
 		[services removeObject:netService];
@@ -613,7 +608,6 @@ NSNetServiceBrowser* Browser = nil;
 				[self removeDistCCServer:[DistCCDict objectForKey:@"HOSTNAME"]];
 				[DistCCServerController removeObject:DistCCDict];
 				[self writeDmucsHostsFile];
-				sleep(1);
 			}
 		}
 		[services removeObject:netService];
