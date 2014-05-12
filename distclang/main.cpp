@@ -100,13 +100,6 @@ int main(int argc, const char * argv[])
 		Args[ArgIdx++] = strdup(argv[i]);
 	}
 	Args[ArgIdx++] = NULL;
-    
-    std::string command = getHostPath;
-    for (int Index = 0; Index < ArgIdx; Index++)
-    {
-        command += " ";
-        command += Args[Index];
-    }
 	
 	int forkret = fork();
     if (forkret == 0) {
