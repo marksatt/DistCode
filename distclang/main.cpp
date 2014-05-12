@@ -85,8 +85,6 @@ int main(int argc, const char * argv[])
 	
 	std::string getHostPath = std::string(path, pathLen);
 	getHostPath += "/gethost";
-//	std::string pumpPath = std::string(path, pathLen);
-//	pumpPath += "/pump";
 	std::string distccPath = std::string(path, pathLen);
 	distccPath += "/distcc";
 	
@@ -95,7 +93,6 @@ int main(int argc, const char * argv[])
 	Args[ArgIdx++] = strdup(getHostPath.c_str());
 	Args[ArgIdx++] = strdup("--wait");
 	Args[ArgIdx++] = timeoutBuffer;
-	//Args[ArgIdx++] = strdup(pumpPath.c_str());
 	Args[ArgIdx++] = strdup(distccPath.c_str());
 	Args[ArgIdx++] = strdup("xcrun");
 	Args[ArgIdx++] = strdup(name);
@@ -103,6 +100,13 @@ int main(int argc, const char * argv[])
 		Args[ArgIdx++] = strdup(argv[i]);
 	}
 	Args[ArgIdx++] = NULL;
+    
+    std::string command = getHostPath;
+    for (int Index = 0; Index < ArgIdx; Index++)
+    {
+        command += " ";
+        command += Args[Index];
+    }
 	
 	int forkret = fork();
     if (forkret == 0) {
@@ -119,7 +123,11 @@ int main(int argc, const char * argv[])
 	
     /* parent process -- just wait for the child */
     int status = 0;
-    (void) wait(&status);
+    pid_t pid = -1;
+    do
+    {
+        pid = waitpid(forkret, &status, 0);
+    } while (pid == -1 && errno == EINTR);
 	
     return WEXITSTATUS(status);
 }
