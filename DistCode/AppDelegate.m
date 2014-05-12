@@ -310,7 +310,8 @@ NSNetServiceBrowser* Browser = nil;
 			NSUInteger GigaBytesLessOS = (GigaBytes - 2);
 			NSUInteger MaxTasks = NumCPUs <= GigaBytesLessOS ? NumCPUs : GigaBytesLessOS;
 			SumTasks += MaxTasks;
-			NSString* Entry = [NSString stringWithFormat:@"%@ %ld %ld\n", IP, (long)MaxTasks, (long)Pri];
+            
+			NSString* Entry = [NSString stringWithFormat:@"%@ %ld %ld\n", IP, (long)NumCPUs, (long)Pri];
 			fwrite([Entry UTF8String], 1, strlen([Entry UTF8String]), f);
 		}
 	}
@@ -403,6 +404,9 @@ NSNetServiceBrowser* Browser = nil;
 		[DistCCDict setObject:[NSNumber numberWithBool:YES] forKey:@"ACTIVE"];
 		[DistCCDict setValue:@"Updating..." forKey:@"STATUS"];
 		[DistCCDict setObject:[[NSBundle mainBundle] imageForResource:@"mac_client-512"] forKey:@"ICON"];
+        [DistCCDict setValue:@"0" forKey:@"LOADAVG1"];
+        [DistCCDict setValue:@"0" forKey:@"LOADAVG5"];
+        [DistCCDict setValue:@"0" forKey:@"LOADAVG10"];
 		
 		for (NSUInteger i = 0; i < [Components count]-1; i+=2)
 		{
