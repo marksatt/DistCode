@@ -1,0 +1,15 @@
+/*                                                                 */
+/*    START THE AS400 POS TCP RECEIVER                             */
+/*                                                                 */
+/*    ADU TEST REGION V1.0                                         */
+
+ STARTAU17:  PGM        PARM(&ANYVALUE)
+  DCL &ANYVALUE *CHAR 10
+  CHGLIBL LIBL(QGPL QTEMP ) CURLIB(ADUTESTLIB)
+
+             SBMJOB     CMD(STRCICSUSR CTLRGN(ADUC) TRANID(A17R)) +
+                          JOB(RUNAU17R) JOBQ(*LIBL/ADUCJOBQ) +
+                          USER(CICSTST)
+
+ENDPGM
+

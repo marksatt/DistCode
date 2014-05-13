@@ -1,0 +1,114 @@
+
+               S I M P L E  S O C K E T S  L I B R A R Y
+               -----------  -------------  -------------
+                     Charles E. Campbell, Jr. PhD.
+                           Terry McRoberts
+
+   =====================================================================   
+
+1. Current Version: 7c Tue Aug 23 09:03:41 EDT 2005
+
+   (an [a-z] suffix to your version number indicates that you have
+   received a beta copy of the next release).
+
+2. The Simple Sockets Library is public domain, and therefore may be copied and
+   distributed freely.
+
+3. You should have the following files:
+
+   Makefile            -- UNIX makefile    -> simpleskts.a and executables
+   Makelib.            -- MSDOS/MicroSoft Library making commands
+   Makeskt.bat         -- MSDOS "makefile" -> smplskts.lib and executables
+   Makeskt.com         -- VMS "makefile"   -> simpleskts.lib and executables
+
+                       -- Sockets Library Functions <sockets.h>
+   Saccept.c           -- generate an Accept Socket from a Server Socket
+   Sclose.c            -- close any kind of Socket
+   Sgets.c             -- get a null-byte-terminated string from a Socket
+   Smaskwait.c         -- mask (group of) Socket support: Smaskwait Smaskset etc
+   Smkskt.c            -- internal: make a Socket
+   Sopen.c             -- open a Server or Client Socket
+   Sopenv.c            -- open a Server or Client Socket over a machine path
+   Speek.c             -- peek on a Socket
+   Speeraddr.c         -- returns the peer's IP address
+   Speername.c         -- returns the peer's name (a string)
+   Sprintf.c           -- print formatted i/o to a Socket
+   Sprtskt.c           -- return a string describing a Socket
+   Sputs.c             -- put a null-byte-terminated string onto a Socket
+   Sread.c             -- read available bytes from a Socket
+   Sreadbytes.c        -- read specified qty of bytes from a Socket
+   Srmsrvr.c           -- forcibly remove a Server from the PortMaster
+   Sscanf.c            -- read formatted i/o from a Socket
+   Stest.c             -- test if anything is available on a Socket
+   Stimeoutwait.c      -- set timeout parameters for Smaskwait
+   Svprintf.c          -- "vprintf" for a Socket
+   Swait.c             -- wait on a Socket
+   Swrite.c            -- write bytes onto a Socket
+
+                       -- "Extended I/O" Library Support <xtdio.h>
+   cprt.c              -- make a character into a visible string
+   error.c             -- give ***error***/warning/note messages
+   fopenv.c            -- fopen with search along an environment variable path
+   outofmem.c          -- check if memory allocation succeeded
+   rdcolor.c           -- make GREEN, UYELLOW, etc escape-sequence strings
+   rdcolor.dat         -- specifies GREEN etc escape-sequences for various terminals
+   sprt.c              -- make a string into a completely-visible'ized version
+   srmtrblk.c          -- remove trailing white space from a string
+   stpblk.c            -- return a ptr to first non-white-space character
+   stpnxt.c            -- return a ptr past a format-code specified (ex. %d) string
+   strnxtfmt.c         -- returns a ptr to the end of a format code
+
+   ./DOC:
+   History             -- History, differences, and updates file
+   README              -- This file
+   porting.doc         -- Directions on how to port the Simple Sockets Library
+   (sockets.ps         -- PostScript document source, not always distributed)
+   sockets.tex         -- LaTeX document source, used to create <sockets.ps>
+
+   ./EXAMPLES:
+   multiskt.c          -- Multiple client example program
+   oobrecv.c           -- How to receive out-of-band data
+   oobsend.c           -- How to send out-of-band data
+   sktpoll.c           -- Client polling for a server to open example
+   sktsig.c            -- Sockets and SIGIO handling (unix)
+   smclient.c          -- A real small client example
+   smsrvr.c            -- A real small server example
+   Makefile            -- Used to make these examples
+
+   ./EXE:
+   Spm.c               -- The PortMaster
+   sktdbg.c            -- Simple Sockets Library Debugger
+   spmchk.c            -- PortMaster presence detector:
+                          Returns 0/1 status for testing if the PortMaster is running
+   spmtable.c          -- Gets tables of current servers the PortMaster has
+   srmsrvr.c           -- Remove servers from a PortMaster
+   Makefile            -- Used to make these utilities
+
+   ./HDR:
+   rdcolor.h           -- BLACK, RED, GREEN, ... support
+   sockets.h           -- The Simple Sockets Library header file
+   xstdlib.h           -- For those sorry machines without <stdlib.h>
+   xtdio.h             -- "Extended I/O" Library (partial) header file
+
+   ./AS400:            -- Steve Richard's AS/400 Port
+   ADUCBAT             -- cl will compile library modules
+   ADUCBATB            -- cl will compile and bind executables
+   AS400.NOTES         -- notes on Steve Richard's modifications
+   READ.ME             -- file containing explanation of scripts
+   RUNAU17             -- Spm will auto-start a server
+   adusslbnd           -- binder export file that crtsslsrv uses
+   crtsslsrv           -- cl will create service program after module compiling
+   startau17w          -- supports the RUNAU17 command
+
+4. Check out <rdcolor.dat> for better use of color terminals.  If your sktdbg,
+   for example, appears in monochrome, you may have to modify <rdcolor.dat> to
+   support your terminal.  Some machines (such as PCs) may not have the
+   environment variable TERM set.  More info on this is in <sockets.tex>.
+
+5. The latest version is available via the web:
+       http://www.erols.com/astronaut/ssl
+
+   However, that website is due to change soon (by Sep 2004) to
+       http://www.verizon.net/astronaut/ssl
+
+        Charles E Campbell, Jr., Ph.D.

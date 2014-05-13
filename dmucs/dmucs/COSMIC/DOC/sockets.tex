@@ -1,0 +1,1726 @@
+\documentclass[12pt]{article}
+
+\title{\textbf{The Simple Sockets Library \\ \normalsize\em Version 6}}
+\author{Charles E. Campbell, Jr., {\normalsize Ph.D.} \and Terry McRoberts}
+
+\def\COSMIC{{\small COSMIC}}
+\def\SSL{{\small SSL}}
+\def\IRL{{\small IRL}}
+\def\TCP{{\small TCP/IP }}
+\def\TradeMark{{\tiny (tm) }}
+
+\newtheorem{example}{Example}[section]
+
+\newcommand{\widepage}{
+ \setlength{\topmargin}{0.0in}
+ \setlength{\textheight}{8.75in}
+ \setlength{\footskip}{0.25in}
+ \setlength{\oddsidemargin}{0in}
+ \setlength{\textwidth}{6.5in}
+ }
+\widepage
+\renewcommand{\thepage}{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+{
+The {\em Simple Sockets Library} (\SSL) allows~C~programmers to use
+interprocess communications via Berkeley sockets simply and quickly.
+The programmer is able to move information easily between processes
+on the same or different machines connected via Ethernet \TradeMark and using
+the \TCP\ protocol.  Most of the \SSL's functions resemble C's file i/o
+functions, so~C~programmers will find the {\SSL} easy to learn.
+\vspace{1ex}
+
+The {\SSL} currently runs under various {\small UNIX \TradeMark} machines:
+{\small IRIX \TradeMark} (Silicon Graphics), SunOS \TradeMark (Sun), Domain O/S
+\TradeMark (Apollo), Ultrix \TradeMark (Dec), {\small AIX \TradeMark} ({\small
+IBM}), {\small SCO \TradeMark}, {\small OSF \TradeMark}, and {\small VMS} 5.x
+\TradeMark, and {\small MS-DOS \TradeMark} (using Borland C++ 5.0).
+}
+
+\vspace{.25in}
+\begin{table}[h]
+  \begin{center}
+  \small
+  {\bf Keywords}   \footnotesize
+  \begin{tabular}{ll}
+    Socket Interprocess Communications  & Intermachine Communications \\
+    Berkeley Sockets                    & Ethernet                    \\
+    {\TCP}                                & Robotics                    \\
+    Machine Control                     &
+  \end{tabular}
+  \end{center}
+\end{table}
+
+\end{abstract}
+
+\titlepage
+\tableofcontents
+\newpage
+\setcounter{page}{1}
+\renewcommand{\thepage}{\arabic{page}}
+
+\section{Copyright}
+    \begin{verbatim}
+   Copyright: Copyright (C) 1999-2005 Charles E. Campbell, Jr.
+              Permission is hereby granted to use and distribute this
+              code and documentation, with or without modifications,
+              provided that this copyright notice is copied with
+              it. Like anything else that's free, the Simple Sockets
+              Library is provided *as is* and comes with no warranty
+              of any kind, either expressed or implied.  By using
+              this software, you agree that in no event will the
+              copyright holder be liable for any damages resulting
+              from the use of this software.
+    \end{verbatim}
+\section{Introduction}
+
+The {\em Simple Sockets Library} (henceforth to be abbreviated as the \SSL)
+allows~C~programmers to develop systems of cooperating programs using Berkeley
+streaming Sockets running under the {\TCP} protocol over Ethernet.  The
+{\SSL} provides simple ways to move information between programs running on the
+same or different machines and does so with little overhead.  During
+experiments with the {\em Sreadbytes} and {\em Swrite} functions, for example,
+between two machines,~a~$44,000$ bytes/second transfer rate was achieved with
+4~bytes per packet and over $1,000,000$ bytes/second was achieved with
+128~bytes per packet.  Of course, heavily loaded networks will affect the rate
+individual users achieve.  The {\SSL} provides {\em two-way} communications.
+
+The {\SSL} was designed to resemble the {\small FILE} i/o system provided
+by the standard~C~libraries (ie.~fopen, fclose, fputs, etc. map to
+{\SSL} analogs Sopen, Sclose, Sputs, etc.).  Thus,~C~programmers typically
+find the {\SSL} easy to learn.
+
+A~good analogy for the {\SSL} refers to the phone system.  There are three types
+of Sockets supported by the {\SSL} that concern the user:~a~{\em server},~a~{\em
+client}, and an {\em accept} socket. ~A~server is analogous to someone waiting
+by several phones for~a~call,~a~client is analogous to someone making~a~call,
+and an accept is analogous to~a~(server) person accepting the call by picking
+up one of the phones.
+
+Thus, one must have~a~server for~a~client to make~a~successful connection.  The
+server must in turn accept the connection.  Unlike our overworked server
+person, however, the computer using the {\SSL} is perfectly happy handling
+multiple ``accept'' Sockets concurrently.
+
+The {\SSL} itself is provided in three main parts (see Table~\ref{three-parts}).
+The {\em Library} is composed of~C~functions and the {\em PortMaster} and the
+{\em Utilities} are self-contained programs.
+
+\begin{table}[ht]
+  \caption{\bf The Three Parts of the \SSL}
+  \label{three-parts}
+  \begin{description}
+
+  \item[Library] The functions that the users will link to are in the
+    library.
+
+  \item[PortMaster] The PortMaster is~a~d\"aemon program which runs in
+    the background.  It allows {\em clients} to connect to {\em servers}
+    using any available ports.
+
+  \item[Utilities] There are several utility programs provided with
+    the \SSL: {\tt sktdbg}, {\tt srmsrvr}, and {\tt spmtable}.
+  \end{description}
+\end{table}
+
+The {\SSL} was used at the
+Intelligent Robotics Laboratory (\IRL) since May, 1991.  The software appears
+to be stable at the current writing and reasonably robust.  For example, the
+PortMaster,~a~background process provided in the {\SSL} distribution, is
+resistant to hanging (and thereby being unresponsive). It uses {\em
+Stimeoutwait\/}s (see the Reference Manual) to return to its normal quiescent
+mode when communications with one of its clients ceases unexpectedly.
+
+The \IRL\ uses the {\SSL} to control its three robots; its use of the Ethernet
+is consequently somewhat heavy.  Those of you who wish to control machinery or
+otherwise present~a~heavy load may wish to purchase~a~``bridge'' to isolate
+your machines from your local network.  This isolation will benefit both the
+you and the network, as the heavy user will not be afflicted with slowdowns due
+to the network and the network will not be bothered with lots of packets which
+slows all its users down.
+
+
+\newpage
+\section{The Library}
+
+The user of the {\SSL} accesses it by linking his or her program to~a~{\em
+library}. ~A~software library is typically~a~single file which consists of some
+linkage information along with pre-compiled {\em object code}; unfortunately,
+methods for producing~a~library and linking to it vary from system to system
+and compiler to compiler.  Directions for several systems appear in the Section
+on Implementation.
+
+Practically speaking,~a~library is composed of~a~number of pre-compiled C
+functions to be utilized by the programmer.  The calls made available in the
+{\SSL} are reminiscent of those used by the various file functions in the C
+language (see Table~\ref{reminiscent}).
+
+\begin{table}[thb]
+  \begin{center}
+  \caption{Simple Sockets and Related File {\protect\small I/O} Functions}
+  \label{reminiscent}
+  \begin{tabular}{||l|l||}                        \hline\hline
+  {\em File Function} & {\em Socket Function}     \\ \hline
+  fopen               & Sopen                     \\ 
+  fclose              & Sclose                    \\ 
+  fread               & Sread                     \\
+  fwrite              & Swrite                    \\
+  fgets               & Sgets                     \\
+  fputs               & Sputs                     \\
+  fprintf             & Sprintf                   \\
+  fscanf              & Sscanf                    \\ \hline\hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+The Sockets library depends upon the {\em PortMaster} running on your host
+machine. Only one copy of the PortMaster need be running at any time on~a~given
+machine, and may be started up by anyone by running the {\em Spm} program in
+the background.  On Unix, the {\em Spm} program will put itself into the
+background.  One may determine if your system has~a~PortMaster running by
+typing {\em spmtable} first -- it will inform you of any existing servers if
+the PortMaster is up or tell you that the PortMaster is not up otherwise.
+
+A~new feature of the {\SSL} allows servers to share another machine's PortMaster.
+Thus, the {\SSL} supports both distributed and centralized socket name to port
+mapping.  If the machine on which~a~server is to run doesn't have~a~PortMaster,
+such as older {\small MSDOS} machines, then it can ``borrow'' another machine's
+PortMaster.
+
+A~program may open~a~server Socket,~a~client Socket, or an accept Socket.
+Following the phone system analogy, assume that~a~server Socket is opened
+first.  Then,~a~different program may open~a~client Socket which attempts to
+connect to the server -- it succeeds when the server program ``notices'' that
+there is~a~connection waiting on the server Socket and then generates an accept
+Socket.  The client Socket can open, however, before the server accepts the
+client; there just won't be any two-way communication until the server does
+accept the client.
+
+\subsection{User Guide}
+
+Software using~C~must \verb`#include "sockets.h"` and must link to the \SSL.
+Directions for doing so will vary from system to system and also depend upon
+where the installer placed the libraries.  Please refer to your compiler
+documentation and the {\SSL} installer to know how to set up library linkage
+paths and for the include path to the {\em sockets.h} file.
+
+The software below illustrates some typical Socket code fragments to get a
+connected socket, assuming that the \verb`sockets.h` file is on your compiler's
+include search path.  If the \verb`sockets.h` file has been placed in a
+standard system directory (not wise - updates to the compiler may wipe it off!)
+then you may have to substitute \verb`#include <sockets.h>` for \verb`#include` 
+"sockets.h"` in the following examples.
+
+\begin{example}~A~server with one accept     \\ \label{one-accept}
+ \begin{verbatim}
+    #include "sockets.h"
+    Socket *server;
+    Socket *skt;
+    server= Sopen("servername","s");
+    skt   = Saccept(server);
+    ...
+    Sclose(skt);
+    Sclose(server);
+ \end{verbatim}
+\end{example}
+
+Note in Example~\ref{one-accept} that the servername is completely up to the
+programmer to select.  Please note that all servers share the same namespace on
+any given machine, however.
+
+\begin{example}~A~server with multiple accepts \\ \label{multi-accept}
+ \begin{verbatim}
+    #include "sockets.h"
+    Socket *server=NULL;
+    Socket *skt=NULL;
+    server= Sopen("servername","s");
+    do {
+      skt= Saccept(server);
+      ...
+      Sclose(skt);
+      } while(whatever);
+    Sclose(server);
+ \end{verbatim}
+\end{example}
+
+Again, the programmer may select any servername.  Note that the {\em accept}
+Socket (``skt'') is re-used in Example~\ref{multi-accept}.  Actually, coding
+of multiple accept sockets is usually a bit more involved; see  \verb`multiskt.c`
+in the {\small EXAMPLES} directory.  I usually set up a doubly-linked list
+containing a Socket pointer for each such accepted client and put them
+on the mask (using \verb`Smaskset()`).  I can then use \verb`Smaskwait()` or
+\verb`Smasktimeoutwait()` to wait for any Socket, including the server itself,
+that needs attention.  Upon closing such a Socket, I also use  \verb`Smaskunset()`
+to remove it from the mask and do a double-link deletion.
+
+\begin{example}~A~client                    \\ \label{client}
+ \begin{verbatim}
+    #include "sockets.h"
+    Socket *client;
+    while(1) {
+      client= Sopen("serverName","c");
+      if(client) break;
+      sleep(1);
+      }
+    ...
+    Sclose(client);
+ \end{verbatim}
+\end{example}
+
+In Example~\ref{client}, the \verb`serverName` may be in the optional form
+\verb`serverName@machineName`.  Without the machine name specification, the
+PortMaster on the machine that the client is running on will be searched for
+the server.  The \verb`smsrvr.c` and \verb`smclient.c` example programs provided
+in the {\SSL} distribution give complete illustrations of Examples~\ref{one-accept}
+and \ref{client}.
+
+Note that the Sopen() of a client will fail if the server is not already up; in
+which case, a null pointer is returned.  Example~\ref{client} illustrates a
+probing method (in this case, once a second).  Example~\ref{blockingclient}
+shows an option to have Sopen() block until the requested server is available.
+
+\begin{example}~A~blocking~until~open~client \\ \label{blockingclient}
+ \begin{verbatim}
+    #include "sockets.h"
+    Socket *client;
+    client= Sopen("serverName","b");
+    ...
+    Sclose(client);
+ \end{verbatim}
+\end{example}
+
+In Example~\ref{blockingclient}, the requested server may or may not be up already.
+If the server is available, a normal client connection is opened.  If the server
+is {\it not} available, then the client will block (wait) until the server
+is brought up.  Internally, the PortMaster places any clients that open using
+this option on a waiting list when the server is not available.  When the server
+connects to the PortMaster, the PortMaster then checks its waiting list for
+clients who wish to connect.
+
+\begin{example} Using Sopenv                                 \\ \label{using-sopenv}
+ \begin{verbatim}
+    #include "sockets.h"
+    Socket *client;
+    while(1) {
+      client= Sopenv("serverName","c","SKTPATH");
+      if(client) break;
+      sleep(1);
+      }
+    ...
+    Sclose(client);
+ \end{verbatim}
+\end{example}
+
+The {\SSL} allows the programmer to set up~a~group of machines for making client
+connections.  In Example~\ref{using-sopenv}, the {\SSL} tries to open~a~client
+to~a~server named \verb`serverName` on any machine on the {\small SKTPATH}.
+The ``{\small SKTPATH}'' is an environment variable typically of the form
+\verb`machine1:machine2:machine3`, ie.~a list of machine names separated by
+colons.  This example also shows~a~typical client connection attempt and sleep
+polling loop.
+
+A~somewhat larger example is included in the distribution: \verb`multiskt.c`.
+This example program concurrently accepts multiple clients on~a~single server,
+reads any messages sent its way from any of its clients, and sends~a~modified
+version back to the sending client.  It uses the {\em Smaskwait} functions to
+block the multiskt process for friendly multi-tasking.  It is~a~useful program
+to study in conjunction with the Manual below.
+
+Connected sockets are~a~pre-requisite for any of the {\small I/O} Socket
+functions described in the next section.  Note that the server should have a
+unique name on any given machine. Servers may have the same name on different
+machines, although this may be confusing.  It is suggested that one use the
+name of the process (at least as~a~prefix) for that purpose.  Note that the
+only things that one can do with~a~server Socket are: open one, close one,
+generate an accept Socket with one, and test/block on one (for clients
+requesting connection).  The {\SSL} supports up to $10$ clients concurrently
+awaiting acceptance on~a~server Socket, although many machines will limit
+that to $5$ (silently).
+
+The {\SSL} supports two way communication of data between~a~client and an accept
+Socket.  Since the processes are not likely to be synchronized, often one
+process must somehow wait until the other process has sent it something.  There
+are two methods to support this under the \SSL: polling and interrupt-driven.
+The polling method uses~a~lot of {\small CPU} time, but lets the program do
+other tasks in the meantime.  The interrupt-driven approach hangs the process
+(aka blocks and suspends) until something shows up on the Socket.  The
+Smask{\small XXX} group of functions allows one to hang the process until
+something shows up on any number of Sockets -- sort of~a~big {\small OR} gate!
+
+The Smask{\small XXX} alternative to polling also allows the programmer to
+insert non-socket file descriptors into the mask via Smaskfdset (and to remove
+them via Smaskunfdset) such as serial ports (ex. open with DEVICE), graphics queues
+(ex. {\small SGI}s with qgetfd), etc.
+
+
+\subsection{Reference Manual}
+
+This section contains~a~description of the functions available in the Socket
+Library.  The {\SSL} returns three types of Sockets:~a~server, client, and an
+accept Socket. ~A~Socket itself is~a~data structure {\em type} set up by the
+\verb`sockets.h` header file.  The Socket is deliberately used in~a~fashion
+reminiscent of the use of {\small FILE} pointers so that the~C~user who knows
+how to read and write~a~file will immediately feel comfortable with reading and
+writing Sockets.
+
+\begin{center}
+  \begin{tabular}{||ll|l|l||} \hline\hline
+  {\em Return}  &   & {\em Function} & {\em Argument}                           \\
+  {\em Type}    &   & {\em Name}     & {\em List}                               \\
+  \hline
+  Socket        & * & Saccept        & (Socket *skt)                            \\
+  void          &   & Sclose         & (Socket *skt)                            \\
+  char          & * & Sgets          & (char *buf, int maxbuf, Socket *skt)     \\
+  int           &   & Smaskfdisset   & (int fd)                                 \\
+  void          &   & Smaskfdset     & (int fd)                                 \\
+  fd\_set       &   & Smaskget       & ()                                       \\
+  int           &   & Smaskisset     & (Socket *skt)                            \\
+  void          &   & Smaskpop       & ()                                       \\
+  void          &   & Smaskpush      & ()                                       \\
+  void          &   & Smaskset       & (Socket *skt)                            \\
+  int           &   & Smasktest      & ()                                       \\
+  void          &   & Smasktime      & (long seconds,long useconds)             \\
+  void          &   & Smaskunset     & (Socket *skt)                            \\
+  void          &   & Smaskunfdset   & (int fd)                                 \\
+  void          &   & Smaskuse       & (fd\_set usermask)                       \\
+  int           &   & Smaskwait      & ()                                       \\
+  Socket        & * & Sopen          & (char *skthost, char *mode)              \\
+  Socket        & * & Sopenv         & (char *srvrname,char *ctrl,char *envvar) \\
+  int           &   & Speek          & (Socket *skt, char *buf, int buflen)     \\
+  unsigned long &   & Speeraddr      & (Socket *skt)                            \\
+  char          & * & Speername      & (Socket *skt)                            \\
+  void          &   & Sprintf        & (Socket *skt, char *fmt,...)             \\
+  char          & * & Sprtskt        & (Socket *skt)                            \\
+  void          &   & Sputs          & (char *buf, Socket *skt)                 \\
+  int           &   & Sread          & (Socket *skt, char *buf, int buflen)     \\
+  int           &   & Sreadbytes     & (Socket *skt, char *buf, int buflen)     \\
+  int           &   & Srmsrvr        & (char *skthost)                          \\
+  int           &   & Sscanf         & (Socket *skt, char *fmt, ...)            \\
+  int           &   & Stest          & (Socket *skt)                            \\
+  int           &   & Stimeoutwait   & (Socket *skt,long seconds,long useconds) \\
+  int           &   & Svprintf       & (Socket *skt, char *fmt, void *args)     \\
+  int           &   & Swait          & (Socket *skt)                            \\
+  int           &   & Swrite         & (Socket *skt, char *buf, int buflen)     \\
+  \hline\hline
+  \end{tabular}
+\end{center}
+
+\begin{description}
+
+\item[Socket *Saccept(Socket *skt)] \     This function takes~a~server Socket and produces~a~Socket which has
+    accepted~a~connection.  This function may be used as often as wanted on the
+    same server Socket!  Note that one must have successfully opened~a~server
+    prior to using Saccept to accept connections (see Examples~\ref{one-accept}
+    and \ref{multi-accept}).
+
+    If this operation is unsuccessful, then Saccept will return~a~null Socket
+    pointer.
+
+\item[void Sclose(Socket *skt)] \     This function closes~a~Socket of any type (server, client, accept).  The
+    Sclose function communicates with the local PortMaster whenever~a~server is
+    closed.
+
+\item[char *Sgets(char *buf, int maxbuf, Socket *skt)] \     This is an I/O function which assumes that one has already opened a
+    connected Socket ({\em skt}).  It will attempt to get~a~null-terminated
+    string from the Socket (up to maxbuf characters).  This call will block
+    (aka hang, sleep) until~a~string shows up, but otherwise acts much as a
+    fgets() function does.
+
+    If Sgets has~a~socket error, then~a~null pointer is returned.  Otherwise,
+    it returns the ``{\em buf}'' pointer.
+
+\item[int Smaskfdisset(int fd)] \     The Smaskfdisset() function works in conjunction with the Smaskwait()
+    function.  After the Smaskwait() function returns, one can use
+    Smaskfdisset(skt) to test if~a~particular file descriptor is read-ready.
+
+\item[void Smaskfdset(int fd)] \     The Smask{\small XXX} functions use~a~{\it mask} of type {\it fd\_set}
+    internally.  Other operations, such as use of~a~serial port under
+    Unix or the {\small\it GL} queue for {\small SGI}'s Irises (see their
+    qgetfd() function) use file descriptors.  This function allows one to
+    set up the Smask{\small XXX} mask with one or more of those file
+    descriptors.
+
+\item[Smask Smaskget()] \     The Smask{\small XXX} functions use~a~{\it mask} of type {\it fd\_set}
+    internally.  Other operations, such as use of~a~serial port under
+    Unix, can also be used to set masks.  This function provides access to
+    the mask set up by Smaskset.  The mate to this function is Smaskuse().
+
+\item[int Smaskisset(Socket *skt)] \     The Smaskisset() function works in conjunction with the Smaskwait()
+    function.  After the Smaskwait() function returns, one can use
+    Smaskisset(skt) to test if~a~particular Socket is read-ready.  It is
+    simpler then and thereby faster than Smasktest().
+
+\item[void Smaskpop()] \     The Smaskpop() function, along with the Smaskpush() function, allows
+    the programmer to manipulate an internal stack of masks.  The ``top''
+    mask is the current mask.
+
+\item[void Smaskpush()] \     The Smaskpush() function, along with the Smaskpop() function, allows
+    the programmer to manipulate an internal stack of masks.  The ``top''
+    mask is the current mask.
+
+\item[void Smaskset(Socket *skt)] \     This function is part of the {\em Smask{\small XXX}} group.  Sockets may be
+    set up for Smaskwait'ing one at~a~time.   Note that all Sockets are
+    effectively {\small OR}'ed together for blocking; to clear the mask, pass a
+    {\small NULL} Socket pointer to Smaskset:  Smaskset((Socket *) {\small
+    NULL});.
+
+\item[int Smasktest()] \     This function is part of the {\em Smask{\small XXX}} group.  The Smasktest
+    function supports polling -- one may determine if anything is on any of the
+    Smaskset Sockets and immediately receive~a~positive integer if there is,
+   ~a~0 if there isn't, and~a~negative number if there's an error.
+
+\item[void Smasktime(long seconds,long useconds)] \     This function is part of the {\em Smask{\small XXX}} group.
+    Normally Smaskwait will block ``forever'' (well, at least as long as
+    the machine stays up!).  However, one can specify~a~time limit -- then
+    Smaskwait will return with~a~value of 0 if the time limit is exceeded.  One
+    may specify the time limit in seconds and micro-seconds.  To clear the time
+    limit (ie.~restore Smaskwait to waiting forever), pass~a~negative time in
+    either or both arguments to Smasktime.  Waiting forever is also set up when
+    both arguments to Smasktime are zero.
+
+\item[void Smaskunfdset(int fd)] \     This function is part of the {\em Smask{\small XXX}} group.
+    File descriptors may be entered into the mask via the Smaskfdset()
+    function, and this function can remove it from the mask.  This function
+    is similar to the Smaskunset() function.
+
+\item[void Smaskunset(Socket *skt)] \     This function is part of the {\em Smask{\small XXX}} group.  Sockets may be
+    removed from the Smaskwait's mask one at~a~time via this function.  Like
+    {\em Smaskset},~a~{\em Smaskunset((Socket *) {\small NULL});} will clear
+    the entire mask.
+
+\item[void Smaskuse(Smask usermask)] \     This function is part of the {\em Smask{\small XXX}} group.  The internal
+    {\em mask} in Smask{\small XXX} can be set up by the user via this
+    function.  Often, Smaskset will be used to set up an internal mask,
+    Smaskget will be used to obtain the resulting mask, and Smaskuse will
+    be used to apply that mask.
+
+\item[int Smaskwait()] \     This function is part of the {\em Smask{\small XXX}} group.  The {\em
+    Smaskwait}  function will block (aka hang) the process until any Socket set
+    via Smaskset has something waiting on it to be read.  Note that Sockets set
+    by Smaskset are retained; ie.~they must be explicitly cleared by passing a
+    {\small NULL} Socket pointer to Smaskset.
+
+    Smaskwait returns~a~positive number if something is waiting on a
+    Socket, zero if~a~timeout occurs, and~a~negative number on an error.
+
+\item[Socket *Sopen(char *skthost, char *mode)] \     This function is the workhorse for opening Sockets.  Basically, it can make
+    either~a~server or~a~client depending on the mode.
+
+      \begin{center}
+      \begin{tabular}{|cl|}
+      \hline
+       \multicolumn{1}{|c}{\em Mode}  &
+       \multicolumn{1}{c|}{\em Effect}                                               \\
+      \hline
+        {\em s}           & open~a~server                                            \\
+        {\em S}           & open~a~server but, on failure, retry after using Srmsrvr \\
+        {\em c}           & open~a~client                                            \\
+        {\em b}           & open~a~blocking~client                                   \\
+        {\em s\verb`###`} & open~a~server with the specified port number             \\
+        {\em S\verb`###`} & like {\em S} above, but with the specified port          \\
+        {\em c\verb`###`} & open~a~client to~a~server with the specified port        \\
+      \hline
+      \end{tabular}
+      \end{center}
+
+    The {\em skthost} is the name of the server.  If one is making~a~{\em
+    client} Socket, then one may optionally use the form
+    ``servername@hostname'' for the skthost.  The ``@hostname'' form is not
+    necessary for clients to servers that are on the same host as the client,
+    as the default host is the local host.  The ``servername@hostname'' form
+    makes no sense for servers, and so, for opening servers, Sopen will ignore
+    any ``@hostname'' portion of skthost.
+
+    The {\em ``S''} mode for opening servers, like the {\em ``s''} mode, will
+    cause Sopen to attempt to open~a~server, but if unsuccessful, Sopen will
+    then use Srmsrvr using the provided skthost and then retry opening the
+    server.  In the case of {\em s\verb`###`} or {\em S\verb`###`}, the servers
+    are set up with the \TCP\ option {\small SO\_REUSEADDR}.  This option
+    alleviates some of the difficulties associated with re-starting servers
+    with fixed ports.
+
+    If the skthost is null or an empty string (""), the PortMaster is bypassed.
+    One must specify a port number to use in that case.  A warning is issued
+    (as well as a null \verb`Socket*`) because that is typically a programming
+    error, not a user error.
+
+    The PortMaster is also always bypassed for clients which specify port
+    number ({\em c\verb`###`}).  In the latter case,~a~client connection is
+    immediately attempted to the user-specified port number.  If the function
+    is not successful,~a~null Socket pointer is returned.
+
+    If the user-specified server port mode is used with a skthost, the server
+    will be registered with its PortMaster; clients need {\em not} use
+    specified-port mode to connect (ie.~they may set \verb`mode` to \verb`"c"`)
+    so long as they specify the correct name of the server.
+
+    PortMaster sharing (by setting the environment variable \verb`PMSHARE`)
+    causes servers to work with the {\em\small PMSHARE\/}-specified
+    machine's PortMaster.  Clients should use the name of the machine that
+    the {\em PortMaster} is on; the eventual connection will be made with the
+    appropriate server program, even though it is running on~a~different
+    machine than the PortMaster it uses. See Example~\ref{pmsharing} for
+    an illustration of how PortMaster sharing works.
+
+\item[Socket *Sopenv(char *srvrname,char *ctrl,char *envvar)] \     The {\em Sopenv} function is used to open client Sockets, but is formulated
+    to resemble the {\em Sopen} function with one additional argument.
+    Assuming your computer system supports the concept of environment
+    variables, the Sopenv function can use an environment variable of your
+    choice to help it open~a~client.  Typically,~a~{\small SKTPATH} environment
+    variable gets set up by the user with~a~colon-separated list of machine
+    names (ex. setenv {\small SKTPATH} ``gryphon:dragon:xorn'').  The Sopenv
+    function attempts to open~a~client to~a~server of the given name on the
+    current machine first, and then attempts to do so on each machine in the
+    given sequence.  If \verb`env_var` is NULL or~a~null string, then
+    \verb`SKTPATH` will be used instead.
+
+    If successful,~a~Socket pointer is returned, otherwise~a~{\small NULL}
+    Socket pointer is returned.  Please see Saccept on how to use servers.
+
+\item[int Speek(Socket *skt, char *buf, int buflen)] \     The {\em Speek} function behaves like Sread --- up to {\em buflen} bytes,
+    the buffer will be filled by whatever is currently on the Socket.  This
+    function does not remove those bytes from the Socket, however, and those
+    bytes will be returned again on subsequent Speek, Sread, etc.\ calls.  This
+    function does \underline{not} block (aka hang, sleep).
+
+    It will return EOF on select error, some negative number on recv error,
+    zero if no data is present on the Socket, and~a~positive count of the
+    available bytes otherwise.  In the latter case, {\em buf} will have~a~copy
+    of the bytes available.
+
+    {\small MS-DOS}: Speek will only return~a~1 when data is available on
+    the Socket, not the number of bytes available.  Furthermore, the buffer
+    {\em buf} will be~a~zero-length string with just~a~null byte.
+
+\item[unsigned long Speeraddr(Socket *skt)] \     The {\em Speeraddr} function returns the internet address of the
+    peer Socket.
+
+\item[char *Speername(Socket *skt)] \     The {\em Speername} function returns the name of the peer Socket.
+    Internally, it has three buffers; thus it can be used up to three times
+    in the same printf statement.
+
+\item[void Sprintf(Socket *skt, char *fmt,...)] \     The {\em Sprintf} function acts in an analogous fashion to fprintf,
+    sprintf, etc, by putting formatted strings, appropriately null byte
+    terminated,  through the Socket.  Thus, one may use either {\em Sgets} or
+    an appropriate {\em Sscanf} to receive the information.
+
+\item[char *Sprtskt(Socket *skt)] \     The {\em Sprtskt} function returns~a~string describing the Socket.
+
+\item[void Sputs(char *buf, Socket *skt)] \     The {\em Sputs} function puts~a~null byte terminated string on the Socket
+    in~a~fashion analogous to fputs.
+
+\item[int Sread(Socket *skt, char *buf, int buflen)] \     The {\em Sread} function is similar to the {\em read}
+    function in Unix.  This function can block (aka hang, sleep) if nothing is
+    on the Socket.  Otherwise, it will return up to {\em buflen} bytes in the
+    buffer ``{\em buf}''.  This function will return whatever is on the Socket,
+    and doesn't try to insure that buflen bytes are read.  It returns the
+    number of bytes read from the Socket.
+
+    On error, an EOF is returned.
+
+\item[int Sreadbytes(Socket *skt, char *buf, int buflen)] \     The {\em Sreadbytes} function behaves much like Sread, and it too can block
+    (aka hang, sleep) if nothing is on the Socket.  However, it will not return
+    until buflen bytes are read from the Socket and placed in ``buf''.
+
+    On error, an EOF is returned.
+
+\item[int Srmsrvr(char *skthost)] \     The {\em Srmsrvr} function is made available to take care of those
+    situations when {\small skt = Sopen(``servername'',``s'')} fails because
+    the servername has been inadvertently left in the PortMaster's PortTable.
+    This untoward event can happen, for example, when~a~process is
+    aborted/exited without calling Sclose on its server(s).  The Srmsrvr
+    function will remove~a~server (or server@host) from the PortMaster's
+    PortTable.  Note: it will \underline{not} close the associated Socket, nor
+    free up any Socket memory, and is \underline{not}~a~substitute for Sclose.
+
+    The {\em Srmsrvr} function will return either {\small PM\_OK} (if
+    successful) or {\small PM\_SORRY} (otherwise).
+
+\item[int Sscanf(Socket *skt, char *fmt, ...)] \     The {\em Sscanf} function acts much the same as sscanf and fscanf, taking
+    format strings and additional arguments in~a~like manner.  The arguments
+    Sscanf takes, of course, must all be appropriate pointers.  This function
+    will block if insufficient data is available on the socket according to the
+    {\em fmt}.
+
+    The {\em Sscanf} function returns the number of arguments for which it read
+    data, which may be zero or incomplete if~a~socket error occurred.
+    Normally, the returned count should equal the number of arguments with
+    which Sscanf was provided.
+
+\item[int Stest(Socket *skt)] \     The {\em Stest} function allows one to determine if anything is available
+    on the specified Socket, {\em without blocking}.
+
+    It will return EOF on select error, some negative number on recv error,
+    zero if no data is present on the Socket, and~a~positive count of the
+    available bytes otherwise.
+
+    {\small MS-DOS}: Stest will only return~a~1 when data is available
+    on the Socket, not the number of bytes available.
+
+\item[int Stimeoutwait(Socket *skt,long seconds,long useconds)] \     The {\em Stimeoutwait} function blocks on the given Socket, but for no
+    longer than the number of seconds plus the number of microseconds specified.
+    The function returns the number of bytes available on the Socket (which may be
+    zero), -1 if there was an error, and -2 on timeout.
+
+\item[int Svprintf(Socket *skt, char *fmt, void *args)] \     The {\em Svprintf} function reads bytes using~a~printf family format string
+    from the Socket.  As each format code is processed, the associated argument
+    is changed in the {\em args} vector.  It returns the number of format items
+    processed.
+
+\item[int Swait(Socket *skt)] \     The {\em Swait} function will block (aka hang, sleep) until the specified
+    Socket has data available.
+
+    It will return EOF on select error, some negative number on recv error,
+    zero if no data is present on the Socket, and~a~positive count of the
+    available bytes otherwise.
+
+\item[int Swrite(Socket *skt, char *buf, int buflen)] \     The {\em Swrite} function will write {\em buflen} bytes from the {\em buf}
+    buffer onto the specified Socket.
+
+    The function will return~a~count of the number of bytes transmitted through
+    the Socket, which should be equal to {\em buflen}.  If the output is less
+    than {\em buflen}, then an error occurred while writing to the Socket.
+
+\end{description}
+
+
+\subsection{Hints}
+
+The {\em Hints} below have been found useful at the Intelligent Robotics
+Laboratory.  They are based on almost a~year's experience with the \SSL.
+
+\begin{enumerate}
+
+  \item The ``Sscanf'' function is dangerous.  It will block until all of
+    the format codes in its {\em fmt} string have been used.  If somehow
+   ~a~programmer sends an improper string and Sscanf is used to receive it,
+    then the receiving program will probably hang for quite~a~while.
+    Dr.~Campbell has found that it is somewhat safer to use {\em Sgets} to
+    get an entire string from the Socket and then use {\em sscanf} and
+    {\em stpnxt} to parse it.
+
+  \item Polling is unfriendly to other processes -- it wastes~a~tremendous
+    amount of {\small CPU} time merely querying the Socket(s) to see if
+    anything is awaiting action.  The various blocking functions are much
+    better: Swait, Stimeoutwait, Smask{\small XXX}, etc.
+
+  \item Unless your processes will always run on the same kind of machine,
+    portability considerations argue against using Sread and Swrite to move
+    non-character string data around -- ie. floats, doubles, and even ints.
+    Even if the programmer tests out the machines and verifies that (s)he
+    can safely move, say,~a~double around, or even~a~vector of doubles,
+    data structures (\verb`struct XXX { ... }`) may have ``holes'' in them
+    placed there for word or byte alignment reasons.  These ``holes'' may
+    not be there (or may be placed differently) by other machines and compilers.
+
+  \item The Srmsrvr function is~a~rather rude function -- there is no
+    ownership check of~a~server.  Please use your process name (or your id) as
+    part of your server name so that servers do not clash.  Remember: your
+    server's name is in only one ``name space'' shared by all users on your
+    machine.
+
+  \item For those of you who wish to use other services (ex.~serial ports)
+    which can use the {\em select} function provided by \TCP, check out Smaskfdset
+    and its mate, Smaskunfdset.
+
+  \item The \IRL\ has been using~a~leading two character command
+    convention:     \verb`tp~L~x~y~z rx ry rz` will tell the ``left'' T3 robot to
+    move to ``x~y~z'' (inches) in space with an orientation of ``rx ry rz''
+    degrees (roll, pitch, yaw).  Longer words provide more readability but take
+    up more bandwidth.  Experimentally, Dr.~Campbell has found that \TCP
+    can transfer about 10,000 packets per second with up to 128 bytes in a
+    packet.  Loaded systems will, of course, achieve less throughput.
+
+  \item It is~a~good idea for clients to inform servers that they are
+    quitting.  The \IRL\ has used the following convention:  \verb`tq`
+    {\em t\/}ells the server that the messaging client is {\em q\/}uitting.
+    Also,~a~\verb`tQ` tells the server to shut itself down.  The server then
+    emits~a~\verb`tq` to all of its clients to inform them that the server is
+    shutting down (except for the one client who issued the shutdown command),
+    and then closes itself down with Sclose.
+
+  \item The server-client relationship is intimately involved with
+    object-oriented messaging -- refer to the literature on object-oriented
+    concepts.
+
+  \item The {\SSL} can be used to support~a~{\em no startup sequencing} paradigm.
+    Typically, clients who attempt to Sopen and fail should go into a
+    poll - sleep loop:
+
+     \begin{example} Client Socket Polling      \\ \label{client-polling}
+      \begin{verbatim}
+         skt= Sopen("servername","c");
+         while(!skt) {
+           sleep(1);
+           skt= Sopen("servername","c");
+           }
+      \end{verbatim}
+     \end{example}
+
+    The {\em multiskt.c} program illustrates how servers should be able
+    to accept multiple clients using blocking judiciously.
+
+    This non-sequencing approach allows one to bring up programs which have
+    servers and/or clients without worrying about what comes first.  For two
+    programs, this isn't terribly serious, but at the \IRL\ numerous
+    programs providing numerous services are available and sequencing would
+    be~a~nightmare.
+
+  \item As alluded to earlier, clients should tell servers and servers should
+    tell clients when they are going down.  The program that is {\em not}
+    quitting should return to an ``awaiting another client (or server)'' mode
+    (ie.~see the preceding item).  Thus,~a~troublesome program can be brought
+    down, the programs to which it is communicating will gracefully terminate
+    their connections, and the programmer can then (hopefully) fix the problem.
+    When the program is restarted, the non-sequencing approach will allow the
+    program to seamlessly re-enter into communications with the other software.
+
+  \item When~a~machine is down, and an attempt to connect~a~client Socket using
+    either {\em Sopen\/} directly or {\em Sopenv\/} to~a~server either normally
+    or possibly on that machine, the Sopen will fail but will take an inordinately
+    long time doing so (connection timeout).
+
+ \item When~a~program dies abruptly, connected Sockets appear to {\em select}()
+   to have something on them (select is used by Stest, Smasktest, Swait,
+   Smaskwait, Speek, Stimeoutwait).  Hence, functions which normally block
+   (Smaskwait, Swait) no longer block.  On computers which can {\small
+   MSG\_PEEK} (Unix, Vms), the Stest, Speek, Sgets, and Sscanf functions will
+   detect this situation and will return an error indication ({\small EOF},
+   {\small NULL} pointer, incomplete argument processed count) to indicate that
+   the Socket has~a~problem (one should then Sclose the affected Socket).
+
+   Furthermore, attempts to write to such dead Sockets may generate
+   {\small SIGPIPE}s on Unix boxes.  Unix programmers should write and install
+   signal handlers for {\small SIGPIPE}s.
+
+  \item For multiple concurrent Sockets, one should generate routines for both
+   closing and opening them.
+
+    \begin{example} Client Opening Function              \\ \label{client-opening}
+     \begin{verbatim}
+         #include "sockets.h"
+         typedef struct clientlist_str ClientList;
+         struct clientlist_str {
+             Socket *skt;
+             ClientList *nxt,*prv;
+             }
+         ClientList *clhd=NULL;
+         ClientList *cltl=NULL;
+          ...
+         ClientList *openClient(char *srvrname)
+         {
+         Socket *skt;
+         ClientList *clist;
+         while(1) {
+             skt= Sopen(srvrname,"c");
+             if(!skt) sleep(1);
+             }
+         clist= (ClientList *) malloc(sizeof(ClientList));
+         if(cltl) cltl->nxt= clist;
+         else     clhd     = clist;
+         clist->prv= cltl;
+         clist->nxt= NULL;
+         cltl      = clist;
+         Smaskset(skt);
+         clist->skt= skt;
+         return clist;
+         }
+     \end{verbatim}
+    \end{example}
+
+    The \verb`openClient`() function polls once~a~second in attempting to
+    open~a~client Socket.  Once it succeeds,~a~ClientList data structure
+    is allocated, double-linked, and~a~pointer to it returned.  In addition,
+    the new client Socket is added to the Smask.
+
+   \begin{example} Client Closing Function               \\ \label{client-closing}
+    \begin{verbatim}
+         void closeClient(ClientList *clist)
+         {
+         if(clist) {
+             Smaskunset(clist->skt);
+             Sclose(clist->skt);
+             clist->skt= NULL;
+             }
+         }
+    \end{verbatim}
+   \end{example}
+
+   The \verb`closeClient`() function removes the client Socket from the Smask
+   system, closes the Socket, and then sets the skt pointer to NULL to guarantee
+   that the now dead socket won't be inadvertently re-used somehow.
+
+  \item It is usually advisable to use some sort of handshaking protocol between
+   server and client, especially when large data blocks are being moved.  The {\TCP}    buffers can easily get filled and data get lost otherwise.  To facilitate this,
+   the {\SSL} sets sockets up with the {\small TCP\_NODELAY} option so that small
+   packets are moved out across and not collected (collection of small packets
+   normally improves network efficiency since there's less overhead per byte of data).
+
+\end{enumerate}
+
+\newpage
+\section{The PortMaster}
+
+Servers have names provided by the program which opens them.  When~a~server is
+to be opened, the Sopen function temporarily opens~a~Socket to the PortMaster
+running on the same machine.  The Sopen function then tells the PortMaster the
+server's {\em name} and the (random) {\em port} assigned to the new server, and
+then closes down the connection.  The PortMaster retains~a~list of all active
+servers and ports running on its machine.
+
+A~client is opened using the Sopen function, too.  In that case,~a~connection
+is made to the PortMaster on the machine where the requested server is
+running.  The PortMaster then tells the Sopen function the port number
+associated with the requested server, and then closes down the temporary
+connection.  The Sopen function then attempts to connect to the server using
+the given port.
+
+The server program can use its server Socket to test if any clients are waiting
+to be connected to it (via the Stest function).  If~a~client is waiting, then
+the server's program can {\em accept} the connection, generating an accept
+Socket (via Saccept).  Once the connection is accepted, the program attempting
+to open the client Socket will finally receive~a~Socket pointer.
+
+
+\subsection{Users Guide}
+
+The PortMaster is probably the simplest program to run:  under {\small UNIX},
+type \verb`Spm &` and under {\small VMS} type \verb`run/detach Spm`.  The
+PortMaster will only allow one copy of itself to run on any given computer.  It
+uses~a~fixed port address ($1750$, now registered with {\small IANA}) and
+implements~a~table of server names mapping to random ports.  Although
+knowledgeable users could change the PortMaster's fixed port, this is
+discouraged: hopefully, PortMasters will proliferate across the world and, if
+they all use the same port on their machines, will be able to communicate with
+one another.  In other words, the {\SSL} will be unable to communicate with
+other {\SSL} systems which use~a~different port for its PortMaster.
+
+Since {\small MS-DOS} is not~a~multi-tasking operating system, unlike
+{\small UNIX}, {\small VMS}, or {\small Amiga-DOS}, one cannot have a
+PortMaster running in the background --- there is no background.  Hence,
+{\small MS-DOS} programs are currently restricted to using client Sockets only,
+{\em unless} they can share another machine's PortMaster (see below).
+
+The PortMaster now supports~a~firewall: one can instruct the PortMaster
+to restrict access to~a~group of machines by their host addresses.  See the
+section on {\em The PortMaster Firewall} below.
+
+\subsection{Sharing PortMasters}
+
+PortMasters can now be {\em shared}.  This feature was installed mainly to
+support {\small MSDOS} -- since it doesn't have~a~background process
+capability, it cannot run PortMasters.  Hence, it is normally restricted to
+running clients only, because servers normally announce their presence to their
+host's PortMaster.  If the environment variable \verb`PMSHARE` is set to some other
+machine, that other machine's PortMaster will be used by the host's processes
+attempting to open servers.  From the client's viewpoint, the server appears to
+be on the machine with the PortMaster -- the client doesn't need to know about
+where the server actually is.
+
+\begin{example} PortMaster Sharing \rm     \\ \label{pmsharing}
+  \begin{tabular}{|l|l|l|} \hline
+  \multicolumn{1}{|c|}{\bf Machine} & \multicolumn{1}{c|}{\bf Machine} & \multicolumn{1}{c|}{\bf Machine} \\
+  \multicolumn{1}{|c|}{\bf A}       & \multicolumn{1}{c|}{\bf B}       & \multicolumn{1}{c|}{\bf C}       \\
+  \hline
+                                    &                                  &                                  \\
+  PMSHARE=machineb                  &                                  &                                  \\
+                                    &                                  &                                  \\
+  opens server {\em ASrvr}          &                                  &                                  \\
+                                    &                                  &                                  \\
+                                    & B's PortMaster                   &                                  \\
+                                    & now has {\em ASrvr}              &                                  \\
+                                    & on its list                      &                                  \\
+                                    &                                  &                                  \\
+                                    &                                  & pgm opens client                 \\
+                                    &                                  & to ASrvr@machineb                \\
+                                    &                                  &                                  \\
+                                    & B's PortMaster                   &                                  \\
+                                    & satisfies                        &                                  \\
+                                    & client's request                 &                                  \\
+                                    &                                  &                                  \\
+                                    &                                  & pgm has client to                \\
+                                    &                                  & {\em ASrvr} on~A~                \\
+\hline
+  \end{tabular}
+\end{example}
+
+In Example~\ref{pmsharing}, three machines are in use.  However, machines
+B~and~C~could have been the same machine.  In essence, when~A~shares B's
+PortMaster, the servers on~A~appear to be on~B~insofar as Sopen'ing~a~client
+is concerned.  Internally, of course, B's PortMaster knows where the {\em ASrvr}
+is, and clients end up being connected to the server on machine A.
+
+\subsection{Theory of Operation}
+
+Normally, users of the {\SSL} will not need to read this section.  However,
+for those who are curious...
+
+There are two main benefits to using the \SSL: the functions are similar
+to those that the~C~programmer already knows how to use and hence the {\SSL} 
+has~a~rapid learning curve, and second, servers are assigned to currently
+available ports.  The PortMaster is integral to providing the second benefit.
+
+Berkeley sockets are assigned ports, which are basically just integers.  The
+port is used internally to assign the flow of data to the correct places.
+One must assign~a~specific port to~a~server or, alternatively, allow the
+system to assign any available port to it.  Clients must use that same port
+number to connect to the desired server.  Hence, the problem with using the
+``any available port'' is how to get the client process to know what the
+currently assigned port is!  Programmers using Berkeley sockets have typically
+just assigned~a~fixed port to their server and hard-coded the clients with that
+port.  If some other process just happens to use that same port, then things
+get messy -- re-compile, wait until the other process goes away, etc.  On a
+machine where there are many users, co-operation between the users may be
+impractical.
+
+The PortMaster solves the problem of associating~a~server name with~a~randomly
+assigned (and available) port, and making that association available to
+clients.  The PortMaster itself uses~a~fixed port, and so servers and clients
+always know ``where'' it is.  Whenever~a~server opens (using the Sopen("{\small
+XXX}","s") call), the Sopen function makes~a~Socket data structure, creates a
+Berkeley socket, initializes and binds the socket with any available port, and
+then connects to the PortMaster, {\em using its fixed port}.  It then sends a
+``message'' ({\small PM\_SERVER}, which is simply an integer) to the
+PortMaster, telling it the type of Socket it is.  Subsequently, the PortMaster
+gets the new server's name and the port it is assigned to.
+
+When~a~client opens, it makes~a~Socket, initializes~a~Berkeley socket as a
+client (using the {\small AF\_INET} format), gets~a~``host'' entity pointer
+(the server's machine is known as~a~host), and then connects to the PortMaster
+on the host machine.  It then sends~a~``{\small PM\_CLIENT}'' to that
+PortMaster and the desired server's name; that PortMaster will respond with the
+associated port number (if there is one).  The client then closes down the
+connection to the target host's PortMaster, and initializes~a~Berkeley socket
+with the port number it just received and returns~a~client Socket pointer to
+the user.
+
+Thus, the \SSL's PortMaster system is~a~distributed database.  There are
+advantages and disadvantages to this scheme. No PortMaster knows anything about
+servers residing on other machines; if~a~machine goes down, other machines
+which have no need to communicate with the downed machine are not affected.
+
+On the other hand,~a~single machine with~a~single PortMaster would obviate the
+need for clients to know what machines they wish to connect to, and could
+force servers on all machines to have unique names (as it is, servers can have
+the same name so long as they run on different machines).  As~a~palliative, the
+{\em Sopenv} function supports the concept of~a~{\em machine path} via the
+use of environment variables.  Using the Sopenv function, clients can ``hunt''
+down~a~given server by attempting to open~a~client one at~a~time on each machine
+until~a~server of that name is found.  Thus, the user can designate~a~local
+group of machines via an environment variable (typically, the
+``{\small SKTPATH}'' environment variable is used for this purpose).
+
+The PortMaster talks to its temporary clients using~a~relatively simple
+protocol based on ``messages'' (integers) defined in the \verb`sockets.h`
+header file.  Table~\ref{portmaster} illustrates the protocol.  If the
+PortMaster is using its firewall capability, it immediately checks all of
+its temporary clients for approved machine status;~a~{\small PM\_SORRY} is
+issued immediately prior to the protocol in Table~\ref{portmaster} upon
+failure to be approved.  The connection is then summarily severed.
+
+\begin{table}[thb]
+  \begin{center}
+  \caption{\bf The PortMaster Protocol}
+  \vspace{.2in}
+  \label{portmaster}
+  \begin{tabular}{||l|l|l||} \hline\hline
+   \multicolumn{1}{||c|}{\em Event} & \multicolumn{1}{c|}{\em Client Sends} & \multicolumn{1}{c||}{\em PortMaster Sends} \\
+   \hline\hline
+   {\small PM\_CLIENT}              &                                       &                                            \\
+                                    &                                       & {\small PM\_OK / PM\_RESEND}               \\
+                                    & "sktname"                             &                                            \\
+                                    &                                       & {\small PM\_OK / PM\_SORRY}                \\
+                                    &                                       & port                                       \\ \hline
+   {\small PM\_CLIENTWAIT}          &                                       &                                            \\
+                                    &                                       & {\small PM\_OK / PM\_RESEND}               \\
+                                    & "sktname"                             &                                            \\
+                                    &                                       & {\small PM\_OK / PM\_SORRY}                \\
+                                    &                                       & port                                       \\ \hline
+   {\small PM\_CLOSE}               &                                       &                                            \\
+                                    &                                       & {\small PM\_OK / PM\_RESEND}               \\
+                                    & port                                  &                                            \\
+                                    &                                       & {\small PM\_OK / PM\_SORRY}                \\ \hline
+   {\small PM\_QUIT}                &                                       &                                            \\
+                                    &                                       & {\small PM\_OK / PM\_RESEND}               \\
+                                    & "PortMaster"                          &                                            \\ \hline
+   {\small PM\_SERVER}              &                                       & {\small PM\_OK / PM\_RESEND}               \\
+                                    & "sktname"                             &                                            \\
+                                    & port                                  &                                            \\
+                                    &                                       & {\small PM\_OK / PM\_SORRY}                \\ \hline
+                                    & {\small PM\_OK}                       &                                            \\ \hline
+   {\small PM\_TABLE}               &                                       &                                            \\
+                                    &                                       & {\small PM\_OK / PM\_RESEND}               \\
+                                    &                                       & count of servers                           \\
+                                    &                                       & "server : port"                            \\
+                                    &                                       & ...                                        \\ \hline
+   {\small PM\_FWINIT}              &                                       &                                            \\
+                                    &                                       & {\small PM\_OK / PM\_RESEND}               \\
+  \hline\hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+As indicated in Table~\ref{portmaster}, the PortMaster handles more events than
+just the {\small PM\_SERVER} and {\small PM\_CLIENT} events mentioned earlier.
+When~a~client opens to the PortMaster, it identifies the type of service it
+wishes by sending that PortMaster~a~``message'':  {\small PM\_SERVER}, {\small
+PM\_CLIENT}, {\small PM\_CLOSE}, {\small PM\_TABLE}, or {\small PM\_QUIT}.
+These messages are discussed below.  Whenever the PortMaster does not
+understand the initial message (due to garbling or whatever), the PortMaster
+will immediately issue~a~{\small PM\_RESEND} message and then wait for data.
+It will continue doing so for up to {\small PM\_MAXTRY} times (in the
+\verb`sockets.h` file as sent, {\small PM\_MAXTRY} is defined as $20$).  If the
+limit of re-tries is reached, the PortMaster will peremptorily close down the
+connection and go back to its usual quiescent state waiting for~a~new
+connection.
+
+The PortMaster will wait no more than {\small TIMEOUT} seconds for data, which
+is set to 20 seconds in \verb`Spm.c` as delivered.  If that amount of time
+elapses, the PortMaster will summarily close down the temporary client and
+continue for more business.
+
+\begin{description}
+
+  \item[{\small PM\_CLIENT}] tells the PortMaster that~a~client is attempting
+       to open.  The PortMaster normally responds with~a~{\small PM\_OK} and the
+       program attempting to open~a~client responds with~a~null-byte terminated
+       string (the requested server name).  If the PortMaster finds the requested
+       server in its list, then it responds with~a~{\small PM\_OK} and then the
+       port number, otherwise it sends~a~{\small PM\_SORRY}.
+     
+       If the PortMaster is using~a~firewall, it may respond immediately with
+      ~a~{\small PM\_SORRY} if the client is originating from an unapproved
+       machine.
+
+  \item[{\small PM\_CLIENTWAIT}] acts much like a {\small PM\_CLIENT}, except
+        that the PortMaster will wait (block) before sending the final
+        {\small PM\_OK} and port number.  Thus clients can request a block
+        until the desired server is up.
+
+  \item[{\small PM\_CLOSE}] tells the PortMaster that~a~server is closing down.
+       The PortMaster will normally respond with~a~{\small PM\_OK}; the program
+       closing down the server (via {\em Sclose}) will then send the port number.
+       The PortMaster will then remove the associated server from its internal
+       list of servers and respond with~a~{\small PM\_OK} if the designated
+       server was in its list and~a~{\small PM\_SORRY} otherwise.
+
+  \item[{\small PM\_FWINIT}] tells the PortMaster to re-read its firewall
+       datafile.  The PortMaster will then respond with~a~{\small PM\_OK} if
+       it worked or {\small PM\_RESEND} if something got garbled.
+
+  \item[{\small PM\_QUIT}] tells the PortMaster that~a~shutdown command is
+       to be sent.  The PortMaster responds with~a~{\small PM\_OK}, and the program
+       shutting down the PortMaster issues~a~null-byte terminated string,
+       ``PortMaster'' (just to guarantee that~a~shutdown is really wanted).  The
+       PortMaster will then shutdown.  This operation requires some knowledge of
+       the protocol as no {\SSL} function is provided to make shutting down the
+       PortMaster easy.  However, the \verb`sktdbg` program does provide an easy
+       way to shut down the PortMaster.  Concerned system administrators may wish
+       to remove the ``shut'' command from \verb`sktdbg`.  Shutting down the
+       PortMaster does not affect currently connected Sockets; however, new
+       connections between servers and clients cannot be made.  On the other hand,
+       starting up~a~new PortMaster is easy and anyone may do so -- the \verb`Spm`
+       program itself will refuse to allow two PortMasters to run concurrently (and
+       will say so).
+
+  \item[{\small PM\_SERVER}] tells the PortMaster that~a~server has been
+       opened.  The PortMaster will normally respond with~a~{\small PM\_OK}
+       and then the program opening~a~server will send~a~string giving the
+       new server's name and then will send its port.
+     
+       The PortMaster will then respond with~a~{\small PM\_OK} upon success or
+      ~a~{\small PM\_SORRY} if~a~server by that name already exists.
+     
+       If the PortMaster is using~a~firewall, it may respond immediately with a
+       {\small PM\_SORRY} if the server is originating from an unapproved machine.
+       When PortMaster sharing is not operating, this event should never occur, as
+       servers can then only be legally generated on the same machine that the
+       PortMaster resides upon.  The PortMaster enters its own host onto its
+       internal firewall table whenever use of~a~firewall is enabled.
+
+  \item[{\small PM\_TABLE}] tells the PortMaster to give out~a~list of the
+       servers it currently knows about.  Normally the PortMaster will respond with
+      ~a~{\small PM\_OK},~a~count of servers (in network standard 2-byte format,
+       see the Berkeley ``ntohs'' function for details), and~a~sequence of strings
+       giving the server name and associated port number.  The \verb`spmtable`
+       program and \verb`sktdbg`'s ``table'' function use this facility.
+
+\end{description}
+
+\subsubsection{The PortMaster Firewall}
+
+The PortMaster supports~a~{\em firewall} to keep out socket requests from
+unapproved machines.  The firewall consists of~a~list of machines' internet
+addresses in~a~file.  One specifies the file by one of two methods:
+
+ \begin{enumerate}
+  \item Startup with \verb# Spm -f#{\em full-path-to-filename}
+  \item Initialization of an environment variable, {\small SPMFIREWALL},
+        to the {\em full-path-to-filename}.
+ \end{enumerate}
+
+The {\em full-path-to-filename} file contains records of the form:
+\begin{verbatim}
+  * * number number number number
+\end{verbatim}
+
+where the four \verb`number`s are the internet addresses of the machines
+permitted to talk to the PortMaster.  The \verb`*` indicates accept any number
+in that field.  The firewall function examines incoming internet addresses by
+use of the {\em getpeername} function.
+
+The firewall file, often called {\em spmfirewall.dat}, may contain blank
+lines.  The \verb`#` is assumed to begin~a~comment and is stripped off.
+
+
+\newpage
+\section{The Utilities}
+
+There are several utilities provided with the \SSL, and they are explained
+below.  These are all complete programs in themselves, and can serve as
+lessons on how to use the \SSL.
+
+\begin{description}
+
+  \item[sktdbg] \verb`server-name {s|c}`     {\em sktdbg} is the \SSL's testing program.  One may open server Sockets,
+    accept Sockets, and client Sockets, test out how other program's Sockets
+    are communicating, etc.  See the subsection on {\em sktdbg} below.  The
+    ``server-name'' may take two forms: \verb`servername` or
+    \verb`servername@machine-name`.  The latter form may be used when
+    attempting to open clients to servers residing on machines other than the
+    one the user is currently running \verb`sktdbg` on.
+
+  \item[spmchk] \verb`[machine]`     This program tests the current machine by default, the named machine
+    otherwise, for the presence of~a~PortMaster.  It will return~a~0 if
+    the PortMaster is present, or~a~1 otherwise, and is useful in scripts:
+
+      \begin{center}
+       spmchk \verb`||` (nohup Spm \verb`>` /dev/null \&)       \end{center}
+
+    Translated for non-csh/ksh users: if spmchk finds no PortMaster on the
+    current machine, start one up in the background in ``no hangup on user
+    exit'' mode, with output headed to the bit bucket. {\small (thanks go
+    to Marty Olevitch for this program)}.
+
+    For {\small VMS} users:
+
+      \begin{center}
+       \begin{minipage}[h]{5in}
+        \begin{verbatim}
+spmchk:= [fullpath]spmchk.exe
+set noon
+spmchk
+if '$SEVERITY' .ne. 1 then run/detach [fullpath]Spm.exe
+set on
+        \end{verbatim}
+       \end{minipage}
+      \end{center}
+
+  \item[spmtable] \verb`[machine [machine [machine ...]]]`     This program lists the servers and port numbers on the requested machines.
+    If no machine is listed, then the current machine will be used.
+
+  \item[srmsrvr] \verb`[server-name [server-name [server-name ...]]]`     Sometimes the all-knowledgeable and omnipotent programmer finds~a~need to
+    hit the control-c key or otherwise kill~a~running program with~a~server
+    Socket.  In such cases, the PortMaster does not get informed that the
+    server has gone down.  This utility will tell the PortMaster to forcibly
+    remove the named server(s) from its list.
+
+\end{description}
+
+Except when using \verb`sktdbg` to open~a~server with \verb`sktdbg`, the server
+names above can also have the form \verb`srvr@machine-name`.  This name
+specifies~a~server on~a~specific machine.  Note that the machine-name is its
+normal abbreviation (ie.~hostname) or its full name (ie.~hostname.someplace.com).
+
+
+\subsection{The \texttt{sktdbg} Program}
+
+The \verb`sktdbg` program was originally~a~testing facility to debug the {\SSL} 
+itself, but has proven exceptionally useful in debugging programs which use the
+\SSL.  Consequently, it is provided as part of the package.
+
+To start up \verb`sktdbg`, one must choose between starting up~a~server or
+attempting to open~a~client Socket.
+
+\begin{example} Starting up~a~sktdbg Server \\ \label{sktdbg-srvr}
+sktdbg servername s
+\end{example}
+
+\begin{example} Starting up~a~sktdbg Client \\ \label{sktdbg-client}
+sktdbg servername c
+\end{example}
+
+One may also ask sktdbg to explain itself.
+
+\begin{example} sktdbg Explanation \\ \label{sktdbg-explain}
+sktdbg "?"
+\end{example}
+
+When the \verb`sktdbg` program is started, the first thing it does is attempt
+to create the requested type of Socket.  Typically, attempts to make~a~server
+will succeed; if it doesn't, it will report~a~warning, apply Srmsrvr(), and try
+a~second time to open the server again.  If it fails twice, then usually the
+PortMaster is not running on your machine.
+
+Attempts to open~a~client to~a~non-existent server also yields an error
+message: ``unable to Sopen(srvrname,c)''.  If the server is up and running,
+then~a~client Socket will be set up.
+
+The \verb`sktdbg` program then prints out~a~little menu of actions that the
+user can take with it.
+
+\begin{table}[thb]
+  \begin{center}
+  \caption{sktdbg Help Menu}
+  \label{sktdbg-help}
+  \begin{verbatim}
+Socket Test Commands
+  accept
+  close
+  fwinit
+  fput
+  get
+  menu
+  peek
+  printf
+  put
+  q
+  quit
+  read
+  rmsrvr
+  scanf
+  shutdown
+  table
+  test
+  wait
+  write
+  ?
+(   0 bytes) Enter: 
+  \end{verbatim}
+  \end{center}
+\end{table}
+
+The ``Enter'' prompt now also shows the number of bytes waiting on the queue
+for reading.  This number is updated only when the prompt is generated; ie. it
+is not~a~dynamic value, but is often useful.
+
+In Table~\ref{sktdbg-help}, there are 20 commands available, and are
+described below.
+
+\begin{description}
+
+  \item[accept] \   Used by~a~server Socket to accept clients.  Note that one
+  may first do {\em test} to determine if~a~client is waiting.
+
+  \item[close] \   Used by~a~server Socket to close down an accept Socket.
+
+  \item[fput] \   This function takes~a~filename, {\em fput filename}, which sktdbg then opens.
+  Every line in it, minus trailing white space, is sent via Sputs across the
+  Socket.  Sktdbg then closes the file.
+
+  \item[fwinit] \   This call issues~a~{\small PM\_FWINIT} to the local machine's PortMaster.
+  The PortMaster will then re-read the firewall data file that it was optionally
+  started up with (if it had none, then this command will have no effect).  The
+  fwinit command is useful for the owner of the firewall data file to change it
+  and have the PortMaster update itself without bringing down the PortMaster and
+  restarting it.
+
+  \item[get] \   Uses Sgets to get~a~null-terminated string from the client.  This call will
+  block until something arrives for up to 60 seconds.
+
+  \item[isset] \   Uses Smaskwait() with negligible timeout (1 microsecond!) and then uses
+  Smaskisset() to determine if the socket is read-ready.  This function
+  was included mostly for testing Smaskisset().
+
+  \item[menu] \   Repeats the {\em Socket Test Commands} menu (just like ``?'' below).
+
+  \item[peek] \   Uses Speek to peek at what the client has sent.  This call
+  will not block, even if nothing is there yet.
+
+  \item[printf] printf your-word   Uses Sprintf to send "your-word 7 8. itworked!" through the Socket.
+
+  \item[put] put your various sundry strings across   Uses Sputs to send your strings on the same line through the Socket.
+
+  \item[q] \   This function ``quits'' -- uses Sclose to close down all Sockets that
+  \verb`sktdbg` is using and exits.  Just like ``quit''.
+
+  \item[quit] \   This function ``quits'' -- uses Sclose to close down all Sockets that
+  \verb`sktdbg` is using and exits.  Just like ``q''.
+
+  \item[read] \   This function uses Sread to read whatever is on the Socket, and prints
+  it out assuming that it received~a~string.
+
+  \item[rmsrvr] rmsrvr server-name   This function uses Srmsrvr to remove~a~server.
+
+  \item[scanf] \   This function accepts~a~subset of format code: \%c, \%d, \%f, and \%s.
+  It will call Sscanf once for each format code given to it.
+
+  \item[shutdown] \   This function is {\em dangerous}!  It will shut down the PortMaster on
+  your current machine and perform~a~quit.  Use of this function is
+  strongly discouraged unless it is necessary to pull down~a~PortMaster.
+
+  \item[table] \   The {\em table} function communicates with the PortMaster and prints out
+ ~a~table of all current servers and their ports (rather like spmtable).
+
+  \item[test] \   The {\em test} function prints out the number of bytes awaiting perusal
+  by~a~get or read operation.  It does not block, even if nothing is
+  waiting -- it will return 0 in such~a~case.
+
+  \item[wait] \   This function will block the process until something shows up on the
+  accept or client Socket.
+
+  \item[write] write your sundry thoughts and words   This function will {\em Swrite} your words, appropriately null-byte
+  terminated, through the Socket.  It can be read by the {\em read} function.
+
+  \item[?] \   Repeats the {\em Socket Test Commands} menu (just like ``menu'' above).
+
+\end{description}
+
+This program is really quite simple to learn and run, and is useful to help
+the installer verify that the {\SSL} is installed correctly.
+
+
+\newpage
+\section{Installation Instructions}
+
+Installation varies, of course, from operating system to operating system.
+
+
+\subsection{Unix}
+
+\begin{enumerate}
+
+  \item Make~a~{\tt SKTS} subdirectory somewhere, and extract the contents
+    of the tape into that subdirectory (typically, {\tt tar -xvop}, but
+    systems will vary and you may need to specify~a~tape drive).
+
+  \item If your machine is not {\small ANSI C} compliant, but supports
+    prototyping anyway, edit the \verb`sockets.h` file to \verb`#`define {\small
+    \_\_PROTOTYPE\_\_} for your machine.
+
+  \item Type {\tt make all}.
+
+\end{enumerate}
+
+These instructions should result in the {\SSL} being compiled, the utilities
+being compiled, and the PortMaster being compiled. ~A~{\em simpleskts.a}
+library results.  Although the PortMaster gets started by the make
+instructions, you may occasionally need to re-start it (for example, after the
+computer goes down).  System administrators should know how to modify their
+operating system to automatically bring up the PortMaster during~a~re-boot.
+
+Users may wish to place 
+
+\begin{center}
+  \begin{tabular}{ll}
+    setenv SKTPATH machine:machine:machine...` & csh users   \\
+    export SKTPATH=machine:machine:machine...` & ksh users   \\
+    SKTPATH:==machine:machine:machine...`      & vms users   \\
+    set SKTPATH=machine:machine:machine...`    & msdos users \\
+  \end{tabular}
+\end{center}
+
+\noindent
+in their .login, .profile, login.com, and autoexec.bat respectively.  To link
+to the \SSL, one must include ``sockets.h''.  For example, under {\small UNIX},
+a~user should have~a~{\small .HDR} subdirectory with all his/her favorite
+header files and use ``\verb`cc ...  -I~/.HDR ... simpleskts.a`''.
+
+
+\subsection{Vms}
+
+\begin{enumerate}
+
+  \item Make~a~{\tt SKTS} subdirectory somewhere, and extract the contents
+   of the tape into that subdirectory.  The original tape was~a~quarter-inch
+   cartridge in Unix tar format, but you may well receive~a~different format.
+
+  \item Type \verb`@makeskts`
+\end{enumerate}
+
+The ``makeskts'' command script will create several subdirectories, compile the
+\SSL, and set up~a~``simpleskts.olb'' library.  It will {\bf not} attempt to
+start up the PortMaster.  Change to the ``{\small EXE}'' subdirectory under the
+{\small SKTS} subdirectory.  The PortMaster should be started via
+\verb`run/detach Spm`; you may or may not have sufficient privileges to do so.
+One may spawn the PortMaster, but as soon as you log off the PortMaster will
+rudely terminate.  Due to the potential problem with privileges, the command
+script will not start up the PortMaster itself.
+
+In order to make use of command-line arguments for sktdbg, etc, {\small VMS} requires
+that you first make ``logical symbols.''  In your \verb`<login.com>`,
+place the following lines (with appropriately modified {\small YOURDIR}):
+
+ \begin{center}
+  \begin{tabular}{lcl}
+  \$ spmchk   & :== & \$[{\small YOURDIR.SKTS.EXE}]spmchk.exe   \\
+  \$ spmtable & :== & \$[{\small YOURDIR.SKTS.EXE}]spmtable.exe \\
+  \$ spm      & :== & \$[{\small YOURDIR.SKTS.EXE}]spm.exe      \\
+  \$ srmsrvr  & :== & \$[{\small YOURDIR.SKTS.EXE}]srmsrvr.exe
+  \end{tabular}
+ \end{center}
+
+\subsection{Windows 95 ( or more recent)}
+
+As of Version 2.08, the {\SSL} runs under Windows 95.  One may
+have~a~PortMaster running in the background on those machines,
+too!  Since the present author only has Borland C++, only that
+compiler has been tested.  Other compilers may need to modify the
+\verb`<`Sinit.c\verb`>` file to include any \TCP\ initialization
+they may require.
+
+\begin{enumerate}
+ \item Set up your system with an appropriate~C~compiler, Ethernet card,
+       and \TCP.
+ \item Copy the contents of <ssl.tar.gz> onto your computer.
+ \item Use gunzip and untar to get the uncompressed files
+ \item Open~a~{\small MSDOS} console, change directory to ...\verb`\`{\COSMIC}
+ \item mkwin95
+\end{enumerate}
+
+The {\sf smplskts.lib} and various {\sf *.exe} files should be generated
+in the {\COSMIC} subdirectory.  You may well want to have the Simple Sockets
+Library's PortMaster (Spm) always running in background.  To accomplish this:
+
+\begin{enumerate}
+ \item On your workbench, click the right mouse button
+ \item Select {\sf New}
+ \item Select {\sf Shortcut}
+ \item Put the fully specified path to Spm.exe in the
+       {\sf Command Line} dialog box.
+ \item Put {\sf Spm} as the shortcut's name
+ \item Right-mouse click on the {\sf Spm} shortcut
+ \item Select {\sf Properties}
+ \item Select the {\sf Shortcut} tab
+ \item In the {\sf Run} dialog, left mouse click on the
+       down arrow and select {\sf minimized}.
+ \item Bring up Explorer
+ \item Click on the \verb`+` in the left hand window near {\sf Windows}
+ \item Click on the \verb`+` in the left hand window near {\sf Start Menu}
+ \item Click on the \verb`+` in the left hand window near {\sf Programs}
+ \item Double click on {\sf StartUp}
+ \item Put the mouse cursor on the {\sf Spm} shortcut; press the right
+       mouse button and drag it over the right hand Explorer window.
+ \item Select {\sf Copy Here}.  You will now need to re-boot your machine
+       for this operation to take effect.
+\end{enumerate}
+
+\subsection{Older Ms-Dos}
+
+The {\SSL} was compiled and tested using the Wollongong {\TCP} package with
+MicroSoft~C~(v6.0).  Other compilers and {\TCP} packages may require adjustment
+to the {\SSL} code.  You {\bf must} have~a~\TCP package for your machine,
+however -- that is what provides Berkeley sockets over which the {\SSL} provides
+a~convenient overlay.  Also, you {\bf must} have an Ethernet card for your
+machine -- that provides the hardware over which the information flows.
+Neither the {\TCP} package, the~C~compiler, nor the Ethernet hardware come with
+the \SSL.
+
+\begin{enumerate}
+
+  \item The {\SSL} makes several assumptions, unfortunately, about
+        where include files are (ex. see {\em Speek.c\/}).  The installer
+        will undoubtedly need to customize these include lines.  These
+        areas will always be in \verb`#ifdef MSDOS` ... \verb`#endif` zones.
+  \item Acquire~a~\TCP package for your computer (ie.~Wollongong).
+  \item Acquire~a~C compiler for your computer (ie.~Microsoft C, v6.0).
+  \item Acquire an Ethernet card and {\TCP} address for your computer.
+  \item Copy the contents of the provided diskette into your subdirectory.
+  \item For those of you with the software mentioned in
+        Table~\ref{msdos-swlist}:
+  \begin{enumerate}
+    \item Make~a~directory: \verb`c:\c600\socket`
+    \item Make~a~directory: \verb`c:\c600\socket\exe`
+    \item Copy {\em wintcp.lib} to \verb`c:\c600\socket`
+    \item Copy {\em socket.lib} to \verb`c:\c600\socket`
+    \item Copy {\em slibce.lib} to \verb`c:\c600\socket`
+    \item Disable the {\small MSDOS} linker -- possibly by renaming it
+          to {\em doslink}.  Use the MicroSoft~C~linker instead.
+    \item Return to the directory where you placed the {\SSL} software.
+    \item Type {\em makeskt} (which will use the
+        {\em Makeskt.bat} command script).  This script will use
+        {\em Makelib.}, compile, create the {\em smplskts.lib} library,
+        and generate {\em sktdbg.exe}, {\em spmtable.exe}, and
+        {\em srmsrvr.exe}.
+    \item You should be done installing the software at this point.
+  \end{enumerate}
+  \item If your compiler is not {\small ANSI C} compliant, but supports
+        prototyping, edit the \verb`sockets.h` file to define {\small
+        \_\_PROTOTYPE\_\_} for your machine.
+  \item Follow your compiler's directions to compile to object file format
+        all the~C~files in \verb`SKTS` and \verb`SKTS\EXE`.
+  \item Follow your compiler's directions to set up~a~``library'' (a {\tt .LIB}
+        file) with all the {\tt .OBJ} files in the \verb`SKTS` subdirectory.
+  \item Change to the \verb`SKTS\EXE` subdirectory and follow your compiler's
+        instructions to link each of the object files, one at~a~time, to the
+        ``smplskts.lib'' library, the {\TCP} library, and whatever
+        libraries your compiler normally needs.
+
+\end{enumerate}
+
+The installation should yield~a~{\em smplskts.lib} (or something similar)
+library and three executable files (sktdbg.exe, spmtable.exe, and
+spmtable.exe).
+
+Note that the ``{\small SPM.EXE}'' file should not be generated; you could
+generate and execute it, but your clone could not use it as it does not allow
+the PortMaster to run in the background.  No attempt has been made to insure
+that the PortMaster is actually compilable under MicroSoft C, either.  Someday
+a~kludge to allow MS-DOS programs to be their own PortMaster may be developed,
+but that day is not yet.  Using Wollongong \TCP, one will be restricted to
+three (or five if its ``kernel'' is rebuilt) clients.
+
+The software in Table~\ref{msdos-swlist} was used by the \IRL\ and is known to
+work properly with the \SSL.  Other software may work but has not been tested.
+
+\begin{table}[h]
+  \begin{center}
+  \caption{\bf Ms-Dos Software known to work with the \protect{\small\bf SSL}}
+  \label{msdos-swlist}
+  \begin{tabular}{ll}
+    \multicolumn{1}{c}{\em Software Product} & \multicolumn{1}{c}{\em Company} \\
+    MicroSoft C, v6.0                        & MicroSoft                       \\
+    {\small Win/API} for {\small DOS}, v4.1  & The Wollongong Group, Inc.      \\
+                                             & PO Box 51860                    \\
+                                             & Palo Alto, CA 94303-4374        \\
+                                             & (415)-962-7100                  \\
+    Wollongong Win/{\small TCP}, v4.1.1      & The Wollongong Group, Inc.      \\
+  \end{tabular}
+  \end{center}
+\end{table}
+
+
+\newpage
+\section{Appendix: Miscellaneous Functions}
+
+The {\SSL} uses nine functions from Dr.~Campbell's {\em xtdio} library; these
+have been gathered together and made part of the {\em simpleskts.a} library.
+Several of the functions use~a~special data file, {\em rdcolor.dat}.
+
+Note: the {\em error} and {\em outofmem} functions claim they will
+``terminate'' under certain conditions.  Actually, they will call the function
+{\em (*error\_exit)(int~rtn)}, which by default is the {\em exit} function.
+Programmers may easily prevent or otherwise control termination by simply
+setting {\em error\_exit} to point to some other function.
+
+\begin{description}
+
+  \item[void error(int severity,char *fmt,...)] \     The {\em error} function prints out an error, warning, or note type of
+    message to stdout.  This function takes four kinds of ``severity'': {\small
+    SEVERE}, {\small ERROR}, {\small WARNING}, and {\small NOTE}.  Both the
+    {\small SEVERE} and {\small ERROR} levels will {\em terminate} the
+    program.  The other two, {\small WARNING} and {\small NOTE}, will not do
+    so.  The termination action tends to enforce~a~standard for what errors
+    versus warnings mean!  If your terminal type is supported by the {\em
+    rdcolor.dat} file (see rdcolor below), {\small SEVERE} and {\small ERROR}
+    messages are printed with~a~red leader, {\small WARNING}s with~a~yellow
+    leader, and {\small NOTE}s with~a~cyan leader.
+
+  \item[FILE *fopenv(char *filename,char *ctrl,char *env\_var)] \     The {\em fopenv} provides~a~file opening service akin to that provided
+    by the {\em Sopenv} function for the \SSL.  The {\em fopen()} function
+    will be used with the given filename and ctrl strings, and upon failure,
+    the environment variable in {\em env\_var} will be used like a
+    {\small PATH} variable in attempts to open the file in one directory after
+    another (until success).  If none of the {\em fopen\/}s succeed, then
+    the {\em fopenv} function will return~a~{\small NULL} pointer.
+
+  \item[void outofmem(void *ptr,char *fmt,...)] \     The {\em outofmem} function checks if {\em ptr} is {\small NULL}; if it is
+    not, the function immediately returns.
+
+    However, if the {\em ptr} pointer is in fact {\small NULL}, then the
+    {\em fmt} and any subsequent arguments will be used like~a~regular printf
+    to give~a~message to the user.  The program will then terminate.
+
+  \item[void rdcolor(void)] \     This function reads the {\em rdcolor.dat} file, which essentially is an
+    extended ``termcap'' file.  It uses the ``RDCOLOR'' environment variable with
+    {\em fopenv} to search for the {\em rdcolor.dat} file.  The function uses
+    that file to set up various string variables ({\small RED}, {\small CLEAR},
+    -- see below).
+
+  \item[void rdcputs(char *s,FILE *fp)] \     This function puts~a~string out to the {\small FILE} pointer {\em fp},
+    except that those strings ({\small XRED}, {\small XUWHITE}, etc.) are
+    interpreted using the {\em rdcolor}-provided string instead.
+
+  \item[char *sprt(char *s)] \     This function returns~a~pointer to~a~static buffer (there are four of them).
+    The string {\em s} has all of its characters made into ``visible'' forms:
+    control characters become \^A through \^Z and characters with {\small ANSI}
+    values greater than or equal to $128$ are made into \verb`~###` sequences.
+    Characters which are normally visible are left unchanged.
+
+  \item[void srmtrblk(char *s)] \     This function removes any trailing ``blanks'' (white space) from the
+    end of~a~string.
+
+  \item[char *stpblk(char *p)] \     This function returns~a~pointer to the first non-white space character
+    in the string {\em p} (ie.~steps past blanks).
+
+  \item[char *stpnxt(char *s,char *fmt)] \     This function returns~a~pointer to the first character in {\em s} which
+    would not have been read by~a~{\em sscanf(s,fmt,...)} function.  Useful
+    for quick and dirty parsing.
+
+  \item[char *strnxtfmt(char *fmt)] \     The {\em strnxtfmt} function returns~a~pointer to the beginning of the
+    (next) format code substring.  If {\em fmt} is {\small NULL}, then the
+    previous format string is used (ie.~a pointer to the last {\em fmt} code
+    is retained and the~a~pointer to the next format code pointer will be
+    returned).  This function bears some similarity to {\small strtok} except
+    that it jumps from format code to format code (used by Sscanf).
+
+\end{description}
+
+The {\em rdcolor.dat\/} file describes terminal escape sequences to use
+to control color and~a~few other actions.  Each line which does not begin
+with~a~white space character is assumed to be~a~terminal line: terminal
+types are separated by vertical bars and the line is terminated by~a~colon.
+There are~a~number of strings defined (see Table~\ref{rdcolor}).
+
+\begin{table}[thb]
+  \begin{center}
+  \caption{rdcolor.dat strings}
+  \label{rdcolor}
+  \begin{tabular}{||l|l||}
+   \hline\hline
+  {\em String Name}  & {\em Function}                                 \\
+  \hline
+  {\small BLACK}     & subsequent chars are black                     \\
+  {\small RED}       & subsequent chars are red                       \\
+  {\small GREEN}     & subsequent chars are green                     \\
+  {\small YELLOW}    & subsequent chars are yellow                    \\
+  {\small BLUE}      & subsequent chars are blue                      \\
+  {\small MAGENTA}   & subsequent chars are magenta                   \\
+  {\small CYAN}      & subsequent chars are cyan                      \\
+  {\small WHITE}     & subsequent chars are white                     \\
+                     &                                                \\
+  {\small UBLACK}    & subsequent chars are underlined and black      \\
+  {\small URED}      & subsequent chars are underlined and red        \\
+  {\small UGREEN}    & subsequent chars are underlined and green      \\
+  {\small UYELLOW}   & subsequent chars are underlined and yellow     \\
+  {\small UBLUE}     & subsequent chars are underlined and blue       \\
+  {\small UMAGENTA}  & subsequent chars are underlined and magenta    \\
+  {\small UCYAN}     & subsequent chars are underlined and cyan       \\
+  {\small UWHITE}    & subsequent chars are underlined and white      \\
+                     &                                                \\
+  {\small RVBLACK}   & subsequent chars are reverse-video and black   \\
+  {\small RVRED}     & subsequent chars are reverse-video and red     \\
+  {\small RVGREEN}   & subsequent chars are reverse-video and green   \\
+  {\small RVYELLOW}  & subsequent chars are reverse-video and yellow  \\
+  {\small RVBLUE}    & subsequent chars are reverse-video and blue    \\
+  {\small RVMAGENTA} & subsequent chars are reverse-video and magenta \\
+  {\small RVCYAN}    & subsequent chars are reverse-video and cyan    \\
+  {\small RVWHITE}   & subsequent chars are reverse-video and white   \\
+                     &                                                \\
+  {\small NRML}      & subsequent chars are ``normal''                \\
+  {\small BOLD}      & subsequent chars are ``bold''                  \\
+  {\small CLEAR}     & the screen is cleared                          \\
+  \hline\hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+Escape sequences may include the sequence \verb`\e` for the {\small ESCAPE}
+character and \verb`\b` for~a~blank.  Please see the {\em rdcolor.dat} file
+for examples.
+\end{document}
