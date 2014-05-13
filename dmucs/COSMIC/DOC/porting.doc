@@ -1,0 +1,107 @@
+                       Porting the Simple Sockets Library
+                          Dr. Charles E. Campbell, Jr.
+
+1.  Most SSL porting issues are handled in the header file, "sockets.h".  The
+    leading portion of the file has several machine specific sections:
+
+        #ifdef vms
+        ...
+        #endif
+        
+        #ifdef apollo
+        ...
+        #endif
+        
+        #ifdef sgi
+        ...
+        #endif
+    
+        etc.
+
+    These machine specific sections mostly contain #include <some tcp/ip header
+    file> stuff; your new machine section must be set up to include the
+    appropriate header files, too, but they'll probably have nearly the same
+    set of header file names.
+
+    Each machine section  also usually has a
+
+       #ifdef SSLNEEDTIME
+       ...
+       #endif
+
+    subsection which includes the time header file information needed by select().
+
+2.  Some machines have case insensitive linkers, such as MS-DOS.  The usual solution
+    is to put
+
+        # define Sscanf  Sktscanf
+        # define Sprintf Sktprintf
+    
+    in the machine-specific section.
+
+3. There are three options for the SSL that support different machines:
+
+        #define SSLNOSETSOCKOPT
+        #define SSLNOPEEK
+        #define SSLNEEDTOSHAREPM
+
+   The SSLNOSETSOCKOPT is for those machines whose Berkeley sockets API does
+   not support the setsockopt() function (or, if present, doesn't support the
+   TCP_NODELAY option).
+
+   The SSLNOPEEK is for those machines whose Berkeley sockets API does not
+   support the MSG_PEEK option on a recv().
+
+   The SSLNEEDTOSHAREPM is for those machines which lack multi-tasking; ie.
+   cannot run a PortMaster in the background.  Those machines need to share
+   another machine's PortMaster for any servers to be run on them.  Clients are
+   unaffected.
+
+4. There are a few MSDOS exceptions in <Sopen.c> and <Sscanf.c>.
+
+   The <Sopen.c> ones initialize the WIN/API DOS Socket Library.  If your
+   tcp/ip Berkeley sockets requires a call to some initialization function,
+   this is the place to do it.
+
+   The <Sscanf.c> MSDOS exceptions support MicroSoft C's requirement to have
+   its first argument to va_start() and va_arg() be "char *" instead of "void
+   *".
+
+5. Some middle-aged C compilers allowed prototyping, but were not ANSI-C
+   compliant.  In <xtdio.h>, at or near line 78, is a preprocessor block:
+
+    #  if defined(sgi)   || defined(apollo)    || defined(__STDC__) || \
+          defined(MSDOS) || defined(MCH_AMIGA) || defined(__osf__)
+    #   define __PROTOTYPE__
+    ...
+
+    If your machine's compiler fits this bill, you should (this is not
+    required, merely suggested) put it on the #if defined() ... list of
+    machines so that the compiler would use prototyping.  Prototyping will
+    likely save you some syntax errors in your future.
+
+    One caveat: the cprt() and sprt() functions use the keyword "const".  Your
+    middle-aged C compiler may, or may not, support that keyword.  If not,
+    you'll be getting some syntax errors from the <xtdio.h> line near the
+    prototypes for those two functions.  The solution is simple: in <xtdio.h>
+    near line 94 is
+
+    #define const
+
+    buried inside a comment about this problem.  Move that line out of the
+    comment, and the "const" problems should disappear.
+
+6. SCO/Unix sockets:  You may need additional network products such as
+
+   SCO Unix 3.2v4:
+      - SCO Unix runtime
+      - SCO Unix Development System
+      - SCO TCP/IP Runtime
+      - SCO TCP/IP Development System
+
+   Open Desktop 2 or 3:  ODT Development System
+
+   OpenServer 5: all include files and libraries are already supplied with the o/s
+
+   Note -- I (C Campbell) have never used SCO, so I can not personally attest as to
+   what your SCO variant may or may not need.

@@ -1,0 +1,36 @@
+#!/usr/bin/env sh
+
+DMUCS_DIR=/us/bfsbld/Compilers/distcc
+
+#
+# This script undoes what the enable-host script does.  Specifically, it
+# kills the dmucs loadavg daemon, and, then sends a "remove host" message
+# to the dmucs server (note that a loadavg message from a machine adds
+# the host to the dmucs database if it is not already there, but lack of
+# periodic load average messages from a host does NOT remove the host from
+# the database -- that's why we have to send a "remove host" message.
+#
+# Then, this script kills the distccd daemons.
+#
+# Arguments: 1: the name of the machine on which the dmucs server is running.
+#
+
+if [ $# -eq 0 ] ; then
+    echo "Usage: $0 <server-machine>"
+    exit 
+fi
+
+server=$1
+
+echo "Stopping the loadavg daemon"
+/bin/ps -ef | /bin/grep 'loadavg' | /bin/grep -v grep | /usr/bin/awk '{print $2}' | /usr/bin/xargs /bin/kill
+echo "done"
+
+echo "Removing this host from the dmucs server"
+$DMUCS_DIR/bin/removehost -s $server
+echo "done"
+
+echo "Stopping the distccd daemons"
+pidfile=$DMUCS_DIR/pids/`hostname`.pid
+/bin/kill -HUP `cat $pidfile`
+echo "done"

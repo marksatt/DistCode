@@ -1,0 +1,59 @@
+# Makefile for the Simple Sockets Library (C version) Executables
+#
+#  NASA --   Goddard Space Flight Center, Code 714.1
+#            Intelligent Robotics Laboratory
+#            Robotics Branch
+#
+#  Authors:  Dr. Charles E. Campbell, Jr.
+#            Terry McRoberts
+#
+#  Modified for OS/2 Watcom v11.0a OS2 toolkit V4.5
+#            By Steve Richards
+#
+#  for TCP version 4 (16bit stack) USE These two setups
+#  instead of the ones below
+#libs = k:\srwork\sockets\cosmic\smplskts.lib  &
+#      w:\os2tk45\lib\so32dll.lib             &
+#      w:\os2tk45\lib\tcp32dll.lib            &
+#      w:\os2tk45\lib\tcpipdll.lib
+#
+#cFLAGS = /bt=os2 /dos2 /l=os2flat /dTCPV40HDRS  $(libs)
+#
+#
+#
+# Change paths below as appropriate
+#
+.before
+  SET INCLUDE=W:\WATCOM\H\OS2;W:\WATCOM\H;W:\WATCOM\SOM\INCLUDE;w:\os2tk45\som\include;w:\os2tk45\inc;w:\os2tk45\h\gl;w:\os2tk45\h;w:\os2tk45\h\libc;.;
+  set include=$(%include)k:\srwork\sockets\cosmic\HDR;
+  set lib=$(%lib);w:\watcom\lib386;w:\watcom\lib386\os2;
+  set watcom=w:\watcom
+
+libs = k:\srwork\sockets\cosmic\smplskts.lib  &
+       w:\os2tk45\lib\tcpip32.lib
+
+hdrroot = k:\srwork\sockets\cosmic\HDR\
+
+# list of executables
+EXES =  Spm.exe sktdbg.exe spmtable.exe srmsrvr.exe spmchk.exe
+
+hdrs = $(hdrroot)sockets.h  &
+       $(hdrroot)xstdlib.h  &
+       $(hdrroot)xtdio.h    &
+       $(hdrroot)setproto.h &
+       $(hdrroot)rdcolor.h
+
+CC  = wcl386
+cFLAGS = /bt=os2 /dos2 /l=os2flat /dxCPV40HDRS  $(libs)
+
+# to convert C into executables
+
+.c.exe : .AUTODEPEND
+    $(CC) $(CFLAGS) $[*
+    del $*.map $*.obj
+
+
+$(EXES) :: $(hdrs) $(libs)
+
+all :: $(EXES)
+
