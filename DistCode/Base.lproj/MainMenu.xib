@@ -12,6 +12,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application"/>
+        <customObject id="B19-r8-X1Z" userLabel="SUUpdater" customClass="SUUpdater"/>
         <menu title="AMainMenu" systemMenu="main" id="29">
             <items>
                 <menuItem title="Distcc" id="56">
@@ -21,6 +22,11 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Check for Updates..." keyEquivalent="u" id="v6j-09-Ggs">
+                                <connections>
+                                    <action selector="checkForUpdates:" target="B19-r8-X1Z" id="Khh-2a-jWS"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="236">
@@ -690,6 +696,20 @@
                             <action selector="orderFrontStandardAboutPanel:" target="-2" id="4OV-Td-f9h"/>
                         </connections>
                     </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3ed-ev-amq">
+                        <rect key="frame" x="171" y="14" width="80" height="28"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="70" id="cG0-8Q-sHk"/>
+                        </constraints>
+                        <buttonCell key="cell" type="push" title="Update" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="SV1-75-DFe">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="checkForUpdates:" target="B19-r8-X1Z" id="9QX-0l-cld"/>
+                        </connections>
+                    </button>
                     <tabView type="noTabsNoBorder" initialItem="gJ8-fy-5U1" translatesAutoresizingMaskIntoConstraints="NO" id="gW2-b2-Aea">
                         <rect key="frame" x="0.0" y="46" width="536" height="250"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -923,16 +943,48 @@
                                                 <binding destination="FFW-oU-JRE" name="value" keyPath="values.HostTimeout" id="bnr-Tj-Kvj"/>
                                             </connections>
                                         </stepper>
+                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="EQM-ct-tld">
+                                            <rect key="frame" x="171" y="164" width="194" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="14" id="CtJ-AG-cBX"/>
+                                            </constraints>
+                                            <buttonCell key="cell" type="check" title="Automatically check for updates" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="wpd-jg-6Jw">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="smallSystem"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <binding destination="B19-r8-X1Z" name="value" keyPath="automaticallyChecksForUpdates" id="SSH-5O-jXL"/>
+                                            </connections>
+                                        </button>
+                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="PXk-H0-gGp">
+                                            <rect key="frame" x="170" y="144" width="196" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="14" id="X3Q-co-DXe"/>
+                                            </constraints>
+                                            <buttonCell key="cell" type="check" title="Automatically download updates" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="d2H-1s-2BT">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="smallSystem"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <binding destination="B19-r8-X1Z" name="value" keyPath="automaticallyDownloadsUpdates" id="CDc-C2-TXL"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="Rym-kM-KJO" firstAttribute="top" secondItem="5Ff-7H-IHm" secondAttribute="top" id="Ip1-As-YHX"/>
                                         <constraint firstAttribute="trailing" secondItem="Rym-kM-KJO" secondAttribute="trailing" constant="204" id="IpB-hw-c3W"/>
                                         <constraint firstAttribute="centerX" secondItem="4m3-4S-v95" secondAttribute="centerX" id="NfH-Ky-obf"/>
+                                        <constraint firstItem="PXk-H0-gGp" firstAttribute="centerX" secondItem="EQM-ct-tld" secondAttribute="centerX" id="al9-oY-q38"/>
+                                        <constraint firstItem="EQM-ct-tld" firstAttribute="centerX" secondItem="4m3-4S-v95" secondAttribute="centerX" id="bhW-Fo-zve"/>
                                         <constraint firstItem="4m3-4S-v95" firstAttribute="top" secondItem="I0B-hC-GlG" secondAttribute="top" constant="20" symbolic="YES" id="fTg-Nn-3AM"/>
                                         <constraint firstItem="5Ff-7H-IHm" firstAttribute="leading" secondItem="Rym-kM-KJO" secondAttribute="trailing" constant="8" symbolic="YES" id="gjn-4B-UL3"/>
                                         <constraint firstItem="Rym-kM-KJO" firstAttribute="top" secondItem="4m3-4S-v95" secondAttribute="bottom" constant="8" symbolic="YES" id="i4B-FZ-0hQ"/>
                                         <constraint firstItem="Rym-kM-KJO" firstAttribute="leading" secondItem="Dry-Gk-iok" secondAttribute="trailing" constant="8" id="kmX-j6-TQ5"/>
                                         <constraint firstItem="Rym-kM-KJO" firstAttribute="baseline" secondItem="Dry-Gk-iok" secondAttribute="baseline" id="l2b-y5-Led"/>
+                                        <constraint firstItem="EQM-ct-tld" firstAttribute="top" secondItem="Rym-kM-KJO" secondAttribute="bottom" constant="8" symbolic="YES" id="tbw-ng-GvB"/>
+                                        <constraint firstItem="PXk-H0-gGp" firstAttribute="top" secondItem="EQM-ct-tld" secondAttribute="bottom" constant="6" symbolic="YES" id="vYR-l0-Gg4"/>
                                     </constraints>
                                 </view>
                             </tabViewItem>
@@ -976,6 +1028,8 @@ Gw
                 <constraints>
                     <constraint firstItem="zD7-zX-K3z" firstAttribute="top" secondItem="372" secondAttribute="top" id="13m-hw-iWT"/>
                     <constraint firstItem="h2w-Kb-ScE" firstAttribute="baseline" secondItem="A2P-WR-pMh" secondAttribute="baseline" id="7jV-UU-zEA"/>
+                    <constraint firstItem="3ed-ev-amq" firstAttribute="leading" secondItem="sbd-OV-WIl" secondAttribute="trailing" constant="8" symbolic="YES" id="83h-E9-wKa"/>
+                    <constraint firstItem="3ed-ev-amq" firstAttribute="baseline" secondItem="sbd-OV-WIl" secondAttribute="baseline" id="BPc-EN-8Np"/>
                     <constraint firstAttribute="trailing" secondItem="gW2-b2-Aea" secondAttribute="trailing" id="Db1-gh-avc"/>
                     <constraint firstAttribute="trailing" secondItem="zD7-zX-K3z" secondAttribute="trailing" id="HAC-N2-uzK"/>
                     <constraint firstItem="gW2-b2-Aea" firstAttribute="leading" secondItem="372" secondAttribute="leading" id="Jbu-jx-5gS"/>
@@ -1025,7 +1079,7 @@ Gw
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YY7-EC-BZr">
-                    <rect key="frame" x="290.00000029391629" y="138" width="177" height="14"/>
+                    <rect key="frame" x="289.99999967568954" y="138" width="177" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="IP Address" id="eAH-9C-20G">
                         <font key="font" metaFont="smallSystem"/>
@@ -1037,7 +1091,7 @@ Gw
                     </connections>
                 </textField>
                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CCb-VK-dmz">
-                    <rect key="frame" x="50" y="94.000000676907518" width="57" height="58"/>
+                    <rect key="frame" x="50" y="94.000001012614177" width="57" height="58"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
                     <imageCell key="cell" controlSize="small" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="CgZ-d3-Wza"/>
                     <connections>
