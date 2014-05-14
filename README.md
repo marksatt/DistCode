@@ -40,6 +40,13 @@ Copyright (C) VisualPharm [http://www.visualpharm.com](http://www.visualpharm.co
 Creative Commons Attribution-NoDerivs 3.0 Unported
 	[http://creativecommons.org/licenses/by-nd/3.0/](http://creativecommons.org/licenses/by-nd/3.0/)
 
+Sparkle
+-------
+
+[https://github.com/pornel/Sparkle](https://github.com/pornel/Sparkle)
+
+Copyright (c) 2006 Andy Matuschak
+
 OBMenuBarWindow
 ---------------
 
