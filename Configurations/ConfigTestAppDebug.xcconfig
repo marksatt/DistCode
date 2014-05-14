@@ -1,0 +1,4 @@
+#include "ConfigCommon.xcconfig"
+#include "ConfigCommonDebug.xcconfig"
+#include "ConfigTestApp.xcconfig"
+
