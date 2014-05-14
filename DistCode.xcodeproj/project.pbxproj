@@ -171,6 +171,13 @@
 			remoteGlobalIDString = 302882F21803F70B00BB141E;
 			remoteInfo = addhost;
 		};
+		30D2578D192407AD0095502A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 303AA41817E9962C0077FFC3 /* distcc-read-only.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 303AA3E617E9962C0077FFC3;
+			remoteInfo = "distcc-read-only";
+		};
 		30E986891906A1A3006FA27E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 30F461F417EAE499008042F1 /* dmucs.xcodeproj */;
@@ -657,6 +664,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				30D2578E192407AD0095502A /* PBXTargetDependency */,
 			);
 			name = distclang;
 			productName = distclang;
@@ -909,6 +917,11 @@
 			isa = PBXTargetDependency;
 			name = addhost;
 			targetProxy = 30BF29FF1906700B00104783 /* PBXContainerItemProxy */;
+		};
+		30D2578E192407AD0095502A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "distcc-read-only";
+			targetProxy = 30D2578D192407AD0095502A /* PBXContainerItemProxy */;
 		};
 		30E9868A1906A1A3006FA27E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
