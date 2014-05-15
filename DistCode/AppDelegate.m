@@ -614,6 +614,11 @@ NSNetServiceBrowser* Browser = nil;
 	{
 		[self stopDistcc];
 	}
+    // Set the number of Xcode build tasks.
+	NSUserDefaults* XcodeDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"com.apple.dt.Xcode"];
+    // Don't ever use 0, if we get to that use the system default.
+    [XcodeDefaults removeObjectForKey:@"IDEBuildOperationMaxNumberOfConcurrentCompileTasks"];
+	[XcodeDefaults synchronize];
 }
 - (void)netServiceBrowser:(NSNetServiceBrowser *)netServiceBrowser didFindDomain:(NSString *)domainName moreComing:(BOOL)moreDomainsComing
 {
