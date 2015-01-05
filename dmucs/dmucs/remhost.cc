@@ -63,6 +63,9 @@ main(int argc, char *argv[])
     char * distingProp = "";
 	char * suppliedIP = NULL;
 	char * suppliedHost = NULL;
+	char const * numcpus = "1";
+	char const * powerindex = "1";
+	bool addRemote = false;
 
     int nextarg = 1;
     for (; nextarg < argc; nextarg++) {
@@ -106,6 +109,15 @@ main(int argc, char *argv[])
 			return -1;
 	    }
 		suppliedHost = argv[nextarg];
+	} else if (strequ("-A", argv[nextarg]) ||
+			   strequ("--add", argv[nextarg])) {
+		if ((++nextarg) + 1 >= argc) {
+			usage(argv[0]);
+			return -1;
+		}
+		numcpus = argv[nextarg];
+		powerindex = argv[++nextarg];
+		addRemote = true;
 	} else {
 	    /* We are looking at the command to run, supposedly. */
 	    break;
@@ -145,12 +157,16 @@ main(int argc, char *argv[])
 
     /* If the name of the program is "addhost", then send "up" to the
        dmucs server.  Otherwise, send "down". */
-    const char *op = (strstr(argv[0], "addhost") != NULL) ? "up" : "down";
+	const char *op = !addRemote ? ((strstr(argv[0], "addhost") != NULL) ? "up" : "down") : "add";
 
     std::ostringstream clientReqStr;
 	char const* ip = suppliedIP ? suppliedIP : inet_ntoa(in);
     clientReqStr << "status " << ip << " " << op << " "
 	<< (distingProp ? distingProp : "");
+	if(addRemote)
+	{
+		clientReqStr << " " << numcpus << " " << powerindex;
+	}
     DMUCS_DEBUG((stderr, "Writing -->%s<-- to the server\n",
 		 clientReqStr.str().c_str()));
 
@@ -167,5 +183,5 @@ void
 usage(const char *prog)
 {
     fprintf(stderr, "Usage: %s [-s|--server <server>] [-p|--port <port>] "
-	    "[-t|--type <str>] [-D|--debug] [-ip <address>] [--host <hostname>] <command> [args] \n\n", prog);
+	    "[-t|--type <str>] [-D|--debug] [-ip <address>] [--host <hostname>] [-A|--add <numcpus> <powerindex>] <command> [args] \n\n", prog);
 }

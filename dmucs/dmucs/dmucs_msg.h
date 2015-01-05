@@ -81,6 +81,24 @@ public:
 };
 
 
+class DmucsRemoteAddMsg : public DmucsMsg
+{
+private:
+	struct in_addr host_;
+	host_status_t status_;
+	int numCpus_;
+	int powerIndex_;
+	
+public:
+	DmucsRemoteAddMsg(struct in_addr clientIp, struct in_addr host,
+				   host_status_t status, DmucsDprop dprop, int numcpus, int powerindex) :
+	DmucsMsg(clientIp, dprop),
+	host_(host), status_(status), numCpus_(numcpus), powerIndex_(powerindex) {}
+	virtual ~DmucsRemoteAddMsg(){}
+	void handle(Socket *sock, const char *buf);
+};
+
+
 class DmucsLdAvgMsg : public DmucsMsg
 {
 private:

@@ -86,30 +86,43 @@ DmucsMsg::parseMsg(Socket *sock, const char *buffer)
 				  ldavg1, ldavg5, ldavg10, dpropstr);
     } else if (strncmp(buffer, "status", 6) == 0) {
 	/* The buffer must hold:
-	 * status <host-IP-address> up|down [<dprop>]
+	 * status <host-IP-address> add|up|down [<dprop>] [numcpus] [poweridx]
 	 * NOTE: the host-IP-address MUST be in "dot-notation".
 	 */
 	char machname[64];
 	char state[10];
-        if (sscanf(buffer, "status %s %s %s", machname, state, dpropstr)!= 3){
-            if (sscanf(buffer, "status %s %s", machname, state) != 2) {
-                fprintf(stderr, "Got a bad status msg!!!\n");
-                return NULL;
-	    }
+	int numcpus = 1;
+	int poweridx = 1;
+		if (sscanf(buffer, "status %s %s %s %d %d", machname, state, dpropstr, &numcpus, &poweridx)!= 5) {
+			dpropstr[0] = '\0';
+			if (sscanf(buffer, "status %s %s %d %d", machname, state, &numcpus, &poweridx)!= 4) {
+				if (sscanf(buffer, "status %s %s %s", machname, state, dpropstr)!= 3) {
+					if (sscanf(buffer, "status %s %s", machname, state) != 2) {
+						fprintf(stderr, "Got a bad status msg!!!\n");
+						return NULL;
+				}
+			}
+		}
 	}
 	fprintf(stderr, "machname %s, state %s, dprop '%s'\n",
 		machname, state, dpropstr);
 	struct in_addr host;
 	host.s_addr = inet_addr(machname);
 	host_status_t status = STATUS_UNKNOWN;
-	if (strncmp(state, "up", 2) == 0) {
+	if (strncmp(state, "add", 2) == 0) {
+		status = STATUS_AVAILABLE;
+	} else if (strncmp(state, "up", 2) == 0) {
 	    status = STATUS_AVAILABLE;
 	} else if (strncmp(state, "down", 4) == 0) {
 	    status = STATUS_UNAVAILABLE;
 	} else {
 	    fprintf(stderr, "got unknown state %s\n", state);
 	}
-	return new DmucsStatusMsg(clientIp, host, status, dpropstr);
+	if (strncmp(state, "add", 2) == 0) {
+		return new DmucsRemoteAddMsg(clientIp, host, status, dpropstr, numcpus, poweridx);
+	} else {
+		return new DmucsStatusMsg(clientIp, host, status, dpropstr);
+	}
     } else if (strncmp(buffer, "monitor", 7) == 0) {
 	return new DmucsMonitorReqMsg(clientIp, dpropstr);
     }
@@ -219,7 +232,8 @@ DmucsStatusMsg::handle(Socket *sock, const char *buf)
 	    /* A new host is available! */
 	    DMUCS_DEBUG((stderr, "Creating new host %s, type %s\n",
 			 inet_ntoa(host_), dprop2cstr(dprop_)));
-	    DmucsHost::createHost(host_, dprop_, hostsInfoFile);
+		DmucsHost *newHost = DmucsHost::createHost(host_, dprop_, hostsInfoFile);
+		newHost->avail();
 	}
     } else {    // status is unavailable.
 		try {
@@ -228,6 +242,34 @@ DmucsStatusMsg::handle(Socket *sock, const char *buf)
 			}
     }
     removeFd(sock);
+}
+
+
+void
+DmucsRemoteAddMsg::handle(Socket *sock, const char *buf)
+{
+	DmucsDb *db = DmucsDb::getInstance();
+	if (status_ == STATUS_AVAILABLE) {
+		if (db->haveHost(host_, dprop_)) {
+			/* Make it available (if it wasn't). */
+			db->getHost(host_, dprop_)->avail();
+		} else {
+			/* A new host is available! */
+			DMUCS_DEBUG((stderr, "Creating new host %s, type %s, cpus %d, index %d\n",
+						 inet_ntoa(host_), dprop2cstr(dprop_), numCpus_, powerIndex_));
+			DmucsHost *newHost = DmucsHost::appendHost(host_, dprop_, numCpus_, powerIndex_, hostsInfoFile);
+			if(newHost)
+			{
+				newHost->avail();
+			}
+		}
+	} else {    // status is unavailable.
+		try {
+			db->getHost(host_, dprop_)->unavail();
+		} catch (...) {
+		}
+	}
+	removeFd(sock);
 }
 
 void
