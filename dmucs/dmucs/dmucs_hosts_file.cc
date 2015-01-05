@@ -157,6 +157,29 @@ DmucsHostsFile::getDataForHost(const struct in_addr &ipAddr, int *numCpus,
 }
 
 
+bool
+DmucsHostsFile::setDataForHost(const struct in_addr ipAddr, int numCpus,
+					int powerIndex) const
+{
+	int temp;
+	if(!getDataForHost(ipAddr, &temp, &temp)) {
+		std::ofstream ostr(hostsInfoFile_.c_str(), std::ofstream::out | std::ofstream::app);
+		if (!ostr) {
+			DMUCS_DEBUG((stderr, "Unable to open hosts-info file \"%s\"\n",
+		     hostsInfoFile_.c_str()));
+			return false;
+		}
+		
+		try {
+			ostr.seekp(0, std::ofstream::end);
+		} catch (...) { }
+		
+		ostr << inet_ntoa(ipAddr) << " " << numCpus << " " << powerIndex << "\n";
+		return true;
+	}
+	return false;
+}
+
 
 /* If the file modification time has changed since the last time this
    was called, then return true AND update lastFileChangeTime_ to the

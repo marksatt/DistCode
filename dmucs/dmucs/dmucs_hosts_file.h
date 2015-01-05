@@ -39,6 +39,8 @@ public:
     static DmucsHostsFile *getInstance(const std::string &hostsInfoFile);
     bool getDataForHost(const struct in_addr &ipAddr, int *numCpus,
 			int *powerIndex) const;
+	bool setDataForHost(const struct in_addr ipAddr, int numCpus,
+						int powerIndex) const;
 
     /*
      * This class implements the singleton pattern, as only one instance of
