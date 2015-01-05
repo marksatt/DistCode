@@ -71,6 +71,27 @@ DmucsHost::createHost(const struct in_addr &ipAddr,
     return newHost;
 }
 
+DmucsHost *
+DmucsHost::appendHost(const struct in_addr &ipAddr,
+							 const DmucsDprop dprop,
+							 int numCpus,
+							 int powerIndex,
+							 const std::string &hostsInfoFile)
+{
+	DmucsHost *newHost = NULL;
+	DmucsHostsFile *hostsFile = DmucsHostsFile::getInstance(hostsInfoFile);
+	if(hostsFile->setDataForHost(ipAddr, numCpus, powerIndex))
+	{
+		newHost = new DmucsHost(ipAddr, dprop, numCpus, powerIndex);
+		DmucsDb::getInstance()->addNewHost(newHost);
+	}
+	else
+	{
+		newHost = createHost(ipAddr, dprop, hostsInfoFile);
+	}
+	return newHost;
+}
+
 const int
 DmucsHost::getStateAsInt() const
 {

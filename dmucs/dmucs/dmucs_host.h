@@ -82,6 +82,11 @@ public:
     static DmucsHost *createHost(const struct in_addr &ipAddr,
 				  const DmucsDprop dprop,
 				  const std::string &hostsInfoFile);
+	static DmucsHost *appendHost(const struct in_addr &ipAddr,
+					const DmucsDprop dprop,
+					int numCpus,
+					int powerIndex,
+					const std::string &hostsInfoFile);
 
     const int getStateAsInt() const;
     int getTier() const;
