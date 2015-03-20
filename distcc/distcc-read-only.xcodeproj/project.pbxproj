@@ -6,6 +6,16 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		10570F541ABCDF9F0071A289 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 303AA3E217E9962C0077FFC3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 10570F501ABCDF900071A289;
+			remoteInfo = "distcc-read-only-configure";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		300D328818036FD300EDD3BC /* distcc_compilers */ = {isa = PBXFileReference; lastKnownFileType = text; path = distcc_compilers; sourceTree = "<group>"; };
 		300D328918036FF500EDD3BC /* distcc_compilers */ = {isa = PBXFileReference; lastKnownFileType = text; path = distcc_compilers; sourceTree = "<group>"; };
@@ -137,6 +147,20 @@
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
+		10570F501ABCDF900071A289 /* distcc-read-only-configure */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "";
+			buildConfigurationList = 10570F511ABCDF900071A289 /* Build configuration list for PBXLegacyTarget "distcc-read-only-configure" */;
+			buildPhases = (
+			);
+			buildToolPath = ./configure;
+			buildWorkingDirectory = "$(PROJECT_DIR)";
+			dependencies = (
+			);
+			name = "distcc-read-only-configure";
+			passBuildSettingsInEnvironment = 1;
+			productName = "distcc-read-only";
+		};
 		303AA3E617E9962C0077FFC3 /* distcc-read-only */ = {
 			isa = PBXLegacyTarget;
 			buildArgumentsString = "$(ACTION)";
@@ -146,6 +170,7 @@
 			buildToolPath = /usr/bin/make;
 			buildWorkingDirectory = "$(PROJECT_DIR)";
 			dependencies = (
+				10570F551ABCDF9F0071A289 /* PBXTargetDependency */,
 			);
 			name = "distcc-read-only";
 			passBuildSettingsInEnvironment = 1;
@@ -171,11 +196,47 @@
 			projectRoot = "";
 			targets = (
 				303AA3E617E9962C0077FFC3 /* distcc-read-only */,
+				10570F501ABCDF900071A289 /* distcc-read-only-configure */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXTargetDependency section */
+		10570F551ABCDF9F0071A289 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 10570F501ABCDF900071A289 /* distcc-read-only-configure */;
+			targetProxy = 10570F541ABCDF9F0071A289 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		10570F521ABCDF900071A289 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "distcc-read-only copy";
+			};
+			name = Debug;
+		};
+		10570F531ABCDF900071A289 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "distcc-read-only copy";
+			};
+			name = Release;
+		};
 		303AA3E317E9962C0077FFC3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -225,6 +286,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		10570F511ABCDF900071A289 /* Build configuration list for PBXLegacyTarget "distcc-read-only-configure" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				10570F521ABCDF900071A289 /* Debug */,
+				10570F531ABCDF900071A289 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		303AA3E517E9962C0077FFC3 /* Build configuration list for PBXProject "distcc-read-only" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
