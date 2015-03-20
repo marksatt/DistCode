@@ -4,6 +4,7 @@
 <dict>
 	<key>DVTPlugInCompatibilityUUIDs</key>
 	<array>
+		<string>A16FF353-8441-459E-A50C-B071F53F51B7</string>
 		<string>A2E4D43F-41F4-4FB9-BB94-7177011C9AED</string>
 	</array>
 	<key>BuildMachineOSBuild</key>
