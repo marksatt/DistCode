@@ -1,0 +1,186 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		30A323571A71B9380035C1DD /* aclocal.m4 */ = {isa = PBXFileReference; lastKnownFileType = text; path = aclocal.m4; sourceTree = "<group>"; };
+		30A323581A71B9380035C1DD /* asm */ = {isa = PBXFileReference; lastKnownFileType = folder; path = asm; sourceTree = "<group>"; };
+		30A323591A71B9380035C1DD /* AUTHORS */ = {isa = PBXFileReference; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
+		30A3235A1A71B9380035C1DD /* autoconf */ = {isa = PBXFileReference; lastKnownFileType = folder; path = autoconf; sourceTree = "<group>"; };
+		30A3235B1A71B9380035C1DD /* B */ = {isa = PBXFileReference; lastKnownFileType = folder; path = B; sourceTree = "<group>"; };
+		30A3235C1A71B9380035C1DD /* BUGS */ = {isa = PBXFileReference; lastKnownFileType = text; path = BUGS; sourceTree = "<group>"; };
+		30A3235D1A71B9380035C1DD /* ChangeLog */ = {isa = PBXFileReference; lastKnownFileType = text; path = ChangeLog; sourceTree = "<group>"; };
+		30A3235E1A71B9380035C1DD /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		30A3235F1A71B9380035C1DD /* config.hin */ = {isa = PBXFileReference; lastKnownFileType = text; path = config.hin; sourceTree = "<group>"; };
+		30A323601A71B9380035C1DD /* configure */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = configure; sourceTree = "<group>"; };
+		30A323611A71B9380035C1DD /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
+		30A323621A71B9380035C1DD /* COPYING */ = {isa = PBXFileReference; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
+		30A323631A71B9380035C1DD /* doc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = doc; sourceTree = "<group>"; };
+		30A323641A71B9380035C1DD /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = "<group>"; };
+		30A323651A71B9380035C1DD /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include; sourceTree = "<group>"; };
+		30A323661A71B9380035C1DD /* INSTALL */ = {isa = PBXFileReference; lastKnownFileType = text; path = INSTALL; sourceTree = "<group>"; };
+		30A323671A71B9380035C1DD /* lzotest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = lzotest; sourceTree = "<group>"; };
+		30A323681A71B9380035C1DD /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		30A323691A71B9380035C1DD /* Makefile.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		30A3236A1A71B9380035C1DD /* minilzo */ = {isa = PBXFileReference; lastKnownFileType = folder; path = minilzo; sourceTree = "<group>"; };
+		30A3236B1A71B9380035C1DD /* NEWS */ = {isa = PBXFileReference; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
+		30A3236C1A71B9380035C1DD /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		30A3236D1A71B9380035C1DD /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
+		30A3236E1A71B9380035C1DD /* tests */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tests; sourceTree = "<group>"; };
+		30A3236F1A71B9380035C1DD /* THANKS */ = {isa = PBXFileReference; lastKnownFileType = text; path = THANKS; sourceTree = "<group>"; };
+		30A323701A71B9380035C1DD /* util */ = {isa = PBXFileReference; lastKnownFileType = folder; path = util; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		30A323511A71B9380035C1DD = {
+			isa = PBXGroup;
+			children = (
+				30A323571A71B9380035C1DD /* aclocal.m4 */,
+				30A323581A71B9380035C1DD /* asm */,
+				30A323591A71B9380035C1DD /* AUTHORS */,
+				30A3235A1A71B9380035C1DD /* autoconf */,
+				30A3235B1A71B9380035C1DD /* B */,
+				30A3235C1A71B9380035C1DD /* BUGS */,
+				30A3235D1A71B9380035C1DD /* ChangeLog */,
+				30A3235E1A71B9380035C1DD /* CMakeLists.txt */,
+				30A3235F1A71B9380035C1DD /* config.hin */,
+				30A323601A71B9380035C1DD /* configure */,
+				30A323611A71B9380035C1DD /* configure.ac */,
+				30A323621A71B9380035C1DD /* COPYING */,
+				30A323631A71B9380035C1DD /* doc */,
+				30A323641A71B9380035C1DD /* examples */,
+				30A323651A71B9380035C1DD /* include */,
+				30A323661A71B9380035C1DD /* INSTALL */,
+				30A323671A71B9380035C1DD /* lzotest */,
+				30A323681A71B9380035C1DD /* Makefile.am */,
+				30A323691A71B9380035C1DD /* Makefile.in */,
+				30A3236A1A71B9380035C1DD /* minilzo */,
+				30A3236B1A71B9380035C1DD /* NEWS */,
+				30A3236C1A71B9380035C1DD /* README */,
+				30A3236D1A71B9380035C1DD /* src */,
+				30A3236E1A71B9380035C1DD /* tests */,
+				30A3236F1A71B9380035C1DD /* THANKS */,
+				30A323701A71B9380035C1DD /* util */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		30A323561A71B9380035C1DD /* lzo-2.08 */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 30A323711A71B9380035C1DD /* Build configuration list for PBXLegacyTarget "lzo-2.08" */;
+			buildPhases = (
+			);
+			buildToolPath = "$(PROJECT_DIR)/MacBuild.sh";
+			buildWorkingDirectory = "$(PROJECT_DIR)";
+			dependencies = (
+			);
+			name = "lzo-2.08";
+			passBuildSettingsInEnvironment = 1;
+			productName = "lzo-2.08";
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		30A323521A71B9380035C1DD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 30A323551A71B9380035C1DD /* Build configuration list for PBXProject "lzo-2.08" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 30A323511A71B9380035C1DD;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				30A323561A71B9380035C1DD /* lzo-2.08 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		30A323531A71B9380035C1DD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.10;
+			};
+			name = Debug;
+		};
+		30A323541A71B9380035C1DD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.10;
+			};
+			name = Release;
+		};
+		30A323721A71B9380035C1DD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "lzo-2.08";
+			};
+			name = Debug;
+		};
+		30A323731A71B9380035C1DD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "lzo-2.08";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		30A323551A71B9380035C1DD /* Build configuration list for PBXProject "lzo-2.08" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				30A323531A71B9380035C1DD /* Debug */,
+				30A323541A71B9380035C1DD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		30A323711A71B9380035C1DD /* Build configuration list for PBXLegacyTarget "lzo-2.08" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				30A323721A71B9380035C1DD /* Debug */,
+				30A323731A71B9380035C1DD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 30A323521A71B9380035C1DD /* Project object */;
+}
