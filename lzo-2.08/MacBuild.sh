@@ -6,6 +6,8 @@ test -z "$srcdir" && srcdir=.
 olddir=`pwd`
 cd $srcdir
 
+srcdir=`php -r "echo realpath('$srcdir');"`
+
 echo "Working Dir: $srcdir"
 
 $srcdir/configure --enable-shared --prefix=$srcdir/bin || {
