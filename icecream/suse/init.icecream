@@ -1,0 +1,128 @@
+#! /bin/sh
+# Copyright (c) 2003 SuSE Linux AG Nuernberg, Germany.
+#
+# Author: Stephan Kulow <http://www.suse.de/feedback>
+#
+# /etc/init.d/icecream
+#   and its symbolic  link
+# /usr/sbin/rcicecream
+#
+### BEGIN INIT INFO
+# Provides:          icecream
+# Required-Start:    $network $syslog $remote_fs
+# Required-Stop:     $network $remote_fs
+# Default-Start:     3 5
+# Default-Stop:
+# Description:       distributed compiler daemon
+# Short-Description: icecc
+### END INIT INFO
+
+# Determine the base and follow a runlevel link name.
+base=${0##*/}
+link=${base#*[SK][0-9][0-9]}
+
+# Force execution if not called by a runlevel directory.
+test -x /usr/sbin/iceccd || exit 0
+
+. /etc/rc.status
+. /etc/sysconfig/icecream
+
+rc_reset
+case "$1" in
+    start)
+	echo -n "Starting Distributed Compiler Daemon"
+        netname=
+	if test -n "$ICECREAM_NETNAME"; then
+	    netname="-n $ICECREAM_NETNAME"
+	fi
+        if test "$ICECREAM_RUN_SCHEDULER" == "yes"; then
+            logfile=""
+            if test -z "$ICECREAM_SCHEDULER_LOG_FILE"; then
+		ICECREAM_SCHEDULER_LOG_FILE="/var/log/icecream/scheduler"
+            fi
+            logfile="-l $ICECREAM_SCHEDULER_LOG_FILE"
+	    : > $ICECREAM_SCHEDULER_LOG_FILE
+	    chown icecream:icecream $ICECREAM_SCHEDULER_LOG_FILE
+            startproc -u icecream /usr/sbin/icecc-scheduler -d $logfile $netname
+        fi
+        logfile=""
+        if test -n "$ICECREAM_LOG_FILE"; then
+            touch $ICECREAM_LOG_FILE
+            chown icecream:icecream $ICECREAM_LOG_FILE
+            logfile="-l $ICECREAM_LOG_FILE"
+        else
+            touch /var/log/icecream/iceccd
+            chown icecream:icecream /var/log/icecream/iceccd
+        fi
+        nice= 
+	if test -n "$ICECREAM_NICE_LEVEL"; then
+	   nice="--nice $ICECREAM_NICE_LEVEL"
+	fi
+        scheduler=
+	if test -n "$ICECREAM_SCHEDULER_HOST"; then
+	    scheduler="-s $ICECREAM_SCHEDULER_HOST"
+	fi
+        noremote=
+        if test "$ICECREAM_ALLOW_REMOTE" = "no" 2> /dev/null; then
+                noremote="--no-remote"
+        fi
+        maxjobs=
+        if test -n "$ICECREAM_MAX_JOBS"; then
+            if test "$ICECREAM_MAX_JOBS" -eq 0 2> /dev/null; then
+                maxjobs="-m 1"
+                noremote="--no-remote"
+            else
+                maxjobs="-m $ICECREAM_MAX_JOBS"
+            fi
+        fi
+	startproc /usr/sbin/iceccd -d $logfile $nice $scheduler $netname -u icecream -b "$ICECREAM_BASEDIR" $maxjobs $noremote
+	rc_status -v
+	;;
+    stop)
+	echo -n "Shutting down Distributed Compiler Daemon"
+	killproc -TERM /usr/sbin/iceccd
+        if test "$ICECREAM_RUN_SCHEDULER" == "yes"; then
+            killproc -TERM /usr/sbin/icecc-scheduler
+        fi
+	rc_status -v
+	;;
+    restart)
+	## If first returns OK call the second, if first or
+	## second command fails, set echo return value.
+	$0 stop; sleep 1  &&  $0 start
+	rc_status
+	;;
+    try-restart|condrestart)
+        ## Do a restart only if the service was active before.
+        ## Note: try-restart is now part of LSB (as of 1.9).
+        ## RH has a similar command named condrestart.
+        if test "$1" = "condrestart"; then
+                echo "${attn} Use try-restart ${done}(LSB)${attn} rather than condrestart ${warn}(RH)${norm}"
+        fi
+        $0 status
+        if test $? = 0; then
+                $0 restart
+        else
+                rc_reset        # Not running is not a failure.
+        fi
+        # Remember status and be quiet
+        rc_status
+        ;;
+    reload|force-reload)
+	if test "$ICECREAM_RUN_SCHEDULER" == "yes"; then
+          killproc  -HUP /usr/sbin/icecc-scheduler
+        fi
+        killproc  -HUP /usr/sbin/iceccd
+	rc_status
+	;;
+    status)
+	echo -n "Checking for Distributed Compiler Daemon: "
+	checkproc /usr/sbin/iceccd
+	rc_status -v
+	;;
+    *)
+	echo "Usage: $0 {start|stop|status|restart|try-restart|reload}"
+	exit 1
+	;;
+esac
+rc_exit

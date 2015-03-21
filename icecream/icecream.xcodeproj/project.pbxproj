@@ -1,0 +1,178 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		30AD398B1A70F2A500E61F9F /* .DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; path = .DS_Store; sourceTree = "<group>"; };
+		30AD398C1A70F2A500E61F9F /* autogen.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = autogen.sh; sourceTree = "<group>"; };
+		30AD398D1A70F2A500E61F9F /* BENCH */ = {isa = PBXFileReference; lastKnownFileType = text; path = BENCH; sourceTree = "<group>"; };
+		30AD398E1A70F2A500E61F9F /* client */ = {isa = PBXFileReference; lastKnownFileType = folder; path = client; sourceTree = "<group>"; };
+		30AD398F1A70F2A500E61F9F /* compilerwrapper */ = {isa = PBXFileReference; lastKnownFileType = folder; path = compilerwrapper; sourceTree = "<group>"; };
+		30AD39901A70F2A500E61F9F /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
+		30AD39911A70F2A500E61F9F /* COPYING */ = {isa = PBXFileReference; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
+		30AD39921A70F2A500E61F9F /* daemon */ = {isa = PBXFileReference; lastKnownFileType = folder; path = daemon; sourceTree = "<group>"; };
+		30AD39931A70F2A500E61F9F /* doc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = doc; sourceTree = "<group>"; };
+		30AD39941A70F2A500E61F9F /* icecream */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icecream; sourceTree = "<group>"; };
+		30AD39951A70F2A500E61F9F /* m4 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = m4; sourceTree = "<group>"; };
+		30AD39961A70F2A500E61F9F /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		30AD39971A70F2A500E61F9F /* NEWS */ = {isa = PBXFileReference; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
+		30AD39981A70F2A500E61F9F /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		30AD39991A70F2A500E61F9F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		30AD399A1A70F2A500E61F9F /* scheduler */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scheduler; sourceTree = "<group>"; };
+		30AD399B1A70F2A500E61F9F /* services */ = {isa = PBXFileReference; lastKnownFileType = folder; path = services; sourceTree = "<group>"; };
+		30AD399C1A70F2A500E61F9F /* suse */ = {isa = PBXFileReference; lastKnownFileType = folder; path = suse; sourceTree = "<group>"; };
+		30AD399D1A70F2A500E61F9F /* tests */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tests; sourceTree = "<group>"; };
+		30AD399E1A70F2A500E61F9F /* TODO */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+		30AD39AB1A70F37800E61F9F /* bin */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bin; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		30AD39851A70F2A500E61F9F = {
+			isa = PBXGroup;
+			children = (
+				30AD39AB1A70F37800E61F9F /* bin */,
+				30AD398B1A70F2A500E61F9F /* .DS_Store */,
+				30AD398C1A70F2A500E61F9F /* autogen.sh */,
+				30AD398D1A70F2A500E61F9F /* BENCH */,
+				30AD398E1A70F2A500E61F9F /* client */,
+				30AD398F1A70F2A500E61F9F /* compilerwrapper */,
+				30AD39901A70F2A500E61F9F /* configure.ac */,
+				30AD39911A70F2A500E61F9F /* COPYING */,
+				30AD39921A70F2A500E61F9F /* daemon */,
+				30AD39931A70F2A500E61F9F /* doc */,
+				30AD39941A70F2A500E61F9F /* icecream */,
+				30AD39951A70F2A500E61F9F /* m4 */,
+				30AD39961A70F2A500E61F9F /* Makefile.am */,
+				30AD39971A70F2A500E61F9F /* NEWS */,
+				30AD39981A70F2A500E61F9F /* README */,
+				30AD39991A70F2A500E61F9F /* README.md */,
+				30AD399A1A70F2A500E61F9F /* scheduler */,
+				30AD399B1A70F2A500E61F9F /* services */,
+				30AD399C1A70F2A500E61F9F /* suse */,
+				30AD399D1A70F2A500E61F9F /* tests */,
+				30AD399E1A70F2A500E61F9F /* TODO */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		30AD398A1A70F2A500E61F9F /* icecream */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 30AD399F1A70F2A500E61F9F /* Build configuration list for PBXLegacyTarget "icecream" */;
+			buildPhases = (
+			);
+			buildToolPath = "$(PROJECT_DIR)/MacBuild.sh";
+			buildWorkingDirectory = "$(PROJECT_DIR)";
+			dependencies = (
+			);
+			name = icecream;
+			passBuildSettingsInEnvironment = 1;
+			productName = icecream;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		30AD39861A70F2A500E61F9F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 30AD39891A70F2A500E61F9F /* Build configuration list for PBXProject "icecream" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 30AD39851A70F2A500E61F9F;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				30AD398A1A70F2A500E61F9F /* icecream */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		30AD39871A70F2A500E61F9F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.10;
+			};
+			name = Debug;
+		};
+		30AD39881A70F2A500E61F9F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.10;
+			};
+			name = Release;
+		};
+		30AD39A01A70F2A500E61F9F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = icecream;
+				SDKROOT = macosx10.10;
+			};
+			name = Debug;
+		};
+		30AD39A11A70F2A500E61F9F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = icecream;
+				SDKROOT = macosx10.10;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		30AD39891A70F2A500E61F9F /* Build configuration list for PBXProject "icecream" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				30AD39871A70F2A500E61F9F /* Debug */,
+				30AD39881A70F2A500E61F9F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		30AD399F1A70F2A500E61F9F /* Build configuration list for PBXLegacyTarget "icecream" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				30AD39A01A70F2A500E61F9F /* Debug */,
+				30AD39A11A70F2A500E61F9F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 30AD39861A70F2A500E61F9F /* Project object */;
+}

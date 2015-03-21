@@ -1,0 +1,155 @@
+#
+# spec file for package icecream
+#
+# Copyright (c) 2014 SUSE LINUX Products GmbH, Nuernberg, Germany.
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+
+# Please submit bugfixes or comments via http://bugs.opensuse.org/
+#
+# icecream 0
+
+
+Name:           icecream
+BuildRequires:  gcc-c++
+BuildRequires:  lzo-devel
+%if 0%{?suse_version} > 1110
+BuildRequires:  libcap-ng-devel
+%endif
+Summary:        For Distributed Compile in the Network
+License:        GPL-2.0+ and LGPL-2.1+
+Group:          Development/Tools/Building
+Url:            https://github.com/icecc/icecream
+Requires:       /bin/tar
+Requires:       /usr/bin/bzip2
+%if 0%{?suse_version}
+PreReq:         %fillup_prereq
+PreReq:         %insserv_prereq
+%endif
+PreReq:         /usr/sbin/useradd
+PreReq:         /usr/sbin/groupadd
+Recommends:     gcc-c++
+Requires:       logrotate
+Version:        @VERSION@
+Release:        0
+Source0:        ftp://ftp.suse.com/pub/projects/icecream/icecc-%{version}.tar.bz2
+BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+
+%description
+Distributed compiler with a central scheduler to share build load
+
+%package -n libicecream-devel
+Summary:        For Distributed Compile in the Network
+Group:          Development/Tools/Building
+Requires:       libstdc++-devel
+%if 0%{?suse_version} > 1110
+Requires:       libcap-ng-devel
+%endif
+
+%description -n libicecream-devel
+icecream is the next generation distcc.
+
+%package -n icecream-clang-wrappers
+Summary:        Distributed Compile Wrappers for Clang
+Group:          Development/Tools/Building
+Requires:       clang
+Requires:       icecream
+Supplements:    packageand(icecream:clang)
+
+%description -n icecream-clang-wrappers
+Wrapper symlinks for clang/clang++ for icecream distributed building.
+
+%prep
+%setup -q -n icecc-%{version}
+# DO NOT ADD PATCHES without github reference
+
+%build
+export CFLAGS="$RPM_OPT_FLAGS"
+export CXXFLAGS="$RPM_OPT_FLAGS"
+%configure \
+%if 0%{?suse_version} >= 1230
+    --enable-clang-rewrite-includes \
+%endif
+    --enable-clang-wrappers \
+    --libexecdir %_libexecdir
+make %{?jobs:-j %jobs}
+
+%install
+make DESTDIR=$RPM_BUILD_ROOT install
+
+# Create symlinks in /opt/icecream/bin on openSUSE <= 1220
+%if 0%{?suse_version} <= 1220
+  mkdir -p $RPM_BUILD_ROOT/opt/icecream/bin
+  for i in g++ gcc cc c++ clang++ clang; do
+    ln -sf %_bindir/icecc $RPM_BUILD_ROOT/opt/icecream/bin/$i
+  done
+%endif
+
+%preun
+%stop_on_removal icecream
+
+%pre
+/usr/sbin/groupadd -r icecream 2> /dev/null || :
+/usr/sbin/useradd -r -g icecream -s /bin/false -c "Icecream Daemon" -d /var/cache/icecream icecream 2> /dev/null || :
+
+%post
+# older icecream versions may have left some files owned by root:root in the cache
+rm -rf -- %_localstatedir/cache/icecream/*
+%if 0%{?suse_version}
+%{fillup_and_insserv -n icecream icecream}
+%endif
+
+%postun
+%restart_on_update icecream
+%{insserv_cleanup}
+
+%files
+%defattr(-,root,root)
+%doc COPYING README.md NEWS
+%config %_sysconfdir/logrotate.d/icecream
+%config %_sysconfdir/init.d/icecream
+%_bindir/icecc-create-env
+%_bindir/icecc
+%_bindir/icerun
+%_sbindir/icecc-scheduler
+%_sbindir/iceccd
+%_sbindir/rcicecream
+%_mandir/man*/*
+%_libexecdir/icecc
+%exclude %_libexecdir/icecc/bin/clang
+%exclude %_libexecdir/icecc/bin/clang++
+%if 0%{?suse_version}
+%config %_sysconfdir/sysconfig/SuSEfirewall2.d/services/*
+%_localstatedir/adm/fillup-templates/sysconfig.icecream
+%if 0%{?suse_version} <= 1220
+/opt/icecream
+%exclude /opt/icecream/bin/clang
+%exclude /opt/icecream/bin/clang++
+%endif
+%endif
+%attr(-,icecream,icecream) %_localstatedir/cache/icecream
+%attr(-,icecream,icecream) %_localstatedir/log/icecream
+
+%files -n libicecream-devel
+%defattr(-,root,root)
+%_includedir/icecc
+%_libdir/libicecc.*
+%_libdir/pkgconfig/icecc.pc
+
+%files -n icecream-clang-wrappers
+%defattr(-,root,root)
+%_libexecdir/icecc/bin/clang
+%_libexecdir/icecc/bin/clang++
+%if 0%{?suse_version} <= 1220
+/opt/icecream/bin/clang
+/opt/icecream/bin/clang++
+%endif
+
+%changelog

@@ -1,0 +1,16 @@
+/var/log/icecream/iceccd /var/log/icecream/scheduler {
+    compress
+    dateext
+    maxage 30
+    rotate 99
+    missingok
+    notifempty
+    size +4096k
+    create 644 icecream icecream
+    su icecream icecream
+    sharedscripts
+    postrotate
+        /etc/init.d/icecream reload
+    endscript
+}
+
