@@ -2,8 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>HostTimeout</key>
+	<key>IceccDebug</key>
+	<integer>3</integer>
+	<key>MaxJobs</key>
 	<integer>-1</integer>
+	<key>CoordinatorMode</key>
+	<integer>0</integer>
+	<key>HostTimeout</key>
+	<integer>10</integer>
 	<key>RunCompilationHost</key>
 	<true/>
 </dict>

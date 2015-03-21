@@ -17,7 +17,7 @@ mkdir -p "$INSIDE_SOURCE"
 # Copy the source tree, minus resources, into Content/Source.
 rsync -a --cvs-exclude --extended-attributes --exclude 'NoRedist' --exclude 'Updates' \
 --exclude 'build' --exclude '*.pbxuser' --exclude '*.mode1' --exclude '.git' \
---exclude '*.scriptSuite' --exclude '*.o' --exclude '*.d' \
+--exclude '*.scriptSuite' --exclude '*.a' --exclude '*.o' --exclude '*.d' \
 --exclude '*.iconset' --exclude 'xcuserdata' --exclude '*.mode1v3' --exclude '*.perspectivev3' \
 $@ \
 "$SRCROOT"/ "$INSIDE_SOURCE"
