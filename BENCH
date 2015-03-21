@@ -1,0 +1,211 @@
+
+There were no structured benchmarks of icecream, so I started some. I'm benchmarking 5 runs
+each, throwing away the worst and the best run, and then averaging the rest of the 3.
+There are two machines in the cluster, both single cpu and both about the same speed (1.7GHz
+Pentium M). Normally the tests are done via otherwise idle WLAN (54MBit). WLAN has a bad
+latency and very bad throughput, which gives icecream a hard time, and should be compareable
+to a loaded cabled network environment. For comparison, I repeated some tests via 100MBit
+cabled LAN.
+
+I'm testing linux 2.6.16 (defconfig), which is a set of small C files with sometimes larger
+C files inbetween. its a tough benchmark because compiling C is rather quick, so remote
+overhead has to be low.
+
+No icecream:
+
+make  -j1:     315s
+make  -j2:     322s
+make  -j3:     324s
+make -j10:     334s
+
+result: without icecream, starting more compilers than CPUs available is a bad idea.
+
+
+icecream wrapper, no scheduler.
+
+make  -j1:     323s
+make -j10:     340s
+
+result: Overhead of just using icecream without cluster is neglectible (2%) in all cases.
+
+dirk's no-latency icecream: remote daemon with -m 1:
+
+make  -j1:     418s
+make  -j2:     397s
+make  -j3:     263s
+make -j10:     230s
+make -j10/100: 203s
+make -j100:    231s
+make -j10/100: 202s
+
+result: Enabling icecream without parallel compilation is a horrible mistake. icecream
+must be tuned to detect and compensate this situation better. Maximum performance
+improvement of icecream is 27% (LAN: 36%) out of the theoretical 50%.
+
+======================================================================
+
+Qt 3.3.6's src/ subdirectory. This is a bunch of medium and large C++ files. It
+gives icecream good opportunities because compilation time is comparatively low
+and the preprocessed files are not too large (low STL usage).
+
+
+No icecream:
+
+make  -j1:     368s
+make  -j3:     363s
+
+result: apparently there is a small win by starting more compilers than CPUs in parallel.
+Perhaps the I/O overhead is not neglectible like in the linux kernel case.
+
+dirk's no-latency icecream, remote daemon with -m 2:
+
+make  -j1:     572s
+make  -j3:     273s
+make -j10:     269s
+make -j10/100: 239s
+make -j100:    282s
+
+result: again, not compiling in parallel is a deadly sin. trying to overload the cluster
+with very high parallelism as well. Maximum performance improvement is again 27% and
+36% for LAN. That these numbers compare equally with the Linux kernel case is astonishing
+and needs explanation.
+
+Now, to make sure that the no-latency patch hasn't regressed anything, we're comparing with
+stock 0.7 (which already has some performance improvements over 0.6):
+
+
+make  -j1:      569s
+make -j10:      349s
+make -j10/100:  253s
+make -j100/100: 278s
+
+It is remarkable, that 0.7 does not provide much advantage over compiling locally (6% speedup)
+in a WLAN, while providing the expected 36% speedup for LAN. This proves that no-latency
+provides significant wins for unstable/bad network connections and does not regress
+performance for good networking setups. The overall 20% improvement is not bad at all.
+
+2006-06-16 make-it-cool-branch:
+
+make -j10/100:  244s
+make -j1:       376s
+
+result: correcting process accounting for local jobs makes -j1 fast again (just 2% overhead)
+
+icecream, always compile remote even though host is not faster:
+
+make -j10:       538s
+make -j10/sched: 389s
+
+As we can see, the scheduler improves performance by 38%.
+
+
+======================================================================
+
+New performance experiments. 
+
+New baseline:
+
+make-it-cool, both with -m 1, make -j5
+
+make -j5  :    382s
+make -j5  :    354s
+make -j5  :    336s
+make -j5  :    355s
+
+remote with -m 2
+
+make -j5  :    333s
+make -j5  :    299s
+make -j5  :    307s
+
+remote with -m 2, preload scheduler:
+
+make -j5  :    303s
+make -j5  :    287s
+make -j5  :    291s
+
+remote with -m 1, preload scheduler:
+
+make -j5  :    287s
+make -j5  :    288s
+make -j5  :    289s
+
+remote with -m 1, preload scheduler, optimized return:
+make -j5  :    288s
+make -j5  :    289s
+make -j5  :    288s
+
+remote with -m 2, preload scheduler, optimized return:
+make -j5  :    279s
+make -j5  :    281s
+make -j5  :    278s
+
+As we can see, over-booking the remote slave improves performance by 13%.
+As the CPU hardly gets faster, it means that we're reducing idle wait time
+this way. 
+
+One experiment was to pre-load jobs on the remote slave. This means even 
+though all compile slots are filled, it gets one (exactly one) job assigned.
+The daemon itself will start compilation as soon as it gets a free slot,
+reducing both client<->CS and CS<->scheduler roundtrip. Overall, it gave an
+impressive 4% speedup.
+
+A lot of time is however spent on writing back the compiled object file
+to the client, and this is dominated by network saturation and latency
+and not by CPU usage. The obvious solution is to notify the scheduler
+about a free slot as soon as compilation (but not write-back) has
+finished. With remote over-booking this resulted in another 3% speedup,
+while no improvements could be measured in the -m 1 case. Given that
+it significantly reduced code complexity in the daemon, it should still be
+an improvement (reduced code size by almost 8%!).
+
+======================================================================
+
+Load detection tunings.
+
+The biggest problem with accurate load detection is that it is impossible
+to find out how much cpu time a iceccd child is currently using. All you
+can get is how much time it used overall, but only when it exited. 
+Which gives you a lot of cpu-usage peaks sprinkled over time, and you have
+to somehow average that out in a meaningful way. 
+
+Actually, the Linux kernel tracks cpu time, and you can read it in
+/proc/<pid>/stat for any child. unfortunately it is converted to seconds
+in there, so resolution isn't much more accurate. 
+
+Watching the old load detector, it became obvious that it once in a 
+while jumps to 1000 because of own jobs eating 100% cpu, but not finishing
+within the measure timeframe, which causes the host to be blacklisted
+by the scheduler, even though nothing is wrong with it. 
+
+There are two solutions: 
+
+- trying to get a more accurate usage over time
+
+- only track usage whenever it is accurate, e.g. a child exited. 
+
+As the second possibility has problems with multi-cpu environments (you'd
+have to wait for all jobs to finish before doing another idleness sample,
+which probably reduces throughput considerably), first one was chosen. 
+
+Simplest idea: assume that overall system nice load is at least partially
+caused by our own childs. 
+
+remote with -m 2:
+make -j5  :    272s
+make -j5  :    274s
+make -j5  :    271s
+
+Hmm.. 2% win.
+
+============================================================================
+
+New baseline: 0.8.0:
+
+remote with -m 1:
+make -j5  :  257s
+
+without compression: 
+
+make -j5:   442s
+
