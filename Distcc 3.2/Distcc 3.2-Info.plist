@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>DVTPlugInCompatibilityUUIDs</key>
+	<array>
+		<string>C4A681B0-4A26-480E-93EC-1218098B9AA0</string>
+		<string>A2E4D43F-41F4-4FB9-BB94-7177011C9AED</string>
+	</array>
+	<key>BuildMachineOSBuild</key>
+	<string>13A596</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.distcc.compilers.distcc</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Distcc 3.2 Compiler Xcode Plug-in</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>dcln</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.1</string>
+	<key>DTCompiler</key>
+	<string>com.distcc.compilers.distcc.3_2</string>
+	<key>DTPlatformBuild</key>
+	<string></string>
+	<key>DTSDKBuild</key>
+	<string>13A596</string>
+	<key>DTSDKName</key>
+	<string></string>
+	<key>DTXcode</key>
+	<string>0510</string>
+	<key>DTXcodeBuild</key>
+	<string></string>
+	<key>XC4Compatible</key>
+	<true/>
+	<key>XCGCReady</key>
+	<string>YES</string>
+	<key>XCPluginHasUI</key>
+	<string>NO</string>
+</dict>
+</plist>
