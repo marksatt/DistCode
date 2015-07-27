@@ -1,0 +1,25 @@
+This AS/400 cl will compile the library  modules
+   ADUCBAT
+
+This AS/400 cl will compile the executabe modules and bind them with
+the service program library
+   ADUCBATB
+
+This AS/400 cl will create the service program after the modules are
+are all compiled.
+   crtsslsrv
+
+This is the binder export file that crtsslsrv uses
+   adusslbnd
+
+
+
+I use spmstrtr to kickoff a CICS/400 transaction when an input request
+comes into the system.
+
+This is an AS/400 command that can be kicked off by spmstrtr to auto
+matically start a server.
+   RUNAU17
+
+This is the CL to support the RUNAU17 command.
+   startau17w

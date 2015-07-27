@@ -1,0 +1,10 @@
+smplskts.lib
+y
++error +sprt +sscanf +swait &
++fopenv +smaskwai +sprtskt +stest +swrite &
++outofmem +smkskt +sputs +stimeout &
++rdcolor +sopen +sread +stpblk &
++saccept +sopenv +sreadbyt +stpnxt &
++sclose +speek +srmsrvr +strnxtfm &
++sgets +sprintf +srmtrblk +svprintf 
+smplskts.lst

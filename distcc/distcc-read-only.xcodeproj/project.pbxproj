@@ -1,0 +1,249 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		300D328818036FD300EDD3BC /* distcc_compilers */ = {isa = PBXFileReference; lastKnownFileType = text; path = distcc_compilers; sourceTree = "<group>"; };
+		300D328918036FF500EDD3BC /* distcc_compilers */ = {isa = PBXFileReference; lastKnownFileType = text; path = distcc_compilers; sourceTree = "<group>"; };
+		303AA3E917E9962C0077FFC3 /* _include_server */ = {isa = PBXFileReference; lastKnownFileType = folder; path = _include_server; sourceTree = "<group>"; };
+		303AA3EA17E9962C0077FFC3 /* aclocal.m4 */ = {isa = PBXFileReference; lastKnownFileType = text; path = aclocal.m4; sourceTree = "<group>"; };
+		303AA3EB17E9962C0077FFC3 /* AUTHORS */ = {isa = PBXFileReference; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
+		303AA3EC17E9962C0077FFC3 /* autogen.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = autogen.sh; sourceTree = "<group>"; };
+		303AA3ED17E9962C0077FFC3 /* autom4te.cache */ = {isa = PBXFileReference; lastKnownFileType = folder; path = autom4te.cache; sourceTree = "<group>"; };
+		303AA3EE17E9962C0077FFC3 /* bench */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bench; sourceTree = "<group>"; };
+		303AA3EF17E9962C0077FFC3 /* ChangeLog */ = {isa = PBXFileReference; lastKnownFileType = text; path = ChangeLog; sourceTree = "<group>"; };
+		303AA3F017E9962C0077FFC3 /* config.guess */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = config.guess; sourceTree = "<group>"; };
+		303AA3F117E9962C0077FFC3 /* config.log */ = {isa = PBXFileReference; lastKnownFileType = text; path = config.log; sourceTree = "<group>"; };
+		303AA3F217E9962C0077FFC3 /* config.status */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = config.status; sourceTree = "<group>"; };
+		303AA3F317E9962C0077FFC3 /* config.sub */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = config.sub; sourceTree = "<group>"; };
+		303AA3F417E9962C0077FFC3 /* configure */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = configure; sourceTree = "<group>"; };
+		303AA3F517E9962C0077FFC3 /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
+		303AA3F617E9962C0077FFC3 /* contrib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = contrib; sourceTree = "<group>"; };
+		303AA3F717E9962C0077FFC3 /* COPYING */ = {isa = PBXFileReference; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
+		303AA3F817E9962C0077FFC3 /* distcc */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = distcc; sourceTree = "<group>"; };
+		303AA3F917E9962C0077FFC3 /* distccd */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = distccd; sourceTree = "<group>"; };
+		303AA3FA17E9962C0077FFC3 /* distccmon-text */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "distccmon-text"; sourceTree = "<group>"; };
+		303AA3FB17E9962C0077FFC3 /* doc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = doc; sourceTree = "<group>"; };
+		303AA3FC17E9962C0077FFC3 /* find_c_extension.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = find_c_extension.sh; sourceTree = "<group>"; };
+		303AA3FD17E9962C0077FFC3 /* gnome */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gnome; sourceTree = "<group>"; };
+		303AA3FE17E9962C0077FFC3 /* include_server */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include_server; sourceTree = "<group>"; };
+		303AA3FF17E9962C0077FFC3 /* INSTALL */ = {isa = PBXFileReference; lastKnownFileType = text; path = INSTALL; sourceTree = "<group>"; };
+		303AA40017E9962C0077FFC3 /* install-sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "install-sh"; sourceTree = "<group>"; };
+		303AA40117E9962C0077FFC3 /* lsdistcc */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = lsdistcc; sourceTree = "<group>"; };
+		303AA40217E9962C0077FFC3 /* lzo */ = {isa = PBXFileReference; lastKnownFileType = folder; path = lzo; sourceTree = "<group>"; };
+		303AA40317E9962C0077FFC3 /* m4 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = m4; sourceTree = "<group>"; };
+		303AA40417E9962C0077FFC3 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		303AA40517E9962C0077FFC3 /* Makefile.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		303AA40617E9962C0077FFC3 /* man */ = {isa = PBXFileReference; lastKnownFileType = folder; path = man; sourceTree = "<group>"; };
+		303AA40717E9962C0077FFC3 /* mkinstalldirs */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = mkinstalldirs; sourceTree = "<group>"; };
+		303AA40817E9962C0077FFC3 /* NEWS */ = {isa = PBXFileReference; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
+		303AA40917E9962C0077FFC3 /* packaging */ = {isa = PBXFileReference; lastKnownFileType = folder; path = packaging; sourceTree = "<group>"; };
+		303AA40A17E9962C0077FFC3 /* popt */ = {isa = PBXFileReference; lastKnownFileType = folder; path = popt; sourceTree = "<group>"; };
+		303AA40B17E9962C0077FFC3 /* pump */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = pump; sourceTree = "<group>"; };
+		303AA40C17E9962C0077FFC3 /* pump.in */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = pump.in; sourceTree = "<group>"; };
+		303AA40D17E9962C0077FFC3 /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		303AA40E17E9962C0077FFC3 /* README.packaging */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.packaging; sourceTree = "<group>"; };
+		303AA40F17E9962C0077FFC3 /* README.pump */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.pump; sourceTree = "<group>"; };
+		303AA41017E9962C0077FFC3 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
+		303AA41117E9962C0077FFC3 /* survey.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = survey.txt; sourceTree = "<group>"; };
+		303AA41217E9962C0077FFC3 /* test */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test; sourceTree = "<group>"; };
+		303AA41317E9962C0077FFC3 /* TODO */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+		30F4621F17EAE7F1008042F1 /* distcc */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = distcc; sourceTree = "<group>"; };
+		30F4622017EAE7F1008042F1 /* distccd */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = distccd; sourceTree = "<group>"; };
+		30F4622117EAE7F1008042F1 /* distccmon-text */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "distccmon-text"; sourceTree = "<group>"; };
+		30F4622217EAE7F1008042F1 /* lsdistcc */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = lsdistcc; sourceTree = "<group>"; };
+		30F4622317EAE7F1008042F1 /* man */ = {isa = PBXFileReference; lastKnownFileType = folder; path = man; sourceTree = "<group>"; };
+		30F4622417EAE7F1008042F1 /* pump */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = pump; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		303AA3E117E9962C0077FFC3 = {
+			isa = PBXGroup;
+			children = (
+				30F4621E17EAE7D2008042F1 /* Products */,
+				300D328918036FF500EDD3BC /* distcc_compilers */,
+				30F4621F17EAE7F1008042F1 /* distcc */,
+				30F4622017EAE7F1008042F1 /* distccd */,
+				30F4622117EAE7F1008042F1 /* distccmon-text */,
+				30F4622217EAE7F1008042F1 /* lsdistcc */,
+				30F4622317EAE7F1008042F1 /* man */,
+				30F4622417EAE7F1008042F1 /* pump */,
+				30F4621D17EAE7C6008042F1 /* Source */,
+			);
+			sourceTree = "<group>";
+		};
+		30F4621D17EAE7C6008042F1 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				300D328818036FD300EDD3BC /* distcc_compilers */,
+				303AA3E917E9962C0077FFC3 /* _include_server */,
+				303AA3EA17E9962C0077FFC3 /* aclocal.m4 */,
+				303AA3EB17E9962C0077FFC3 /* AUTHORS */,
+				303AA3EC17E9962C0077FFC3 /* autogen.sh */,
+				303AA3ED17E9962C0077FFC3 /* autom4te.cache */,
+				303AA3EE17E9962C0077FFC3 /* bench */,
+				303AA3EF17E9962C0077FFC3 /* ChangeLog */,
+				303AA3F017E9962C0077FFC3 /* config.guess */,
+				303AA3F117E9962C0077FFC3 /* config.log */,
+				303AA3F217E9962C0077FFC3 /* config.status */,
+				303AA3F317E9962C0077FFC3 /* config.sub */,
+				303AA3F417E9962C0077FFC3 /* configure */,
+				303AA3F517E9962C0077FFC3 /* configure.ac */,
+				303AA3F617E9962C0077FFC3 /* contrib */,
+				303AA3F717E9962C0077FFC3 /* COPYING */,
+				303AA3F817E9962C0077FFC3 /* distcc */,
+				303AA3F917E9962C0077FFC3 /* distccd */,
+				303AA3FA17E9962C0077FFC3 /* distccmon-text */,
+				303AA3FB17E9962C0077FFC3 /* doc */,
+				303AA3FC17E9962C0077FFC3 /* find_c_extension.sh */,
+				303AA3FD17E9962C0077FFC3 /* gnome */,
+				303AA3FE17E9962C0077FFC3 /* include_server */,
+				303AA3FF17E9962C0077FFC3 /* INSTALL */,
+				303AA40017E9962C0077FFC3 /* install-sh */,
+				303AA40117E9962C0077FFC3 /* lsdistcc */,
+				303AA40217E9962C0077FFC3 /* lzo */,
+				303AA40317E9962C0077FFC3 /* m4 */,
+				303AA40417E9962C0077FFC3 /* Makefile */,
+				303AA40517E9962C0077FFC3 /* Makefile.in */,
+				303AA40617E9962C0077FFC3 /* man */,
+				303AA40717E9962C0077FFC3 /* mkinstalldirs */,
+				303AA40817E9962C0077FFC3 /* NEWS */,
+				303AA40917E9962C0077FFC3 /* packaging */,
+				303AA40A17E9962C0077FFC3 /* popt */,
+				303AA40B17E9962C0077FFC3 /* pump */,
+				303AA40C17E9962C0077FFC3 /* pump.in */,
+				303AA40D17E9962C0077FFC3 /* README */,
+				303AA40E17E9962C0077FFC3 /* README.packaging */,
+				303AA40F17E9962C0077FFC3 /* README.pump */,
+				303AA41017E9962C0077FFC3 /* src */,
+				303AA41117E9962C0077FFC3 /* survey.txt */,
+				303AA41217E9962C0077FFC3 /* test */,
+				303AA41317E9962C0077FFC3 /* TODO */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		30F4621E17EAE7D2008042F1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		303AA3E617E9962C0077FFC3 /* distcc-read-only */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 303AA41517E9962C0077FFC3 /* Build configuration list for PBXLegacyTarget "distcc-read-only" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "$(PROJECT_DIR)";
+			dependencies = (
+			);
+			name = "distcc-read-only";
+			passBuildSettingsInEnvironment = 1;
+			productName = "distcc-read-only";
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		303AA3E217E9962C0077FFC3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+			};
+			buildConfigurationList = 303AA3E517E9962C0077FFC3 /* Build configuration list for PBXProject "distcc-read-only" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 303AA3E117E9962C0077FFC3;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				303AA3E617E9962C0077FFC3 /* distcc-read-only */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		303AA3E317E9962C0077FFC3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		303AA3E417E9962C0077FFC3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+			};
+			name = Release;
+		};
+		303AA41617E9962C0077FFC3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "distcc-read-only";
+			};
+			name = Debug;
+		};
+		303AA41717E9962C0077FFC3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "distcc-read-only";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		303AA3E517E9962C0077FFC3 /* Build configuration list for PBXProject "distcc-read-only" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				303AA3E317E9962C0077FFC3 /* Debug */,
+				303AA3E417E9962C0077FFC3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		303AA41517E9962C0077FFC3 /* Build configuration list for PBXLegacyTarget "distcc-read-only" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				303AA41617E9962C0077FFC3 /* Debug */,
+				303AA41717E9962C0077FFC3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 303AA3E217E9962C0077FFC3 /* Project object */;
+}

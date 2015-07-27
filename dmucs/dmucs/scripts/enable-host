@@ -1,0 +1,39 @@
+#!/usr/bin/env sh
+
+
+DMUCS_DIR=/us/bfsbld/Compilers/distcc
+
+
+#
+# This shell script simply starts up the distccd daemons and the
+# loadavg daemon on this host.  The only argument to it is the location of
+# the dmucs server ('dmucs').
+#
+
+
+if [ $# -eq 0 ] ; then
+    echo "Usage: $0 <server-machine>"
+    exit 
+fi
+
+server=$1
+
+echo "Starting distcc daemons"
+logfile=$DMUCS_DIR/log/`hostname`.log
+pidfile=$DMUCS_DIR/pids/`hostname`.pid
+
+
+#
+# NOTE NOTE NOTE: you probably want to change the value of the "--allow"
+# argument to something more restrictive.  See the distcc documentation for
+# more information.
+#
+$DMUCS_DIR/bin/distccd --daemon --log-file=$logfile --pid-file $DMUCS_DIR/pids/`hostname`.pid --allow 0.0.0.0/0
+
+echo "done: daemons writing to log file" $logfile
+echo "      master daemon pid" `cat $pidfile`
+
+echo "Starting loadavg daemon, communicating with $server"
+$DMUCS_DIR/bin/loadavg -s $server &
+echo "done"
+

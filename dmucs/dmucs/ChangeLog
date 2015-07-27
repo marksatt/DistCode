@@ -1,0 +1,35 @@
+
+0.1 -- Initial release.
+
+0.2 -- Thanks to Patrik Olesen for code to eliminate most pthread forks,
+       and for the -H option to the server to point to the hosts-info file.
+    -- made a few changes to store resolve IP names in the DmucsHost object.
+
+0.3 -- Look for hosts-info in the $pkgdatadir now -- usually
+       /usr/local/share/dmucs/hosts-info.
+    -- Expect the administrator to specify
+	CPPFLAGS=-DSERVER_MACH_NAME=\\\"<machname>\\\" when running
+       'configure'.  This specifies where the dmucs host-server will be run.
+       With this change, you don't have to specify -s to all the executables
+       (loadavg, gethost, monitor, etc.)
+
+0.4 -- Better yet: the administrator should add the CPPFLAGS thing above
+       to the gmake command -- this works for me on both solaris and linux.
+       Added a message to be printed out when a new host is added.
+       Cleaned up the host name resolution stuff -- all in one file now.
+       Thanks for Patrik Olesen for his help.
+
+0.4.1 
+    -- Fix some problems with 0.4: problem when running out of hosts, 
+       problem with compilation, etc.
+ 
+0.5 -- Fix compilation problems with running out of hosts.
+
+0.6 -- Add support for multiple databases.  Using -t "<type>" for loadavg,
+       you can group compilation hosts according to some common
+       characteristic.  Then, to get the host with that characteristic, use
+       -t <type> for gethost as well.
+
+0.6.1 -- Fix compilation problems on Solaris with Solaris's cc
+       compiler. Fix a few other minor things I found.
+

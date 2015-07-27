@@ -1,0 +1,65 @@
+# Makefile for the Simple Sockets Library (C version)
+#
+#  NASA --   Goddard Space Flight Center, Code 714.1
+#            Intelligent Robotics Laboratory
+#            Robotics Branch
+#
+#  Authors:  Dr. Charles E. Campbell, Jr.
+#            Terry McRoberts
+#
+#  modified for OS/2 and watcom 11.0
+#  Using OS/2 Tookkit V4.5 from developer CDROM (OStk45)
+#
+#  can create either for either 16 or 32 bit stack
+#  although the 16 bit was not tested to work
+#
+#  for TCP version 4 (16bit stack) change cFLAGS
+#cFLAGS = /bt=os2 /dos2 /l=os2flat /dTCPV40HDRS  $(libs)
+#  instead of the one below
+#
+#
+
+# change paths below as necessary
+
+.before
+  SET INCLUDE=W:\WATCOM\H\OS2;W:\WATCOM\H;W:\WATCOM\SOM\INCLUDE;w:\os2tk45\som\include;w:\os2tk45\inc;w:\os2tk45\h\gl;w:\os2tk45\h;w:\os2tk45\h\libc;.;
+  set include=$(%include)k:\srwork\sockets\cosmic\HDR;
+  set lib=$(%lib);w:\watcom\lib386;w:\watcom\lib386\os2;
+  set watcom=w:\watcom
+
+libs = k:\srwork\sockets\cosmic\smplskts.lib
+
+hdrroot = k:\srwork\sockets\cosmic\HDR\
+
+
+# list of objects to create
+objs =  Saccept.obj    Sprintf.obj    Stest.obj      outofmem.obj   &
+        Sclose.obj     Sprtskt.obj  Stimeoutwait.obj rdcolor.obj    &
+        Sgets.obj      Sputs.obj      Svprintf.obj   sprt.obj       &
+        Smaskwait.obj  Sread.obj      Swait.obj      srmtrblk.obj   &
+        Smkskt.obj     Sreadbytes.obj Swrite.obj     stpblk.obj     &
+        Sopen.obj      Srmsrvr.obj    error.obj      stpnxt.obj     &
+        Sopenv.obj     Sscanf.obj     fopenv.obj     strnxtfmt.obj  &
+        Speek.obj      cprt.obj       Speername.obj  Speeraddr.obj  &
+        Sinit.obj
+
+hdrs = $(hdrroot)sockets.h  &
+       $(hdrroot)xstdlib.h  &
+       $(hdrroot)xtdio.h    &
+       $(hdrroot)setproto.h &
+       $(hdrroot)rdcolor.h
+
+CC  = wcc386
+cFLAGS = /bt=os2 /dos2  /dxCPV40HDRS
+
+# to convert C into executables
+
+.c.obj : .AUTODEPEND
+    $(CC) $(CFLAGS) $[*
+
+#$(objs) :: $(hdrs)
+
+#all :: $(objs)
+
+$(libs) : $(objs) $(hdrs)
+    wlib $(libs) -+$(objs)
