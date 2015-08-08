@@ -1,6 +1,6 @@
 /*
  *
- * distclang -- A compiler wrapper for executing the icecc distributed compiler.
+ * distclang -- A compiler wrapper for executing the distcc distributed C compiler with the dmucs host manager.
  *
  * Copyright (C) 2013-14 by Mark Satterthwaite
  *
@@ -33,7 +33,9 @@
 #include <unistd.h>
 #include <syslog.h>
 #include <vector>
+#if __APPLE__
 #include <CoreFoundation/CoreFoundation.h>
+#endif
 
 int main(int argc, const char * argv[])
 {
@@ -58,110 +60,98 @@ int main(int argc, const char * argv[])
 	}
 	putenv("DISTCLANG_RECURSE=1");
 	
-	std::string iceccPath = std::string(path, pathLen);
-	iceccPath += "/icecc";
+	long verbose = 0;
+	long timeout = 0;
+	std::string server("localhost");
 	
-	char** Args = (char**)alloca(sizeof(char*) * argc + 1);
+#if __APPLE__
+	CFPropertyListRef Value = CFPreferencesCopyAppValue(CFSTR("HostTimeout"), CFSTR("com.marksatt.DistCode"));
+	if(Value)
+	{
+		if(CFGetTypeID(Value) == CFNumberGetTypeID())
+		{
+			long value = 1;
+			CFNumberGetValue((CFNumberRef)Value, kCFNumberLongType, &value);
+			timeout = value >= 0 ? value * 60 : value;
+		}
+		CFRelease(Value);
+	}
+	else
+	{
+		timeout = -1;
+	}
+	
+	CFPropertyListRef CoordMode = CFPreferencesCopyAppValue(CFSTR("CoordinatorMode"), CFSTR("com.marksatt.DistCode"));
+	if(CoordMode)
+	{
+		if(CFGetTypeID(CoordMode) == CFNumberGetTypeID())
+		{
+			long value = 1;
+			CFNumberGetValue((CFNumberRef)CoordMode, kCFNumberLongType, &value);
+			
+			if(value == 0)
+			{
+				CFPropertyListRef IPValue = CFPreferencesCopyAppValue(CFSTR("CoordinatorIP"), CFSTR("com.marksatt.DistCode"));
+				if(IPValue)
+				{
+					if(CFGetTypeID(IPValue) == CFStringGetTypeID())
+					{
+						char hostname[1024];
+						if(CFStringGetCString((CFStringRef)IPValue, hostname, 1024, kCFStringEncodingUTF8))
+						{
+							server = hostname;
+						}
+					}
+					CFRelease(IPValue);
+				}
+			}
+		}
+	}
+	
+	CFPropertyListRef VerboseVal = CFPreferencesCopyAppValue(CFSTR("VerboseOutput"), CFSTR("com.marksatt.DistCode"));
+	if(VerboseVal)
+	{
+		if(CFGetTypeID(VerboseVal) == CFNumberGetTypeID())
+		{
+			CFNumberGetValue((CFNumberRef)VerboseVal, kCFNumberLongType, &verbose);
+		}
+		CFRelease(VerboseVal);
+	}
+#endif
+	
+	if(verbose)
+	{
+		putenv("DISTCC_VERBOSE=1");
+	}
+	
+	char timeoutBuffer[16] = {0};
+	snprintf(timeoutBuffer, 16, "%ld", timeout);
+	
+	std::string getHostPath = std::string(path, pathLen);
+	getHostPath += "/gethost";
+	std::string distccPath = std::string(path, pathLen);
+	distccPath += "/distcc";
+	
+	char** Args = (char**)alloca(sizeof(char*) * argc + 9);
 	int ArgIdx = 0;
-	Args[ArgIdx++] = strdup(iceccPath.c_str());
+	Args[ArgIdx++] = strdup(getHostPath.c_str());
+	Args[ArgIdx++] = strdup("--server");
+	Args[ArgIdx++] = strdup(server.c_str());
+	Args[ArgIdx++] = strdup("--wait");
+	Args[ArgIdx++] = timeoutBuffer;
+	Args[ArgIdx++] = strdup(distccPath.c_str());
+	Args[ArgIdx++] = strdup("xcrun");
 	Args[ArgIdx++] = strdup(name);
 	for (int i = 1; i < argc; i++) {
 		Args[ArgIdx++] = strdup(argv[i]);
 	}
 	Args[ArgIdx++] = NULL;
 	
-	char* XcodeToolchainPath = NULL;
-	CFPropertyListRef Value = CFPreferencesCopyAppValue(CFSTR("XcodeToolchainPath"), CFSTR("com.marksatt.DistCode"));
-	if(Value)
-	{
-		if(CFGetTypeID(Value) == CFStringGetTypeID())
-		{
-			CFIndex BufferSize = CFStringGetMaximumSizeForEncoding(CFStringGetLength((CFStringRef)Value), kCFStringEncodingASCII) + 1;
-			XcodeToolchainPath = (char*)malloc(BufferSize);
-			CFStringGetCString((CFStringRef)Value, XcodeToolchainPath, BufferSize, kCFStringEncodingASCII);
-		}
-		CFRelease(Value);
-	}
-	
-	char const* Path = getenv("PATH");
-	if(XcodeToolchainPath)
-	{
-		if ( Path )
-		{
-			char* NewPath = (char*)realloc(strdup(Path), strlen(Path) + 1 + strlen(XcodeToolchainPath) + 1);
-			Path = strcat(strcat(NewPath, ":"), XcodeToolchainPath);
-		}
-		else
-		{
-			Path = XcodeToolchainPath;
-		}
-		setenv("PATH", Path, 1);
-		free(XcodeToolchainPath);
-		free(const_cast<char*>(Path));
-	}
-	
-	char* IceccDebugLevel = strdup("debug");
-	Value = CFPreferencesCopyAppValue(CFSTR("IceccDebug"), CFSTR("com.marksatt.DistCode"));
-	if(Value)
-	{
-		if(CFGetTypeID(Value) == CFNumberGetTypeID())
-		{
-			CFIndex Level = 0;
-			if(CFNumberGetValue((CFNumberRef)Value, kCFNumberCFIndexType, &Level))
-			{
-				switch (Level)
-				{
-					case 1:
-						IceccDebugLevel = strdup("warnings");
-						break;
-					case 2:
-						IceccDebugLevel = strdup("info");
-						break;
-					case 3:
-						IceccDebugLevel = strdup("debug");
-						break;
-					default:
-						break;
-				}
-			}
-			
-			CFIndex BufferSize = CFStringGetMaximumSizeForEncoding(CFStringGetLength((CFStringRef)Value), kCFStringEncodingASCII) + 1;
-			XcodeToolchainPath = (char*)malloc(BufferSize);
-			CFStringGetCString((CFStringRef)Value, IceccDebugLevel, BufferSize, kCFStringEncodingASCII);
-		}
-		CFRelease(Value);
-	}
-	
-	if(IceccDebugLevel)
-	{
-		setenv("ICECC_DEBUG", IceccDebugLevel, 1);
-		free(IceccDebugLevel);
-	}
-	
-	char* IceccLogFile = strdup("/Users/marksatt/Library/Logs/icecc.log");
-	Value = CFPreferencesCopyAppValue(CFSTR("IceccLogFile"), CFSTR("com.marksatt.DistCode"));
-	if(Value)
-	{
-		if(CFGetTypeID(Value) == CFStringGetTypeID())
-		{
-			CFIndex BufferSize = CFStringGetMaximumSizeForEncoding(CFStringGetLength((CFStringRef)Value), kCFStringEncodingASCII) + 1;
-			XcodeToolchainPath = (char*)malloc(BufferSize);
-			CFStringGetCString((CFStringRef)Value, IceccLogFile, BufferSize, kCFStringEncodingASCII);
-		}
-		CFRelease(Value);		
-	}
-	
-	if(IceccLogFile)
-	{
-		setenv("ICECC_LOGFILE", IceccLogFile, 1);
-		free(IceccLogFile);
-	}
-	
 	int forkret = fork();
 	if (forkret == 0) {
 		/* child process */
-		if (execvp(iceccPath.c_str(), Args) < 0) {
-			fprintf(stderr, "execvp failed: %s err %s\n", iceccPath.c_str(), strerror(errno));
+		if (execvp(getHostPath.c_str(), Args) < 0) {
+			fprintf(stderr, "execvp failed: %s err %s\n", getHostPath.c_str(), strerror(errno));
 			return -1;
 		}
 		return 0;

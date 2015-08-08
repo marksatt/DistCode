@@ -17,8 +17,8 @@ struct DistTask
 func BeginTask(Path: NSString, Arguments: NSArray, Pipe: NSPipe) -> NSTask
 {
 	let task = NSTask()
-	task.arguments = Arguments
-	task.launchPath = Path
+	task.arguments = Arguments as [AnyObject]
+	task.launchPath = Path as String
 	task.standardOutput = Pipe
 	task.launch()
 	return task
@@ -119,8 +119,8 @@ class DistCodeAppDelegate : NSObject, NSApplicationDelegate, DOTabbarDelegate {
 		let DefaultsPath = NSBundle.mainBundle().pathForResource("Defaults", ofType:"plist") as NSString?
 		if (DefaultsPath != nil)
 		{
-			let Dict = NSDictionary(contentsOfFile:DefaultsPath!)
-			NSUserDefaults.standardUserDefaults().registerDefaults(Dict!)
+			let Dict = NSDictionary(contentsOfFile:DefaultsPath! as String)
+			NSUserDefaults.standardUserDefaults().registerDefaults(Dict! as [NSObject : AnyObject])
 		}
 		
 		self.CheckAndInstall()
@@ -135,17 +135,17 @@ class DistCodeAppDelegate : NSObject, NSApplicationDelegate, DOTabbarDelegate {
 		self.StartIceccDaemon()
 		self.Tabbar.selectItemWithIdentifier(kHostsItemIdentifier);
 		
-		let TimeoutObj = NSUserDefaults.standardUserDefaults().valueForKey("HostTimeout") as NSNumber?
+		let TimeoutObj = NSUserDefaults.standardUserDefaults().valueForKey("HostTimeout") as! NSNumber?
 		let Timeout: NSInteger = (TimeoutObj != nil && TimeoutObj!.integerValue > 0) ? TimeoutObj!.integerValue : 10
 		let Port:UInt = 0
 		let NetName = ""
 		var Scheduler = ""
 		if(bCoordinatorMode == true)
 		{
-			let schedulerIP = NSUserDefaults.standardUserDefaults().valueForKey("CoordinatorIP") as NSString?
+			let schedulerIP = NSUserDefaults.standardUserDefaults().valueForKey("CoordinatorIP") as! NSString?
 			if(schedulerIP != nil)
 			{
-				Scheduler = schedulerIP!
+				Scheduler = schedulerIP! as String
 			}
 		}
 		self.IceCodeWrapper = IceCode(forNetName: NetName, withTimeout: Timeout, andSchedulerName: Scheduler, andPort: Port)
@@ -218,27 +218,27 @@ class DistCodeAppDelegate : NSObject, NSApplicationDelegate, DOTabbarDelegate {
 	func CheckAndInstall()
 	{
 		let Paths: NSArray = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.ApplicationSupportDirectory, NSSearchPathDomainMask.UserDomainMask, true);
-		let Path = NSString(format:"%@/Developer/Shared/Xcode/Plug-ins", Paths.objectAtIndex(0) as NSString);
+		let Path = NSString(format:"%@/Developer/Shared/Xcode/Plug-ins", Paths.objectAtIndex(0) as! NSString);
 		let PluginLink = NSString(format:"%@/Icecc.xcplugin", Path);
-		if(NSFileManager.defaultManager().fileExistsAtPath(PluginLink) == true)
+		if(NSFileManager.defaultManager().fileExistsAtPath(PluginLink as String) == true)
 		{
-			let CurrentBundle = NSBundle(path: PluginLink);
+			let CurrentBundle = NSBundle(path: PluginLink as String);
 			let CurrentDict: NSDictionary! = CurrentBundle?.infoDictionary as NSDictionary?
-			let CurrentVersion: NSString = CurrentDict.objectForKey("CFBundleVersion") as NSString;
+			let CurrentVersion: NSString = CurrentDict.objectForKey("CFBundleVersion") as! NSString;
 			let PluginPath = NSBundle.mainBundle().pathForResource("Icecc", ofType: "xcplugin")
 			let NewBundle = NSBundle(path: PluginPath!);
 			let NewDict: NSDictionary! = NewBundle?.infoDictionary as NSDictionary?
-			let NewVersion: NSString = NewDict.objectForKey("CFBundleVersion") as NSString;
+			let NewVersion: NSString = NewDict.objectForKey("CFBundleVersion") as! NSString;
 			if(CompareVersion(CurrentVersion, NewVersion) == NSComparisonResult.OrderedAscending)
 			{
-				NSFileManager.defaultManager().removeItemAtPath(PluginLink, error:nil);
+				NSFileManager.defaultManager().removeItemAtPath(PluginLink as String, error:nil);
 			}
 		}
-		if(NSFileManager.defaultManager().fileExistsAtPath(PluginLink) == false)
+		if(NSFileManager.defaultManager().fileExistsAtPath(PluginLink as String) == false)
 		{
-			NSFileManager.defaultManager().createDirectoryAtPath(Path, withIntermediateDirectories:true, attributes: nil, error: nil);
+			NSFileManager.defaultManager().createDirectoryAtPath(Path as String, withIntermediateDirectories:true, attributes: nil, error: nil);
 			let PluginPath = NSBundle.mainBundle().pathForResource("Icecc", ofType: "xcplugin")
-			NSFileManager.defaultManager().copyItemAtPath(PluginPath!, toPath: PluginLink, error:nil);
+			NSFileManager.defaultManager().copyItemAtPath(PluginPath!, toPath: PluginLink as String, error:nil);
 			
 			let DaemonPath = NSString(format:"%@/Contents/usr/sbin/iceccd", PluginLink)
 			let LzoPath = NSString(format:"%@/Contents/usr/lib/liblzo2.2.dylib", PluginLink)
@@ -247,18 +247,18 @@ class DistCodeAppDelegate : NSObject, NSApplicationDelegate, DOTabbarDelegate {
 			let AuthPath: NSString = NSBundle.mainBundle().pathForAuxiliaryExecutable("DistServerDaemon")!
 			ExecuteTask(AuthPath, ["EXEC", DaemonPath, LzoPath, KillIcePath]);
 		}
-		if(NSFileManager.defaultManager().fileExistsAtPath(PluginLink) == true)
+		if(NSFileManager.defaultManager().fileExistsAtPath(PluginLink as String) == true)
 		{
 			let InfoPath = NSString(format:"%@/Contents/Info.plist", PluginLink)
-			let InfoData = NSData(contentsOfFile: InfoPath)!
+			let InfoData = NSData(contentsOfFile: InfoPath as String)!
 			var InfoFormat: NSPropertyListFormat = NSPropertyListFormat.XMLFormat_v1_0
 			let InfoOptions: Int = Int(NSPropertyListMutabilityOptions.MutableContainersAndLeaves.rawValue)
 			var InfoError: NSErrorPointer = NSErrorPointer()
 			var PropertyList: AnyObject? = NSPropertyListSerialization.propertyListWithData(InfoData, options: InfoOptions, format: &InfoFormat, error: InfoError)
 			if ( PropertyList != nil )
 			{
-				let Dictionary: NSMutableDictionary = PropertyList! as NSMutableDictionary
-				let UUIDs: NSMutableArray = Dictionary.valueForKey("DVTPlugInCompatibilityUUIDs") as NSMutableArray
+				let Dictionary: NSMutableDictionary = PropertyList! as! NSMutableDictionary
+				let UUIDs: NSMutableArray = Dictionary.valueForKey("DVTPlugInCompatibilityUUIDs") as! NSMutableArray
 				let XcodePathResult = ExecuteTask("/usr/bin/xcode-select", ["-p"])
 				let XcodePath = XcodePathResult.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "\n \r"))
 				let XcodeInfoPath = XcodePath.stringByDeletingLastPathComponent.stringByAppendingPathComponent("Info.plist")
@@ -270,8 +270,8 @@ class DistCodeAppDelegate : NSObject, NSApplicationDelegate, DOTabbarDelegate {
 				var XcodePropertyList: AnyObject? = NSPropertyListSerialization.propertyListWithData(XcodeData, options: XcodeOptions, format: &XcodeFormat, error: XcodeError)
 				if ( XcodePropertyList != nil )
 				{
-					let XcodeDictionary: NSMutableDictionary = XcodePropertyList! as NSMutableDictionary
-					let UUID: NSString = XcodeDictionary.valueForKey("DVTPlugInCompatibilityUUID") as NSString
+					let XcodeDictionary: NSMutableDictionary = XcodePropertyList! as! NSMutableDictionary
+					let UUID: NSString = XcodeDictionary.valueForKey("DVTPlugInCompatibilityUUID") as! NSString
 					if ( UUIDs.containsObject(UUID) == false )
 					{
 						UUIDs.addObject(UUID);
@@ -279,7 +279,7 @@ class DistCodeAppDelegate : NSObject, NSApplicationDelegate, DOTabbarDelegate {
 						let NewDict = NSPropertyListSerialization.dataFromPropertyList(Dictionary, format: InfoFormat, errorDescription: nil)
 						if ( NewDict != nil )
 						{
-							NewDict?.writeToFile(InfoPath, atomically: true)
+							NewDict?.writeToFile(InfoPath as String, atomically: true)
 						}
 					}
 				}
@@ -295,7 +295,7 @@ class DistCodeAppDelegate : NSObject, NSApplicationDelegate, DOTabbarDelegate {
 		
 		if(NSFileManager.defaultManager().fileExistsAtPath(Path))
 		{
-			let PreviousPath = NSUserDefaults.standardUserDefaults().valueForKey("XcodeToolchainPath") as NSString?
+			let PreviousPath = NSUserDefaults.standardUserDefaults().valueForKey("XcodeToolchainPath") as! NSString?
 			let ToolchainPath = Path + "/Toolchains/XcodeDefault.xctoolchain/usr/bin"
 			
 			if(PreviousPath == nil || ToolchainPath != PreviousPath!)
@@ -305,7 +305,7 @@ class DistCodeAppDelegate : NSObject, NSApplicationDelegate, DOTabbarDelegate {
 				var EnvironmentPath: String = String(UTF8String: Env)!
 				if(PreviousPath != nil)
 				{
-					let Range = EnvironmentPath.rangeOfString(":" + PreviousPath!, options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil, locale: nil)
+					let Range = EnvironmentPath.rangeOfString(":" + (PreviousPath! as String), options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil, locale: nil)
 					if(Range != nil && Range?.isEmpty == false)
 					{
 						EnvironmentPath.removeRange(Range!)
@@ -326,7 +326,7 @@ class DistCodeAppDelegate : NSObject, NSApplicationDelegate, DOTabbarDelegate {
 		var arguments = NSMutableArray()
 		let PluginPath: NSString = NSBundle.mainBundle().pathForResource("Icecc", ofType: "xcplugin")!
 		let IceccSchedulerPath = NSString(format:"%@/Contents/usr/sbin/icecc-scheduler", PluginPath)
-		let debugLevel = NSUserDefaults.standardUserDefaults().valueForKey("IceccDebug") as NSNumber?
+		let debugLevel = NSUserDefaults.standardUserDefaults().valueForKey("IceccDebug") as! NSNumber?
 		if(debugLevel != nil && debugLevel?.integerValue > 0)
 		{
 			for(var i = 0; i < debugLevel?.integerValue; i++)
@@ -345,7 +345,7 @@ class DistCodeAppDelegate : NSObject, NSApplicationDelegate, DOTabbarDelegate {
 	func StartIceccDaemon()
 	{
 		let Paths: NSArray = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.ApplicationSupportDirectory, NSSearchPathDomainMask.UserDomainMask, true);
-		let Path = NSString(format:"%@/Developer/Shared/Xcode/Plug-ins", Paths.objectAtIndex(0) as NSString);
+		let Path = NSString(format:"%@/Developer/Shared/Xcode/Plug-ins", Paths.objectAtIndex(0) as! NSString);
 		let PluginLink = NSString(format:"%@/Icecc.xcplugin", Path);
 		let IceccDaemonPath = NSString(format:"%@/Contents/usr/sbin/iceccd", PluginLink)
 		IceccDaemon.Pipe = NSPipe()
@@ -359,21 +359,21 @@ class DistCodeAppDelegate : NSObject, NSApplicationDelegate, DOTabbarDelegate {
 		let bCoordinatorMode = NSUserDefaults.standardUserDefaults().valueForKey("CoordinatorMode")?.boolValue
 		if(bCoordinatorMode == true)
 		{
-			let schedulerIP = NSUserDefaults.standardUserDefaults().valueForKey("CoordinatorIP") as NSString?
+			let schedulerIP = NSUserDefaults.standardUserDefaults().valueForKey("CoordinatorIP") as! NSString?
 			if(schedulerIP != nil)
 			{
 				arguments.addObject("-s")
 				arguments.addObject(schedulerIP!)
 			}
 		}
-		let numJobs = NSUserDefaults.standardUserDefaults().valueForKey("MaxJobs") as NSNumber?
+		let numJobs = NSUserDefaults.standardUserDefaults().valueForKey("MaxJobs") as! NSNumber?
 		if(numJobs != nil && numJobs?.integerValue >= 0)
 		{
 			arguments.addObject("-m")
 			let Desc = numJobs?.description
 			arguments.addObject(Desc!)
 		}
-		let debugLevel = NSUserDefaults.standardUserDefaults().valueForKey("IceccDebug") as NSNumber?
+		let debugLevel = NSUserDefaults.standardUserDefaults().valueForKey("IceccDebug") as! NSNumber?
 		if(debugLevel != nil && debugLevel?.integerValue > 0)
 		{
 			for(var i = 1; i <= debugLevel?.integerValue; i++)
@@ -393,7 +393,7 @@ class DistCodeAppDelegate : NSObject, NSApplicationDelegate, DOTabbarDelegate {
 		if(IceccDaemon.Task != nil )
 		{
 			let Paths: NSArray = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.ApplicationSupportDirectory, NSSearchPathDomainMask.UserDomainMask, true);
-			let Path = NSString(format:"%@/Developer/Shared/Xcode/Plug-ins", Paths.objectAtIndex(0) as NSString);
+			let Path = NSString(format:"%@/Developer/Shared/Xcode/Plug-ins", Paths.objectAtIndex(0) as! NSString);
 			let PluginLink = NSString(format:"%@/Icecc.xcplugin", Path);
 			let KillIcePath = NSString(format:"%@/Contents/usr/sbin/killice", PluginLink)
 			

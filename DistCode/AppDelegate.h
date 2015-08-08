@@ -28,6 +28,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "DOTabbar.h"
+#import "DistCode.h"
 @class OBMenuBarWindow;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSNetServiceBrowserDelegate, NSNetServiceDelegate, DOTabbarDelegate>
@@ -39,13 +40,8 @@
 	NSMutableArray* Tasks;
 @protected
     // Keeps track of services handled by this delegate
-    NSMutableArray *services;
-	NSTask* DistCCDaemon;
-	NSTask* DmucsDaemon;
-	NSTask* DmucsMonDaemon;
-	NSPipe* DistCCPipe;
-	NSPipe* DmucsPipe;
-	NSPipe* DmucsMonPipe;
+    //NSMutableArray *services;
+	DistCode* DistCodeWrapper;
 	NSTimer* MonitorLoopTimer;
 }
 
@@ -53,10 +49,10 @@
 @property (weak) IBOutlet DOTabbar *tabbar;
 @property (weak) IBOutlet NSTabView *TabView;
 
-- (IBAction)toggleRunCompilationHost:(id)sender;
+- (IBAction)saveDefaults:(id)sender;
 
 // Other methods
-- (void)netServiceDidResolveAddress:(NSNetService *)netService;
+/*- (void)netServiceDidResolveAddress:(NSNetService *)netService;
 // Sent if resolution fails
 - (void)netService:(NSNetService *)netService didNotResolve:(NSDictionary *)errorDict;
 - (BOOL)addressesComplete:(NSArray *)addresses forServiceType:(NSString *)serviceType;
@@ -68,5 +64,5 @@
 - (void)netServiceBrowser:(NSNetServiceBrowser *)netServiceBrowser didRemoveService:(NSNetService *)netService moreComing:(BOOL)moreServicesComing;
 - (void)netServiceBrowserWillSearch:(NSNetServiceBrowser *)netServiceBrowser;
 - (void)netServiceBrowser:(NSNetServiceBrowser *)netServiceBrowser didNotSearch:(NSDictionary *)errorInfo;
-- (void)netServiceBrowserDidStopSearch:(NSNetServiceBrowser *)netServiceBrowser;
+- (void)netServiceBrowserDidStopSearch:(NSNetServiceBrowser *)netServiceBrowser;*/
 @end
