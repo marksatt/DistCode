@@ -1,5 +1,0 @@
-#! /bin/sh
-
-# Indirectly invoke icecc again.
-
-exec icecc g++ "$@"

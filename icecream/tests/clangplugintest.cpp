@@ -1,4 +1,0 @@
-bool foo()
-    {
-    return false;
-    }
