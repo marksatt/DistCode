@@ -942,21 +942,8 @@
                                                 <binding destination="B19-r8-X1Z" name="value" keyPath="automaticallyChecksForUpdates" id="SSH-5O-jXL"/>
                                             </connections>
                                         </button>
-                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="PXk-H0-gGp">
-                                            <rect key="frame" x="170" y="144" width="196" height="20"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="191" id="27R-e7-Yk8"/>
-                                            </constraints>
-                                            <buttonCell key="cell" type="check" title="Automatically download updates" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="d2H-1s-2BT">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="smallSystem"/>
-                                            </buttonCell>
-                                            <connections>
-                                                <binding destination="B19-r8-X1Z" name="value" keyPath="automaticallyDownloadsUpdates" id="CDc-C2-TXL"/>
-                                            </connections>
-                                        </button>
                                         <matrix verticalHuggingPriority="750" allowsEmptySelection="NO" autorecalculatesCellSize="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TgJ-28-dQa">
-                                            <rect key="frame" x="196" y="101" width="144" height="38"/>
+                                            <rect key="frame" x="196" y="103" width="144" height="38"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="144" id="FEE-2l-a4S"/>
                                             </constraints>
@@ -983,20 +970,6 @@
                                                 <binding destination="FFW-oU-JRE" name="selectedIndex" keyPath="values.CoordinatorMode" id="yQN-ot-5nN"/>
                                             </connections>
                                         </matrix>
-                                        <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hWE-A6-lt3">
-                                            <rect key="frame" x="220" y="74" width="120" height="19"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="120" id="SL6-lE-qOW"/>
-                                            </constraints>
-                                            <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="7pv-xe-1vY">
-                                                <font key="font" metaFont="smallSystem"/>
-                                                <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                            <connections>
-                                                <binding destination="FFW-oU-JRE" name="value" keyPath="values.CoordinatorIP" id="5qK-hJ-Amr"/>
-                                            </connections>
-                                        </textField>
                                         <textField toolTip="Time to wait for remote compilation host before falling back to localhost in minutes." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IxC-Yb-axj">
                                             <rect key="frame" x="258" y="189" width="64" height="19"/>
                                             <constraints>
@@ -1040,16 +1013,43 @@
                                                 <binding destination="FFW-oU-JRE" name="value" keyPath="values.VerboseOutput" id="kSq-x4-B6B"/>
                                             </connections>
                                         </button>
+                                        <comboBox focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CGp-x0-gK2">
+                                            <rect key="frame" x="198" y="72" width="143" height="22"/>
+                                            <comboBoxCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" focusRingType="none" drawsBackground="YES" completes="NO" numberOfVisibleItems="5" id="0gT-uH-jbK">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                <objectValues>
+                                                    <string>Item 1</string>
+                                                    <string>Item 2</string>
+                                                    <string>Item 3</string>
+                                                </objectValues>
+                                            </comboBoxCell>
+                                            <connections>
+                                                <binding destination="UE0-Z3-Jez" name="content" keyPath="arrangedObjects" id="RUX-2L-iOA"/>
+                                                <binding destination="FFW-oU-JRE" name="value" keyPath="values.CoordinatorIP" previousBinding="RUX-2L-iOA" id="HvG-MG-E0H"/>
+                                            </connections>
+                                        </comboBox>
+                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="PXk-H0-gGp">
+                                            <rect key="frame" x="170" y="146" width="196" height="18"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="191" id="27R-e7-Yk8"/>
+                                            </constraints>
+                                            <buttonCell key="cell" type="check" title="Automatically download updates" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="d2H-1s-2BT">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="smallSystem"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <binding destination="B19-r8-X1Z" name="value" keyPath="automaticallyDownloadsUpdates" id="CDc-C2-TXL"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="hWE-A6-lt3" firstAttribute="top" secondItem="TgJ-28-dQa" secondAttribute="bottom" constant="8" symbolic="YES" id="0UI-Fu-C4d"/>
                                         <constraint firstItem="b1V-IB-0x9" firstAttribute="centerX" secondItem="Dry-Gk-iok" secondAttribute="centerX" id="5pb-qh-e3c"/>
                                         <constraint firstItem="Rym-kM-KJO" firstAttribute="leading" secondItem="Dry-Gk-iok" secondAttribute="trailing" constant="8" symbolic="YES" id="6tg-Ls-RiY"/>
                                         <constraint firstAttribute="bottom" secondItem="Rym-kM-KJO" secondAttribute="bottom" constant="47" id="8hO-sn-ZgA"/>
-                                        <constraint firstItem="Rym-kM-KJO" firstAttribute="top" secondItem="hWE-A6-lt3" secondAttribute="bottom" constant="8" symbolic="YES" id="Cwk-1r-oRz"/>
                                         <constraint firstItem="5Ff-7H-IHm" firstAttribute="top" secondItem="Rym-kM-KJO" secondAttribute="top" id="Dr8-9f-Oq7"/>
                                         <constraint firstItem="IxC-Yb-axj" firstAttribute="baseline" secondItem="b1V-IB-0x9" secondAttribute="baseline" id="ESR-8h-LIl"/>
-                                        <constraint firstItem="hWE-A6-lt3" firstAttribute="trailing" secondItem="TgJ-28-dQa" secondAttribute="trailing" id="GWE-Ii-hyR"/>
                                         <constraint firstItem="TgJ-28-dQa" firstAttribute="top" secondItem="PXk-H0-gGp" secondAttribute="bottom" constant="8" symbolic="YES" id="HJE-I1-Cqp"/>
                                         <constraint firstItem="Dry-Gk-iok" firstAttribute="baseline" secondItem="Rym-kM-KJO" secondAttribute="baseline" id="Nty-HD-ely"/>
                                         <constraint firstItem="PXk-H0-gGp" firstAttribute="centerX" secondItem="I0B-hC-GlG" secondAttribute="centerX" id="PgT-io-eX3"/>
@@ -1128,8 +1128,10 @@ Gw
         <customObject id="494" customClass="AppDelegate">
             <connections>
                 <outlet property="DistCCServerController" destination="Ca1-WZ-31d" id="XUR-hM-RoI"/>
+                <outlet property="ServicesController" destination="UE0-Z3-Jez" id="kxU-Nv-ypZ"/>
                 <outlet property="TabView" destination="gW2-b2-Aea" id="9Ru-6d-rcL"/>
                 <outlet property="TasksController" destination="FyW-cC-Ofq" id="ND8-hM-8bH"/>
+                <outlet property="services" destination="UE0-Z3-Jez" id="Aud-r7-hcY"/>
                 <outlet property="tabbar" destination="zD7-zX-K3z" id="UR1-Up-Kvq"/>
                 <outlet property="window" destination="371" id="TKA-ED-JQQ"/>
             </connections>
@@ -1298,6 +1300,7 @@ Gw
         <arrayController objectClassName="NSDictionary" editable="NO" automaticallyPreparesContent="YES" selectsInsertedObjects="NO" avoidsEmptySelection="NO" id="Ca1-WZ-31d"/>
         <arrayController id="FyW-cC-Ofq" userLabel="Tasks"/>
         <userDefaultsController id="FFW-oU-JRE"/>
+        <arrayController id="UE0-Z3-Jez" userLabel="Services"/>
     </objects>
     <resources>
         <image name="user-busy" width="104.72727203369141" height="104.72727203369141"/>

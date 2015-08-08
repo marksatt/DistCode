@@ -62,7 +62,7 @@ NSNetServiceBrowser* Browser = nil;
 {
     self = [super init];
     if (self) {
-        //services = [[NSMutableArray alloc] init];
+		services = [NSMutableArray new];
 		DistCCServers = [NSMutableArray new];
 		Tasks = [NSMutableArray new];
 		DistCodeWrapper = [DistCode new];
@@ -366,7 +366,7 @@ NSNetServiceBrowser* Browser = nil;
 
 
 // Sent when addresses are resolved
-/*- (void)netServiceDidResolveAddress:(NSNetService *)netService
+- (void)netServiceDidResolveAddress:(NSNetService *)netService
 {
 	// Make sure [netService addresses] contains the
 	// necessary connection information
@@ -375,19 +375,14 @@ NSNetServiceBrowser* Browser = nil;
 				 forServiceType:[netService type]]) {
 		NSArray* Addresses = [netService addresses];
 		char Name[INET6_ADDRSTRLEN];
-		NSString* Path = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"distcc"];
 		for (NSData* Addr in Addresses)
 		{
 			struct sockaddr* IP = (struct sockaddr*)[Addr bytes];
 			if(IP->sa_family == AF_INET && inet_ntop(IP->sa_family, get_in_addr(IP), Name, INET6_ADDRSTRLEN)!=NULL)
 			{
-				NSString* Address = [NSString stringWithFormat:@"%s", Name];
-				NSString* Response = [self executeTask:Path withArguments:[NSArray arrayWithObjects:@"--host-info", Address, nil]];
-				OK = [self registerHost:netService withAddress:Address andDetails:Response];
-				if(OK)
-				{
-					break;
-				}
+				NSString* Name = [[netService hostName] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"."]];
+				[ServicesController addObject:Name];
+				break;
 			}
 		}
 	}
@@ -401,27 +396,7 @@ NSNetServiceBrowser* Browser = nil;
  - (void)netService:(NSNetService *)netService didNotResolve:(NSDictionary *)errorDict
 {
 	[self handleError:[errorDict objectForKey:NSNetServicesErrorCode] withService:netService];
-	NSUInteger Index = [services indexOfObject:netService];
-	if(Index != NSNotFound)
-	{
-		if([DistCCServers count] > Index)
-		{
-			NSMutableDictionary* DistCCDict = [DistCCServers objectAtIndex:Index];
-			if(DistCCDict && [[DistCCDict objectForKey:@"SERVICE"] isEqualTo:netService])
-			{
-				NSTask* LoadAvg = [DistCCDict objectForKey:@"LOADAVG"];
-				if(LoadAvg)
-				{
-					[LoadAvg terminate];
-					[LoadAvg waitUntilExit];
-				}
-				[self removeDistCCServer:[DistCCDict objectForKey:@"HOSTNAME"]];
-				[DistCCServerController removeObject:DistCCDict];
-				[self writeDmucsHostsFile];
-			}
-		}
-		[services removeObject:netService];
-	}
+	[services removeObject:netService];
 }
 
 // Verifies [netService addresses]
@@ -457,27 +432,12 @@ NSNetServiceBrowser* Browser = nil;
 }
 - (void)netServiceBrowser:(NSNetServiceBrowser *)netServiceBrowser didRemoveService:(NSNetService *)netService moreComing:(BOOL)moreServicesComing
 {
-	NSUInteger Index = [services indexOfObject:netService];
-	if(Index != NSNotFound)
+	if([netService hostName])
 	{
-		if([DistCCServers count] > Index)
-		{
-			NSMutableDictionary* DistCCDict = [DistCCServers objectAtIndex:Index];
-			if(DistCCDict && [[DistCCDict objectForKey:@"SERVICE"] isEqualTo:netService])
-			{
-				NSTask* LoadAvg = [DistCCDict objectForKey:@"LOADAVG"];
-				if(LoadAvg)
-				{
-					[LoadAvg terminate];
-					[LoadAvg waitUntilExit];
-				}
-				[self removeDistCCServer:[DistCCDict objectForKey:@"HOSTNAME"]];
-				[DistCCServerController removeObject:DistCCDict];
-				[self writeDmucsHostsFile];
-			}
-		}
-		[services removeObject:netService];
+		NSString* Name = [[netService hostName] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"."]];
+		[ServicesController removeObject:Name];
 	}
+	[services removeObject:netService];
 }
 - (void)netServiceBrowserWillSearch:(NSNetServiceBrowser *)netServiceBrowser
 {
@@ -490,7 +450,7 @@ NSNetServiceBrowser* Browser = nil;
 - (void)netServiceBrowserDidStopSearch:(NSNetServiceBrowser *)netServiceBrowser
 {
 	
-}*/
+}
 
 - (void)setViewForIdentifier:(NSString *)identifier
 {

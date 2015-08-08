@@ -36,11 +36,12 @@
 @public
 	IBOutlet NSArrayController* DistCCServerController;
 	IBOutlet NSArrayController* TasksController;
+	IBOutlet NSArrayController* ServicesController;
 	NSMutableArray* DistCCServers;
 	NSMutableArray* Tasks;
 @protected
     // Keeps track of services handled by this delegate
-    //NSMutableArray *services;
+    NSMutableArray *services;
 	DistCode* DistCodeWrapper;
 	NSTimer* MonitorLoopTimer;
 }
@@ -52,7 +53,7 @@
 - (IBAction)saveDefaults:(id)sender;
 
 // Other methods
-/*- (void)netServiceDidResolveAddress:(NSNetService *)netService;
+- (void)netServiceDidResolveAddress:(NSNetService *)netService;
 // Sent if resolution fails
 - (void)netService:(NSNetService *)netService didNotResolve:(NSDictionary *)errorDict;
 - (BOOL)addressesComplete:(NSArray *)addresses forServiceType:(NSString *)serviceType;
@@ -64,5 +65,5 @@
 - (void)netServiceBrowser:(NSNetServiceBrowser *)netServiceBrowser didRemoveService:(NSNetService *)netService moreComing:(BOOL)moreServicesComing;
 - (void)netServiceBrowserWillSearch:(NSNetServiceBrowser *)netServiceBrowser;
 - (void)netServiceBrowser:(NSNetServiceBrowser *)netServiceBrowser didNotSearch:(NSDictionary *)errorInfo;
-- (void)netServiceBrowserDidStopSearch:(NSNetServiceBrowser *)netServiceBrowser;*/
+- (void)netServiceBrowserDidStopSearch:(NSNetServiceBrowser *)netServiceBrowser;
 @end
