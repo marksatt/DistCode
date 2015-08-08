@@ -39,6 +39,6 @@ typedef std::string DmucsDprop;
 
 const char *dprop2cstr(DmucsDprop d);
 
-const int DPROP_MAX_STRLEN =	64;
+const int DPROP_MAX_STRLEN =	4096;
 
 #endif 

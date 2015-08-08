@@ -209,7 +209,7 @@ DmucsDpropDb::serialize()
      * We will encode the database this way: it will be a big long string
      * with newlines in it.  The lines will look like this:
      * D: <distingishingProp>       (the string that distinguishes these hosts)
-     * H: <ip-addr> <int> <state>
+     * H: <ip-addr> <state> <ldAvg1> <ldAvg5> <ldAvg10>
      * C <tier>: <ipaddr>/<#cpus>
      *
      * o The state is represented by an integer representing the
@@ -224,7 +224,9 @@ DmucsDpropDb::serialize()
 	 itr != allHosts_.end(); ++itr) {
 	struct in_addr in;
 	in.s_addr = (*itr)->getIpAddrInt();
-	result << "H: " << inet_ntoa(in) << " " << (*itr)->getStateAsInt()
+	float ldAvg1, ldAvg5, ldAvg10;
+	(*itr)->getLoadAvg(ldAvg1, ldAvg5, ldAvg10);
+	result << "H: " << inet_ntoa(in) << " " << (*itr)->getStateAsInt() << " " << ldAvg1 << " " << ldAvg5 << " " << ldAvg10
 	       << "\n";
     }
 

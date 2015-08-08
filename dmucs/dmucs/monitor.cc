@@ -193,7 +193,12 @@ parseResults(const char *resultStr)
     std::ostringstream unkHosts, availHosts, unavailHosts, overHosts,
         silentHosts;
 
-    while (1) {
+#if __APPLE__
+	NSMutableDictionary* Hosts = [NSMutableDictionary new];
+#endif
+	
+	std::string distProp;
+	while (1) {
 
         char firstChar;
 	instr >> firstChar;
@@ -212,8 +217,8 @@ parseResults(const char *resultStr)
             dumpSummaryInfo(availHosts, overHosts, unavailHosts, silentHosts,
                             unkHosts);
           
-            std::string distProp;
             instr.ignore();		// eat ':'
+			distProp.clear();
             instr >> distProp;
             if (distProp == "''")  continue;	// empty distinguishing str
             std::cout << "*** " << distProp << " hosts:" << '\n';
@@ -222,9 +227,10 @@ parseResults(const char *resultStr)
 	case 'H': {
 	    std::string ipstr;
 	    int state;
-	    /* Read in ': <ip-address> <state>' */
+		float ldAvg1, ldAvg5, ldAvg10;
+	    /* Read in ': <ip-address> <state> <ldAvg1> <ldAvg5> <ldAvg10>' */
 	    instr.ignore();		// eat ':'
-	    instr >> ipstr >> state;
+	    instr >> ipstr >> state >> ldAvg1 >> ldAvg5 >> ldAvg10;
             std::string hostname = ipstr;
             
 	    unsigned int addr = inet_addr(ipstr.c_str());
@@ -243,11 +249,13 @@ parseResults(const char *resultStr)
 	     */
 		
 #if __APPLE__
-		NSDistributedNotificationCenter* Notifier = [NSDistributedNotificationCenter defaultCenter];
 		NSString* HostName = [NSString stringWithUTF8String: hostname.c_str()];
 		NSNumber* StatusNum = [NSNumber numberWithInt:(int)state];
-		NSDictionary* Info = [NSDictionary dictionaryWithObjectsAndKeys:HostName, @"HostName", StatusNum, @"Status", nil];
-		[Notifier postNotificationName:@"dmucsMonitorHostStatus" object:@"DMUCS" userInfo:Info options:(NSUInteger)NSNotificationPostToAllSessions];
+		NSNumber* ldAvg1_ = [NSNumber numberWithFloat:ldAvg1];
+		NSNumber* ldAvg5_ = [NSNumber numberWithFloat:ldAvg5];
+		NSNumber* ldAvg10_ = [NSNumber numberWithFloat:ldAvg10];
+		NSMutableDictionary* Info = [NSMutableDictionary dictionaryWithObjectsAndKeys:HostName, @"HostName", StatusNum, @"Status", ldAvg1_, @"LoadAvg1", ldAvg5_, @"LoadAvg5", ldAvg10_, @"LoadAvg10", nil];
+		[Hosts setValue:Info forKey:HostName];
 #endif
 
 	    std::ostringstream *ostr;
@@ -299,12 +307,17 @@ parseResults(const char *resultStr)
                 }
 			
 #if __APPLE__
-		NSDistributedNotificationCenter* Notifier = [NSDistributedNotificationCenter defaultCenter];
 		NSString* HostName = [NSString stringWithUTF8String: hname.c_str()];
+		NSString* Property = [NSString stringWithUTF8String: distProp.c_str()];
 		NSNumber* TierNum = [NSNumber numberWithInt:(int)tierNum];
 		NSNumber* CpusNum = [NSNumber numberWithInt:(int)numCpus];
-		NSDictionary* Info = [NSDictionary dictionaryWithObjectsAndKeys:HostName, @"HostName", TierNum, @"Tier", CpusNum, @"Cpus", nil];
-		[Notifier postNotificationName:@"dmucsMonitorHostTier" object:@"DMUCS" userInfo:Info options:(NSUInteger)NSNotificationPostToAllSessions];
+		NSMutableDictionary* Info = [Hosts valueForKey:HostName];
+		if(Info)
+		{
+			[Info setValue:TierNum forKey:@"Tier"];
+			[Info setValue:CpusNum forKey:@"Cpus"];
+			[Info setValue:Property forKey:@"DistProp"];
+		}
 #endif
 			
 		std::ostringstream hostname;
@@ -321,6 +334,11 @@ parseResults(const char *resultStr)
 	    std::cout << line << '\n';
 	}
     }
+	
+#if __APPLE__
+	NSDistributedNotificationCenter* Notifier = [NSDistributedNotificationCenter defaultCenter];
+	[Notifier postNotificationName:@"dmucsMonitorHosts" object:@"DMUCS" userInfo:Hosts options:(NSUInteger)NSNotificationPostToAllSessions];
+#endif
 
     std::cout << '\n' << std::flush;
 }

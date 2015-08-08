@@ -94,6 +94,7 @@ public:
     const std::string &getName();
     const DmucsDprop getDprop() const { return dprop_; }
 
+	void getLoadAvg(float& ldAvg1, float& ldAvg5, float& ldAvg10) { ldAvg1 = ldavg1_; ldAvg5 = ldavg5_; ldAvg10 = ldavg10_; }
     unsigned int getIpAddrInt() const { return ipAddr_.s_addr; }
     int getNumCpus() const { return ncpus_; }
     bool seemsDown() const;
