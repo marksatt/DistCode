@@ -120,7 +120,12 @@ main(int argc, char *argv[])
 				    (char *) clientPortStr.str().c_str());
 	if (!client_sock) {
 	    fprintf(stderr, "Could not open client: %s\n", strerror(errno));
-	    Sclose(client_sock);
+		Sclose(client_sock);
+#if __APPLE__
+		NSMutableDictionary* Hosts = [NSMutableDictionary new];
+		NSDistributedNotificationCenter* Notifier = [NSDistributedNotificationCenter defaultCenter];
+		[Notifier postNotificationName:@"dmucsMonitorHosts" object:@"DMUCS" userInfo:Hosts options:(NSUInteger)NSNotificationPostToAllSessions];
+#endif
 	    sleep();
 	    continue;
 	}
@@ -130,6 +135,11 @@ main(int argc, char *argv[])
 	if (Sgets(resultStr, RESULT_MAX_SIZE, client_sock) == NULL) {
 	    fprintf(stderr, "Got error from reading socket.\n");
 	    Sclose(client_sock);
+#if __APPLE__
+		NSMutableDictionary* Hosts = [NSMutableDictionary new];
+		NSDistributedNotificationCenter* Notifier = [NSDistributedNotificationCenter defaultCenter];
+		[Notifier postNotificationName:@"dmucsMonitorHosts" object:@"DMUCS" userInfo:Hosts options:(NSUInteger)NSNotificationPostToAllSessions];
+#endif
 	    return -1;
 	}
         DMUCS_DEBUG((stderr, "monitor: got -->%s<--\n", resultStr));
@@ -232,16 +242,22 @@ parseResults(const char *resultStr)
 	    instr.ignore();		// eat ':'
 	    instr >> ipstr >> state >> ldAvg1 >> ldAvg5 >> ldAvg10;
             std::string hostname = ipstr;
-            
-	    unsigned int addr = inet_addr(ipstr.c_str());
-	    struct hostent *he = gethostbyaddr((char *)&addr, sizeof(addr),
-					       AF_INET);
-            if (he) {
-                hostname = he->h_name;
-            }
-			else {
-				hostname = ipstr;
-			}
+		
+		unsigned int addr = inet_addr(ipstr.c_str());
+		struct hostent *he = gethostbyaddr((char *)&addr,
+										   sizeof(addr), AF_INET);
+		struct in_addr ip;
+		if(!he && inet_aton(ipstr.c_str(), &ip))
+		{
+			he = gethostbyaddr((char *)&ip,
+							   sizeof(ip), AF_INET);
+		}
+		if (he) {
+			hostname = he->h_name;
+		}
+		else {
+			hostname = ipstr;
+		}
 
 	    /*
 	     * We collect each hostname based on its state, and add it
@@ -249,12 +265,13 @@ parseResults(const char *resultStr)
 	     */
 		
 #if __APPLE__
+		NSString* IPAddr = [NSString stringWithUTF8String: ipstr.c_str()];
 		NSString* HostName = [NSString stringWithUTF8String: hostname.c_str()];
 		NSNumber* StatusNum = [NSNumber numberWithInt:(int)state];
 		NSNumber* ldAvg1_ = [NSNumber numberWithFloat:ldAvg1];
 		NSNumber* ldAvg5_ = [NSNumber numberWithFloat:ldAvg5];
 		NSNumber* ldAvg10_ = [NSNumber numberWithFloat:ldAvg10];
-		NSMutableDictionary* Info = [NSMutableDictionary dictionaryWithObjectsAndKeys:HostName, @"HostName", StatusNum, @"Status", ldAvg1_, @"LoadAvg1", ldAvg5_, @"LoadAvg5", ldAvg10_, @"LoadAvg10", nil];
+		NSMutableDictionary* Info = [NSMutableDictionary dictionaryWithObjectsAndKeys:IPAddr, @"IP", HostName, @"HostName", StatusNum, @"Status", ldAvg1_, @"LoadAvg1", ldAvg5_, @"LoadAvg5", ldAvg10_, @"LoadAvg10", nil];
 		[Hosts setValue:Info forKey:HostName];
 #endif
 
@@ -296,15 +313,23 @@ parseResults(const char *resultStr)
 		linestr >> numCpus;
 		linestr.ignore();		// eat ' '
 
+			
 		unsigned int addr = inet_addr(ipName);
 		struct hostent *he = gethostbyaddr((char *)&addr,
-                                                   sizeof(addr), AF_INET);
-                std::string hname;
-                if (he == NULL) {
-                  hname = ipName;
-                } else {
-                  hname = he->h_name;
-                }
+										   sizeof(addr), AF_INET);
+		struct in_addr ip;
+		if(!he && inet_aton(ipName, &ip))
+		{
+			he = gethostbyaddr((char *)&ip,
+							   sizeof(ip), AF_INET);
+		}
+			
+		std::string hname;
+		if (he == NULL) {
+		  hname = ipName;
+		} else {
+		  hname = he->h_name;
+		}
 			
 #if __APPLE__
 		NSString* HostName = [NSString stringWithUTF8String: hname.c_str()];
