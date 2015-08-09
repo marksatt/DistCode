@@ -1,27 +1,36 @@
 DistCode - Distributed Compilation For Xcode
 ============================================
 			
-DistCode provides a native Mac OS X GUI & Xcode plugin for the icecc
-distributed compiler system. This allows users to compile their projects 
-across multiple Macs to reduce build time.
+DistCode provides a GUI for managing distccd compilation hosts, with
+the host management and distribution managed by dmucs. An Xcode compiler
+plugin is provided to allow projects to compile across multiple machines using
+distcc. 						
 
-icecc -- Distributed compiler with a central scheduler to share build load
---------------------------------------------------
-
-[https://github.com/icecc/icecream](https://github.com/icecc/icecream)
-
-Copyright (C) 2003, 2004 by the Icecream Authors
-
-Based on distcc
-Copyright (C) 2002, 2003 by Martin Pool <mbp@samba.org>
-
-LZO
+DMUCS – a Distributed Multi-User Compilation System
 ---------------------------------------------------
 
-[http://www.oberhumer.com/opensource/lzo/](http://www.oberhumer.com/opensource/lzo/)
+[http://dmucs.sourceforge.net](http://dmucs.sourceforge.net)
 
-Copyright (C) 1996-2014 Markus Franz Xaver Johannes Oberhumer
-All Rights Reserved.
+by Victor Norman <vic.norman@gmail.com>
+
+Additional changes have been made to integrate into Xcode 5+ as part of DistCode:
+	 [https://github.com/marksatt/dmucs](https://github.com/marksatt/dmucs)
+
+distcc -- a free distributed C/C++ compiler system
+--------------------------------------------------
+
+[http://code.google.com/p/distcc/](http://code.google.com/p/distcc/)
+
+by Martin Pool <mbp@samba.org>
+
+"pump" functionality added by Fergus Henderson, Nils Klarlund, Manos Renieris, and Craig Silverstein (Google Inc.)
+			    
+Containing the Xcode integration code v. 2805 from Apple used in Xcode 3 and earlier.
+The Apple code is found here: [http://www.opensource.apple.com/source/distcc/](http://www.opensource.apple.com/source/distcc/)
+Or as a tarball here: [http://opensource.apple.com/tarballs/distcc/](http://opensource.apple.com/tarballs/distcc/)
+
+Additional changes have been made to integrate into Xcode 5+ as part of DistCode:
+	 [https://github.com/marksatt/distcc](https://github.com/marksatt/distcc)
 
 VPN & Mac Client Icons
 ----------------------
