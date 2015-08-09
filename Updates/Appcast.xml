@@ -12,6 +12,14 @@
           </sparkle:releaseNotesLink>
           <pubDate>Thu, 15 May 2014 22:07:00 +0100</pubDate>
           <enclosure url="https://github.com/marksatt/DistCode/releases/download/1.0.1/DistCode-v1.0.1.zip" sparkle:version="1.0.1" length="5823803" type="application/octet-stream" sparkle:dsaSignature="MCwCFByRMq4tgR6R+pkGIFABxOak848OAhR1A80s9cJ4xn6OGqz6F8MFw19DNA==" />
-      </item>
+	  </item>
+	  <item>
+		  <title>Version 2.0</title>
+		  <sparkle:releaseNotesLink>
+			  https://github.com/marksatt/DistCode/releases/tag/2.0
+		  </sparkle:releaseNotesLink>
+		  <pubDate>Sun, 9 August 2015 19:20:00 +0100</pubDate>
+		  <enclosure url="https://github.com/marksatt/DistCode/releases/download/2.0/DistCode.zip" sparkle:version="2.0" length="5644757" type="application/octet-stream" sparkle:dsaSignature="MCwCFDdj0FY0FPYocHj8mQ0sktlkLKNFAhRJVHKiQdmn88o/zcDDrGBsVbIYRw==" />
+	  </item>
    </channel>
 </rss>
