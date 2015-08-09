@@ -63,6 +63,7 @@ int main(int argc, const char * argv[])
 	long verbose = 0;
 	long timeout = 0;
 	std::string server("localhost");
+	std::string distprop("*");
 	
 #if __APPLE__
 	CFPropertyListRef Value = CFPreferencesCopyAppValue(CFSTR("HostTimeout"), CFSTR("com.marksatt.DistCode"));
@@ -111,11 +112,27 @@ int main(int argc, const char * argv[])
 	CFPropertyListRef VerboseVal = CFPreferencesCopyAppValue(CFSTR("VerboseOutput"), CFSTR("com.marksatt.DistCode"));
 	if(VerboseVal)
 	{
-		if(CFGetTypeID(VerboseVal) == CFNumberGetTypeID())
+		if(CFGetTypeID(VerboseVal) == CFBooleanGetTypeID())
 		{
-			CFNumberGetValue((CFNumberRef)VerboseVal, kCFNumberLongType, &verbose);
+			verbose = CFBooleanGetValue((CFBooleanRef)VerboseVal);
 		}
 		CFRelease(VerboseVal);
+	}
+	
+	
+	
+	CFPropertyListRef DistPropVal = CFPreferencesCopyAppValue(CFSTR("DistProp"), CFSTR("com.marksatt.DistCode"));
+	if(DistPropVal)
+	{
+		if(CFGetTypeID(DistPropVal) == CFStringGetTypeID())
+		{
+			char Buffer[4096];
+			if(CFStringGetCString((CFStringRef)DistPropVal, Buffer, 4096, kCFStringEncodingUTF8))
+			{
+				distprop = Buffer;
+			}
+		}
+		CFRelease(DistPropVal);
 	}
 #endif
 	
@@ -132,11 +149,13 @@ int main(int argc, const char * argv[])
 	std::string distccPath = std::string(path, pathLen);
 	distccPath += "/distcc";
 	
-	char** Args = (char**)alloca(sizeof(char*) * argc + 9);
+	char** Args = (char**)alloca(sizeof(char*) * argc + 11);
 	int ArgIdx = 0;
 	Args[ArgIdx++] = strdup(getHostPath.c_str());
 	Args[ArgIdx++] = strdup("--server");
 	Args[ArgIdx++] = strdup(server.c_str());
+	Args[ArgIdx++] = strdup("--type");
+	Args[ArgIdx++] = strdup(distprop.c_str());
 	Args[ArgIdx++] = strdup("--wait");
 	Args[ArgIdx++] = timeoutBuffer;
 	Args[ArgIdx++] = strdup(distccPath.c_str());

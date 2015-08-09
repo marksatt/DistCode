@@ -785,7 +785,7 @@
                                                                 </connections>
                                                             </tableColumn>
                                                             <tableColumn width="64" minWidth="10" maxWidth="3.4028234663852886e+38" id="Phi-N2-7FV">
-                                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Execution">
+                                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Phase">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -797,7 +797,7 @@
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
-                                                                    <binding destination="FyW-cC-Ofq" name="value" keyPath="arrangedObjects.Execution" id="q9d-gf-lQQ"/>
+                                                                    <binding destination="FyW-cC-Ofq" name="value" keyPath="arrangedObjects.Phase" id="IJE-4c-WtX"/>
                                                                 </connections>
                                                             </tableColumn>
                                                             <tableColumn width="64" minWidth="10" maxWidth="3.4028234663852886e+38" id="iUu-Sc-2cG">
@@ -817,7 +817,7 @@
                                                                 </connections>
                                                             </tableColumn>
                                                             <tableColumn width="91" minWidth="40" maxWidth="1000" id="X4z-IE-cw0">
-                                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Client">
+                                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="CPU">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
@@ -829,11 +829,11 @@
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
-                                                                    <binding destination="FyW-cC-Ofq" name="value" keyPath="arrangedObjects.Client" id="Jy0-eu-XgO"/>
+                                                                    <binding destination="FyW-cC-Ofq" name="value" keyPath="arrangedObjects.CPU" id="4lV-xN-p4M"/>
                                                                 </connections>
                                                             </tableColumn>
                                                             <tableColumn width="64" minWidth="10" maxWidth="3.4028234663852886e+38" id="DnU-RX-sgF">
-                                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Result">
+                                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="PID">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -845,7 +845,7 @@
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
-                                                                    <binding destination="FyW-cC-Ofq" name="value" keyPath="arrangedObjects.ExitCode" id="bLh-rF-551"/>
+                                                                    <binding destination="FyW-cC-Ofq" name="value" keyPath="arrangedObjects.PID" id="GUs-sg-0T0"/>
                                                                 </connections>
                                                             </tableColumn>
                                                         </tableColumns>

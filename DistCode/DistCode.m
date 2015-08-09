@@ -216,7 +216,9 @@
 	NSString* Path = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"addhost"];
 	NSString* Task = [NSString stringWithFormat:@"\"%@\" --server %@ --host %@ --type %@ --add %d %d", Path, Server, Host, HostProp, NumCPUs, Index];
 	int Err = system([Task UTF8String]);
+#if DEBUG
 	assert(Err == 0);
+#endif
 }
 
 - (void)removeHost:(NSString*)Host fromServer:(NSString*)Server
@@ -224,7 +226,9 @@
 	NSString* Path = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"remhost"];
 	NSString* Task = [NSString stringWithFormat:@"\"%@\" --server %@ --host %@", Path, Server, Host];
 	int Err = system([Task UTF8String]);
+#if DEBUG
 	assert(Err == 0);
+#endif
 }
 
 - (NSString*)hostProperty
@@ -235,18 +239,6 @@
 	char Buffer[256];
 	char Buffer1[32];
 	char Buffer2[32];
-
-//	[HostProp appendString:@"PLATFORM="];
-//	
-//	NSString* Platform = [NSProcessInfo processInfo].operatingSystemVersionString;
-//	[HostProp appendString:[NSString stringWithFormat:@"%ld.%ld.%ld", [NSProcessInfo processInfo].operatingSystemVersion.majorVersion, [NSProcessInfo processInfo].operatingSystemVersion.minorVersion, (long)[NSProcessInfo processInfo].operatingSystemVersion.patchVersion]];
-//	if(sscanf([Platform UTF8String], "Version %*s %*s %[^)]", Buffer))
-//	{
-//		[HostProp appendString:[NSString stringWithFormat:@"-%s", Buffer]];
-//	}
-//	
-//	[HostProp appendString:[NSString stringWithFormat:@"=MEMORY=%llu", ([NSProcessInfo processInfo].physicalMemory / 1024 / 1024)]];
-	
 	
 	NSMutableArray* Compilers = [HostInfo valueForKey:@"COMPILERS"];
 	[HostProp appendString:@"COMPILERS="];
@@ -343,6 +335,8 @@
 
 - (BOOL)startup
 {
+	[[NSUserDefaults standardUserDefaults] setValue:[self hostProperty] forKey:@"DistProp"];
+	
 	if([self runCoordinator] || [self coordinatorIPAddress])
 	{
 		if([self runCoordinator])
@@ -468,7 +462,7 @@
 		id PropertyList = [NSPropertyListSerialization propertyListWithData:InfoData options: InfoOptions format: &InfoFormat error: &InfoError];
 		if ( PropertyList != nil )
 		{
-			NSMutableDictionary* Dictionary = [NSMutableDictionary new];
+			NSMutableDictionary* Dictionary = (NSMutableDictionary*)PropertyList;
 			NSMutableArray* UUIDs = [Dictionary valueForKey:@"DVTPlugInCompatibilityUUIDs"];
 			NSString* XcodePathResult = [self executeTask:@"/usr/bin/xcode-select" withArguments:[NSArray arrayWithObjects:@"-p", nil]];
 			NSString* XcodePath = [XcodePathResult stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n \r"]];
@@ -481,7 +475,7 @@
 			id XcodePropertyList = [NSPropertyListSerialization propertyListWithData:XcodeData options: XcodeOptions format: &XcodeFormat error:&XcodeError];
 			if ( XcodePropertyList != nil )
 			{
-				NSMutableDictionary* XcodeDictionary = [NSMutableDictionary new];
+				NSMutableDictionary* XcodeDictionary = (NSMutableDictionary*)XcodePropertyList;
 				NSString* UUID = [XcodeDictionary valueForKey:@"DVTPlugInCompatibilityUUID"];
 				if ( [UUIDs containsObject:UUID] == false )
 				{
