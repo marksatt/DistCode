@@ -174,7 +174,7 @@ public:
 	MutexMonitor m(&mutex_);
 	dmucs_dprop_db_iter_t itr = dbDb_.find(dprop);
 	if (itr == dbDb_.end()) {
-	    throw DmucsHostNotFound();
+        return NULL;
 	}
 	return itr->second.getHost(ipAddr);
     }

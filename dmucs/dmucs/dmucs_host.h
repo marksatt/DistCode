@@ -110,16 +110,4 @@ public:
 };
 
 
-
-class DmucsNoMoreHosts : public std::exception
-{
-    // TODO
-};
-
-class DmucsHostNotFound : public std::exception
-{
-    // TODO
-};
-
-
 #endif

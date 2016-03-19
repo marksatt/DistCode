@@ -105,7 +105,7 @@ DmucsDpropDb::getHost(const struct in_addr &ipAddr)
     DmucsHost host(ipAddr, dprop_, 0, 0);
     dmucs_host_set_iter_t hptr = allHosts_.find(&host);
     if (hptr == allHosts_.end()) {
-	throw DmucsHostNotFound(/* ipaddr */);
+        return NULL;
     }
     return *hptr;
 }
@@ -138,9 +138,8 @@ DmucsDpropDb::getBestAvailCpu()
 	result = *itr2;	// get the IP address of the nth element in the list
 	/* Remove the nth element from the list. */
 	itr->second.erase(itr2);
-	return result;
     }
-    throw DmucsNoMoreHosts();
+    return result;
 }
 
 
@@ -181,8 +180,8 @@ DmucsDpropDb::releaseCpu(const Socket *sock)
     in.s_addr = hostIp;
 
 
-    try {
-	DmucsHost *host = getHost(in);
+    DmucsHost *host = getHost(in);
+    if(host) {
 	/* Put this message out on the console, so the administrator can see
 	   when a host is released back to the db. */
 	fprintf(stderr, "Got %s back\n", host->getName().c_str());
@@ -193,7 +192,7 @@ DmucsDpropDb::releaseCpu(const Socket *sock)
 	    int tier = host->getTier();
 	    addCpusToTier(tier, hostIp, 1);
 	}
-    } catch (DmucsHostNotFound &e) {
+    } else {
 	/* The host may have been removed from the db while a cpu
 	   was assigned.  In this case, just don't add the cpu back
 	   to the availCpus_ db table. */

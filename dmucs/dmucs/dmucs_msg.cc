@@ -27,14 +27,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <errno.h>
-#if __APPLE__
-#include <Foundation/Foundation.h>
-#include <Foundation/NSDistributedNotificationCenter.h>
-#endif
 
 extern std::string hostsInfoFile;
-
-class DmucsBadMsg : public std::exception {};
 
 
 
@@ -140,8 +134,8 @@ DmucsHostReqMsg::handle(Socket *sock, const char *buf)
     DmucsDb *db = DmucsDb::getInstance();
     unsigned int cpuIpAddr = 0;
 
-    try {
-	cpuIpAddr = db->getBestAvailCpu(dprop_);
+    cpuIpAddr = db->getBestAvailCpu(dprop_);
+    if(cpuIpAddr > 0) {
 	std::string resolved_name =
 	    DmucsHost::resolveIp2Name(cpuIpAddr, dprop_);
 
@@ -153,16 +147,15 @@ DmucsHostReqMsg::handle(Socket *sock, const char *buf)
 	db->dump();
 #endif
 
-    } catch (DmucsNoMoreHosts &e) {
+    }
+    else {
 	/* getBestAvailCpu() might return 0, when there are
 	   no more available CPUs.  We send 0.0.0.0 to the client
 	   but we don't record it as an assigned cpu. */
         fprintf(stderr, "!!!!!      Out of hosts in db \"%s\"   !!!!!\n",
-		dprop2cstr(dprop_));
-    } catch (...) {
-	fprintf(stderr, "!!!!!  Some other error: %s!!!!!\n",
-		strerror(errno));
-	// Send 0.0.0.0 to the client.
+                dprop2cstr(dprop_));
+        fprintf(stderr, "!!!!!  Some other error: %s!!!!!\n",
+                strerror(errno));
     }
 
     struct in_addr c;
@@ -178,10 +171,10 @@ DmucsLdAvgMsg::handle(Socket *sock, const char *buf)
     DMUCS_DEBUG((stderr, "Got load average mesg\n"));
 
 	std::string hostname;
-	DmucsHost *host = NULL;
+	DmucsHost *host = db->getHost(host_, dprop_);
 	
-    try {
-		host = db->getHost(host_, dprop_);
+    if(host) {
+		
 		hostname = host->getName();
         host->updateTier(ldAvg1_, ldAvg5_, ldAvg10_);
 		/* If the host hasn't been explicitly made unavailable,
@@ -191,7 +184,7 @@ DmucsLdAvgMsg::handle(Socket *sock, const char *buf)
             (host->isOverloaded() && host->getTier() != 0)) {
 			host->avail();      // make sure the host is available
 		}
-    } catch (DmucsHostNotFound &e) {
+    } else {
 		host = DmucsHost::createHost(host_, dprop_, hostsInfoFile);
 		if(host)
 		{
@@ -201,21 +194,8 @@ DmucsLdAvgMsg::handle(Socket *sock, const char *buf)
 					host->getName().c_str(), host->getNumCpus(), host->getTier(),
 					dprop2cstr(dprop_));
 		}
-    } catch (...) {
     }
 	
-#if __APPLE__
-	if(host)
-	{
-		NSDistributedNotificationCenter* Notifier = [NSDistributedNotificationCenter defaultCenter];
-		NSString* HostName = [NSString stringWithUTF8String: hostname.c_str()];
-		NSNumber* LoadAvg1 = [NSNumber numberWithFloat:ldAvg1_];
-		NSNumber* LoadAvg5 = [NSNumber numberWithFloat:ldAvg5_];
-		NSNumber* LoadAvg10 = [NSNumber numberWithFloat:ldAvg10_];
-		NSDictionary* Info = [NSDictionary dictionaryWithObjectsAndKeys:HostName, @"HostName", LoadAvg1, @"LoadAvg1", LoadAvg5, @"LoadAvg5", LoadAvg10, @"LoadAvg10", nil];
-		[Notifier postNotificationName:@"dmucsLoadAvg" object:@"DMUCS" userInfo:Info options:(NSUInteger)NSNotificationPostToAllSessions];
-	}
-#endif
     removeFd(sock);
 }
 

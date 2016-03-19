@@ -26,8 +26,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-class DmucsBadMsg : public std::exception {};
-
 
 DmucsMsg *
 DmucsMsg::parseMsg(Socket *sock, const char *buffer)
