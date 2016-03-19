@@ -79,6 +79,9 @@ NSNetServiceBrowser* Browser = nil;
 
 - (void)monitorLoop
 {
+    NSDictionary* Hosts = [DistCodeWrapper updateDmucs];
+    [self dmucsMonitorHosts:Hosts];
+    
 	NSMutableArray* Objects = [DistCodeWrapper pumpDistccMon];
 	[TasksController removeObjects:Tasks];
 	[TasksController addObjects:Objects];
@@ -116,9 +119,8 @@ NSNetServiceBrowser* Browser = nil;
 	return DistCCDict;
 }
 
-- (void)dmucsMonitorHosts:(NSNotification*)Notification
+- (void)dmucsMonitorHosts:(NSDictionary*)DistccHosts
 {
-	NSDictionary* DistccHosts = Notification.userInfo;
 	for (NSDictionary* DistccInfo in DistCCServers)
 	{
 		NSString* Name = [DistccInfo valueForKey:@"HOSTNAME"];
@@ -236,9 +238,6 @@ NSNetServiceBrowser* Browser = nil;
 	
 	MonitorLoopTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(monitorLoop) userInfo:nil repeats:YES];
 	[[NSRunLoop currentRunLoop] addTimer:MonitorLoopTimer forMode:NSEventTrackingRunLoopMode];
-	
-	NSDistributedNotificationCenter* Notifier = [NSDistributedNotificationCenter defaultCenter];
-	[Notifier addObserver:self selector:@selector(dmucsMonitorHosts:) name:@"dmucsMonitorHosts" object:@"DMUCS"];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification

@@ -289,10 +289,6 @@ NSDictionary* ParseResults(const char *resultStr)
         }
     }
     
-
-    NSDistributedNotificationCenter* Notifier = [NSDistributedNotificationCenter defaultCenter];
-    [Notifier postNotificationName:@"dmucsMonitorHosts" object:@"DMUCS" userInfo:Hosts options:(NSUInteger)NSNotificationPostToAllSessions];
-    
     return Hosts;
 }
 
@@ -304,7 +300,7 @@ NSDictionary* ParseResults(const char *resultStr)
     std::ostringstream clientPortStr;
     clientPortStr << "c" << serverPortNum;
     
-    char const* IPAddress = [[self coordinatorIPAddress] UTF8String];
+    char const* IPAddress = [[NSString stringWithFormat:@"@%@", [self coordinatorIPAddress]] UTF8String];
     
     Socket *client_sock = Sopen((char *) IPAddress,
                                 (char *) clientPortStr.str().c_str());
@@ -370,9 +366,7 @@ NSDictionary* ParseResults(const char *resultStr)
 
 - (NSMutableArray*)pumpDistccMon
 {
-    [self updateDmucs];
-    
-	struct dcc_task_state *list;
+    struct dcc_task_state *list;
 	int ret;
 	
 	static bool TraceSet = false;
