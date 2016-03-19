@@ -202,7 +202,7 @@ then
 -W -Wall -Wimplicit \
 -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings \
 -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes \
--Wnested-externs -Wmissing-declarations -Wno-cast-align -Wno-unused-parameter"
+-Wnested-externs -Wmissing-declarations -Wno-cast-align -Wno-unused-parameter -Wno-unused-local-typedef"
 
     # -Wuninitialized requires -O
     case "$CFLAGS" in "-O"*|*" -O"*)

@@ -19,9 +19,6 @@
 	
 	NSTask* DmucsDaemon;
 	NSPipe* DmucsPipe;
-
-	NSTask* DmucsMonDaemon;
-	NSPipe* DmucsMonPipe;
 	
 	NSPipe* LoadAvgPipe;
 	NSTask* LoadAvgDaemon;
@@ -35,8 +32,7 @@
 - (void)stopDistccDaemon;
 - (void)startDmucsDaemon;
 - (void)stopDmucsDaemon;
-- (void)startDmucsMonitor;
-- (void)stopDmucsMonitor;
+- (NSDictionary*)updateDmucs;
 - (BOOL)startLoadAvg: (NSString*)Server;
 - (void)stopLoadAvg;
 - (BOOL)startCompileHost;

@@ -15,7 +15,7 @@ SHELL = /bin/sh
 # These autoconf variables may contain recursive Make expansions, and
 # so they have to be done here rather than written into config.h.
 
-CFLAGS = -g -O2 -MD -W -Wall -Wimplicit -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs -Wmissing-declarations -Wno-cast-align -Wno-unused-parameter -Wuninitialized -D_THREAD_SAFE 
+CFLAGS = -g -O2 -MD -W -Wall -Wimplicit -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs -Wmissing-declarations -Wno-cast-align -Wno-unused-parameter -Wno-unused-local-typedef -Wuninitialized -D_THREAD_SAFE 
 WERROR_CFLAGS = -Werror
 PYTHON_CFLAGS = -Wp,-U_FORTIFY_SOURCE -Wno-missing-prototypes -Wno-missing-declarations -Wno-write-strings
 POPT_CFLAGS = -Wno-unused
