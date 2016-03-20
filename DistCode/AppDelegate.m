@@ -2,7 +2,7 @@
  *
  * DistCode -- An OS X GUI & Xcode plugin for the distcc distributed C compiler.
  *
- * Copyright (C) 2013-15 by Mark Satterthwaite
+ * Copyright (C) 2013-16 by Mark Satterthwaite
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 //  DistCode
 //
 //  Created by Mark Satterthwaite on 30/09/2013.
-//  Copyright (c) 2013 marksatt. All rights reserved.
+//  Copyright (c) 2013-16 marksatt. All rights reserved.
 //
 
 #import "AppDelegate.h"

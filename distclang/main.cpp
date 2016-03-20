@@ -2,7 +2,7 @@
  *
  * distclang -- A compiler wrapper for executing the distcc distributed C compiler with the dmucs host manager.
  *
- * Copyright (C) 2013-14 by Mark Satterthwaite
+ * Copyright (C) 2013-16 by Mark Satterthwaite
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +25,7 @@
 //  distclang
 //
 //  Created by Mark Satterthwaite on 19/09/2013.
-//  Copyright (c) 2013 marksatt. All rights reserved.
+//  Copyright (c) 2013-16 marksatt. All rights reserved.
 //
 
 #include <iostream>
