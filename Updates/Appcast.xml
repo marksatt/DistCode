@@ -29,5 +29,13 @@
 		  <pubDate>Sun, 20 March 2016 01:20:00 +0000</pubDate>
 		  <enclosure url="https://github.com/marksatt/DistCode/releases/download/3.0.1/DistCode.zip" sparkle:version="3.0.1" length="5676210" type="application/octet-stream" sparkle:dsaSignature="MC4CFQCLTIn+Dm36AT9/BirDCwyrDyDaCQIVAIGh/hclR8CAH2CediF89KeC0yLM" />
 	  </item>
+	  <item>
+		  <title>Version 3.0.2</title>
+		  <sparkle:releaseNotesLink>
+			  https://github.com/marksatt/DistCode/releases/tag/3.0.2
+		  </sparkle:releaseNotesLink>
+		  <pubDate>Tue, 22 March 2016 22:15:00 +0000</pubDate>
+		  <enclosure url="https://github.com/marksatt/DistCode/releases/download/3.0.2/DistCode.zip" sparkle:version="3.0.2" length="5676397" type="application/octet-stream" sparkle:dsaSignature="MCwCFHkQvN1L9MPjVOFdkJuaJNepXvinAhRkP4Muoc8EaSeZcXYbxOnqXO7AeA==" />
+	  </item>
    </channel>
 </rss>
