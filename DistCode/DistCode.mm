@@ -420,8 +420,9 @@ NSDictionary* ParseResults(const char *resultStr)
 
 - (void)removeHost:(NSString*)Host fromServer:(NSString*)Server
 {
+    NSString* HostProp = [self hostProperty];
 	NSString* Path = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"remhost"];
-	NSString* Task = [NSString stringWithFormat:@"\"%@\" --server %@ --host %@", Path, Server, Host];
+	NSString* Task = [NSString stringWithFormat:@"\"%@\" --server %@ --host %@ --type %@", Path, Server, Host, HostProp];
 	int Err = system([Task UTF8String]);
 #if DEBUG
 	assert(Err == 0);

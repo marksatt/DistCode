@@ -216,10 +216,10 @@ DmucsStatusMsg::handle(Socket *sock, const char *buf)
 		newHost->avail();
 	}
     } else {    // status is unavailable.
-		try {
-			db->getHost(host_, dprop_)->unavail();
-		} catch (...) {
-			}
+        DmucsHost * host = db->getHost(host_, dprop_);
+		if(host) {
+			host->unavail();
+		}
     }
     removeFd(sock);
 }
@@ -244,9 +244,9 @@ DmucsRemoteAddMsg::handle(Socket *sock, const char *buf)
 			}
 		}
 	} else {    // status is unavailable.
-		try {
-			db->getHost(host_, dprop_)->unavail();
-		} catch (...) {
+        DmucsHost* host = db->getHost(host_, dprop_);
+        if(host) {
+			host->unavail();
 		}
 	}
 	removeFd(sock);
