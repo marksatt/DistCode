@@ -126,18 +126,19 @@ unsigned int
 DmucsDpropDb::getBestAvailCpu()
 {
     unsigned int result = 0UL;
-    for (dmucs_avail_cpus_riter_t itr = availCpus_.rbegin();
-	 itr != availCpus_.rend(); ++itr) {
-	if (itr->second.empty()) {
-	    continue;
-	}
-	srandom((unsigned int) time(NULL));
-	unsigned long n = random() % itr->second.size();
-	dmucs_cpus_iter_t itr2 = itr->second.begin();
-	for (int i = 0; i < n; ++itr2, i++) ;
-	result = *itr2;	// get the IP address of the nth element in the list
-	/* Remove the nth element from the list. */
-	itr->second.erase(itr2);
+    for (dmucs_avail_cpus_riter_t itr = availCpus_.rbegin(); result == 0UL && itr != availCpus_.rend(); ++itr)
+    {
+        if (itr->second.empty())
+        {
+            continue;
+        }
+        srandom((unsigned int) time(NULL));
+        unsigned long n = random() % itr->second.size();
+        dmucs_cpus_iter_t itr2 = itr->second.begin();
+        for (int i = 0; i < n; ++itr2, i++) ;
+        result = *itr2;	// get the IP address of the nth element in the list
+        /* Remove the nth element from the list. */
+        itr->second.erase(itr2);
     }
     return result;
 }
